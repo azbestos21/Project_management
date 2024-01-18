@@ -1,4 +1,5 @@
 const express = require('express');
+const connection = require('./db/connect');
 const app = express();
 const port = 3000;
 
@@ -8,10 +9,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/demo', (req, res) => {
-  res.send('project!');
+  let sql = "Select * from Student,Project,Project_Files,Mentor";
+  connection.query(sql,function(err,results){
+    if (err) throw err;
+    res.send(results);
+  })
 });
 
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
+  connection.connect(function(err){
+    if(err) throw err;
+    console.log('Database Connected!');
+  })
 });
