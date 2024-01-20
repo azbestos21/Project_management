@@ -17,13 +17,6 @@ app.use(express.json());
 app.set('view engine','hbs');
 // Define a route
 
-app.get('/demo', (req, res) => {
-  let sql = "Select * from Student,Project,Project_Files,Mentor";
-  connection.query(sql,function(err,results){
-    if (err) throw err;
-    res.send(results);
-  })
-});
 app.use('/',require('./routes/pages.js'))
 app.use('/auth',require('./routes/auth'))
 // Start the server

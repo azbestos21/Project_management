@@ -1,7 +1,7 @@
 const mysql = require('mysql2')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-
+const adminTableModule = require('../models/admin');
 const connection = mysql.createConnection({
     host :'localhost',
     database : 'PMS',
@@ -10,6 +10,7 @@ const connection = mysql.createConnection({
 });
 exports.register = (req,res)=>{
     console.log(req.body);
+    adminTableModule.createAdminTable();
     const {username,password,confirmpassword} = req.body;
     connection.query('Select Username from admin where Username = ?',[username],async(error,results)=>{
         if(error){
@@ -17,7 +18,7 @@ exports.register = (req,res)=>{
         }
         if(results.length>0){
             return res.render('register',{
-                message:'That email is already in use'
+                message:'That username is already in use'
             })
         }
         else if(password!=confirmpassword)
@@ -43,3 +44,36 @@ exports.register = (req,res)=>{
         })
     })
 }
+exports.login = (req, res) => {
+    const { username, password } = req.body;
+
+    connection.query('SELECT * FROM admin WHERE Username = ?', [username], async (error, results) => {
+        if (error) {
+            console.log(error);
+        }
+
+        if (results.length === 0) {
+            return res.render('login', {
+                message: 'Username or password is incorrect'
+            });
+        }
+
+        const user = results[0];
+
+        // Compare the provided password with the hashed password
+        const isPasswordMatch = await bcrypt.compare(password, user.Password);
+
+        if (!isPasswordMatch) {
+            return res.render('login', {
+                message: 'Username or password is incorrect'
+            });
+        }
+
+        // If the username and password are correct, you can proceed with the login logic
+        // For example, you can create a session for the user or redirect them to a dashboard page.
+
+        return res.render('login', {
+            message: 'Login successful'
+        });
+    });
+};
