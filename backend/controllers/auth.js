@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
     user :'root',
     password: 'rishi123vg'
 });
-exports.register = (req,res)=>{
+exports.register= (req,res)=>{
     console.log(req.body);
     adminTableModule.createAdminTable();
     const {username,password,confirmpassword} = req.body;
