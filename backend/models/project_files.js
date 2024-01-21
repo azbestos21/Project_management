@@ -6,7 +6,7 @@ exports.createProjectfilesTable = () => {
     File_Path VARCHAR(30) NOT NULL PRIMARY KEY,
     File_Name VARCHAR(10) NOT NULL,
     P_ID VARCHAR(10),
-    FOREIGN KEY (P_ID) REFERENCES some_other_table (P_ID)
+    FOREIGN KEY (P_ID) REFERENCES project (P_ID)
 );
 
 

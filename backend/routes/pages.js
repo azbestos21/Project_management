@@ -12,5 +12,15 @@ router.get('/register', (req, res) => {
 router.get('/login', (req, res) => {
   res.render('login');  
 });
-
+router.get('/', (req, res) => {
+    res.render('studenthome');  
+  });
+  
+  router.get('/studentregister', (req, res) => {
+    res.render('student_register');  
+  });
+  
+  router.get('/studentlogin', (req, res) => {
+    res.render('student_login');  
+  });
 module.exports = router;
