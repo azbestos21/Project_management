@@ -4,10 +4,10 @@ exports.createMentorTable = () => {
   const createTableQuery = `
       CREATE TABLE IF NOT EXISTS mentor (
         Mentor_ID varchar(10) PRIMARY KEY,
-        Name varchar(10) not null ,
-        Email varchar(10) not null,
-        Phone  varchar(10) not null,
-        Designation varchar(10) not null
+        Name varchar(20) not null ,
+        Email varchar(40) not null,
+        Phone  varchar(20) not null,
+        Designation varchar(20) not null
       )
     `;
 
