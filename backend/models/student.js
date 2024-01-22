@@ -5,7 +5,7 @@ exports.createStudentTable = () => {
   CREATE TABLE IF NOT EXISTS student (
     USN VARCHAR(10) NOT NULL PRIMARY KEY,
     Name VARCHAR(20) NOT NULL,
-    Email VARCHAR(10) NOT NULL,
+    Email VARCHAR(40) NOT NULL,
     Password VARCHAR(200) NOT NULL,
     Phone_No VARCHAR(10) NOT NULL,
     P_ID VARCHAR(10),
