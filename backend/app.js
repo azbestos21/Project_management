@@ -17,7 +17,7 @@ app.use(express.json());
 
 // Set the views directory to the correct absolute path
 app.set('view engine', 'hbs');
-app.set('views', 'C:/Users/vishn/OneDrive/Desktop/project_management/frontend/views');
+app.set('views', '../frontend/views');
 
 // Define routes
 app.use('/', require('./routes/pages.js'));

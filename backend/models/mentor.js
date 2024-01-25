@@ -3,7 +3,7 @@ const db = require("../db/connect");
 exports.createMentorTable = () => {
   const createTableQuery = `
       CREATE TABLE IF NOT EXISTS mentor (
-        Mentor_ID varchar(10) PRIMARY KEY,
+        M_ID varchar(10) PRIMARY KEY,
         Name varchar(10) not null ,
         Email varchar(10) not null,
         Phone  varchar(10) not null,

@@ -3,7 +3,7 @@ const db = require("../db/connect");
 exports.createProjectTable = () => {
   const createTableQuery = `
   CREATE TABLE IF NOT EXISTS project (
-    Project_ID VARCHAR(10) NOT NULL PRIMARY KEY,
+    P_ID VARCHAR(10) NOT NULL PRIMARY KEY,
     Project_Name VARCHAR(20) NOT NULL,
     Project_Phase VARCHAR(10) NOT NULL,
     Phase_Status VARCHAR(10) NOT NULL,
