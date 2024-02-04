@@ -74,11 +74,9 @@ exports.adminlogin = (req, res) => {
             });
         }
 
-        // If the username and password are correct, you can proceed with the login logic
-        // For example, you can create a session for the user or redirect them to a dashboard page.
-
-        return res.render('login', {
-            message: 'Login successful'
+        return res.render('admindashboard', {
+            message: 'Login successful',
+            username: user.Username  
         });
     });
 };
@@ -178,6 +176,31 @@ exports.studentlogin = (req, res) => {
         return res.render('student_login', {
             message: 'Login successful'
         });
+    });
+};
+
+exports.studentlist = (req, res) => {
+    console.log('Inside studentlist function');
+    const sql = 'SELECT student.USN, student.Name AS Student_Name, student.Email, student.Phone_No,project.Project_Name,mentor.Name FROM student JOIN project ON student.P_ID = project.Project_ID JOIN mentor ON student.M_ID = mentor.Mentor_ID ORDER BY student.USN ASC';
+    connection.query(sql, (err, data) => {
+        if (err) {
+            console.error('Error fetching data:', err);
+            throw err;
+        }
+        console.log('Retrieved data from the database:', data);
+        res.render('viewstudents', { title: 'student-List', userData: data });
+    });
+};
+exports.grouplist = (req, res) => {
+    console.log('Inside grouplist function');
+    const sql = 'SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID GROUP BY project.Project_Name, student.USN, student.Name;';
+    connection.query(sql, (err, data) => {
+        if (err) {
+            console.error('Error fetching data:', err);
+            throw err;
+        }
+        console.log('Retrieved data from the database:', data);
+        res.render('viewgroups', { title: 'group-List', userData: data });
     });
 };
 
