@@ -1,26 +1,32 @@
-const express = require('express');
-const router = express.Router();
+  const express = require('express');
+  const router = express.Router();
 
-router.get('/secret', (req, res) => {
-  res.render('index');  
-});
+  router.get('/secret', (req, res) => {
+    res.render('index');  
+  });
 
-router.get('/register', (req, res) => {
-  res.render('register');  
-});
+  router.get('/register', (req, res) => {
+    res.render('register');  
+  });
 
-router.get('/login', (req, res) => {
-  res.render('login');  
-});
-router.get('/', (req, res) => {
-    res.render('studenthome');  
+  router.get('/login', (req, res) => {
+    res.render('login');  
   });
-  
-  router.get('/studentregister', (req, res) => {
-    res.render('student_register');  
-  });
-  
-  router.get('/studentlogin', (req, res) => {
-    res.render('student_login');  
-  });
-module.exports = router;
+  router.get('/', (req, res) => {
+      res.render('studenthome');  
+    });
+    router.get('/auth/login', (req, res) => {
+      res.render('admindashboard');  
+    });
+    
+    router.get('/studentregister', (req, res) => {
+      res.render('student_register');  
+    });
+    
+    router.get('/studentlogin', (req, res) => {
+      res.render('student_login');  
+    });
+    router.get('/admindashboard', (req, res) => {
+      res.render('admindashboard');  
+    });
+  module.exports = router;
