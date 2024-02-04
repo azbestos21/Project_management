@@ -193,7 +193,7 @@ exports.studentlist = (req, res) => {
 };
 exports.grouplist = (req, res) => {
     console.log('Inside grouplist function');
-    const sql = 'SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID GROUP BY project.Project_Name, student.USN, student.Name;';
+    const sql = 'SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID GROUP BY project.Project_Name, student.P_ID, student.USN, student.Name;';
     connection.query(sql, (err, data) => {
         if (err) {
             console.error('Error fetching data:', err);
@@ -201,6 +201,18 @@ exports.grouplist = (req, res) => {
         }
         console.log('Retrieved data from the database:', data);
         res.render('viewgroups', { title: 'group-List', userData: data });
+    });
+};
+exports.projectlist = (req, res) => {
+    console.log('Inside projectlist function');
+    const sql = 'select * from project';
+    connection.query(sql, (err, data) => {
+        if (err) {
+            console.error('Error fetching data:', err);
+            throw err;
+        }
+        console.log('Retrieved data from the database:', data);
+        res.render('viewprojects', { title: 'projects-List', userData: data });
     });
 };
 

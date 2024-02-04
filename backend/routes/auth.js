@@ -13,4 +13,5 @@ router.post('/studentlogin', authController.studentlogin);
 /// In your server-side code, modify the route to handle both regular and AJAX requests
 router.get('/viewstudents', authController.studentlist);
 router.get('/viewgroups', authController.grouplist);
+router.get('/viewprojects', authController.projectlist);
 module.exports = router;
