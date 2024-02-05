@@ -179,18 +179,49 @@ exports.studentlogin = (req, res) => {
     });
 };
 
+// authController.js
 exports.studentlist = (req, res) => {
-    console.log('Inside studentlist function');
-    const sql = 'SELECT student.USN, student.Name AS Student_Name, student.Email, student.Phone_No,project.Project_Name,mentor.Name FROM student JOIN project ON student.P_ID = project.Project_ID JOIN mentor ON student.M_ID = mentor.Mentor_ID ORDER BY student.USN ASC';
-    connection.query(sql, (err, data) => {
+    const searchUSN = req.query.usn;
+    const searchName = req.query.name;
+
+// Check if either search parameter (USN or Name) is provided
+if (searchUSN || searchName) {
+    // SQL query to search by USN and/or Name
+    const sql = 'SELECT student.USN, student.Name AS Student_Name, student.Email, student.Phone_No, project.Project_Name, mentor.Name FROM student JOIN project ON student.P_ID = project.Project_ID JOIN mentor ON student.M_ID = mentor.Mentor_ID WHERE (student.USN LIKE ? OR student.Name LIKE ?) ORDER BY student.USN ASC';
+
+    // Execute the query with the USN and Name parameters and the % wildcard
+    connection.query(sql, [`%${searchUSN}%`, `%${searchName}%`], (err, data) => {
+        if (err) {
+            console.error('Error searching data:', err);
+            throw err;
+        }
+        console.log('Search results:', data);
+
+        // Render the viewstudents page with the search results
+        res.render('viewstudents', { title: 'Student List', userData: data });
+    });
+    
+} else {
+    // If no search parameters are provided, retrieve the full list of students
+    const fullListSql = 'SELECT student.USN, student.Name AS Student_Name, student.Email, student.Phone_No, project.Project_Name, mentor.Name FROM student JOIN project ON student.P_ID = project.Project_ID JOIN mentor ON student.M_ID = mentor.Mentor_ID ORDER BY student.USN ASC';
+
+    connection.query(fullListSql, (err, data) => {
         if (err) {
             console.error('Error fetching data:', err);
             throw err;
         }
         console.log('Retrieved data from the database:', data);
-        res.render('viewstudents', { title: 'student-List', userData: data });
+
+        // Render the viewstudents page with the full list of students
+        res.render('viewstudents', { title: 'Student List', userData: data });
     });
+}
+
 };
+
+
+
+
 exports.grouplist = (req, res) => {
     console.log('Inside grouplist function');
     const sql = 'SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID GROUP BY project.Project_Name, student.P_ID, student.USN, student.Name;';

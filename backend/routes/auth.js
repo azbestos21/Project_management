@@ -14,4 +14,5 @@ router.post('/studentlogin', authController.studentlogin);
 router.get('/viewstudents', authController.studentlist);
 router.get('/viewgroups', authController.grouplist);
 router.get('/viewprojects', authController.projectlist);
+router.get('/search', authController.studentlist);
 module.exports = router;
