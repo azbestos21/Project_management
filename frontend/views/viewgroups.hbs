@@ -18,31 +18,49 @@
         </ul>
     </nav>
     <div class="table-data">
-  <div class="container mt-4">
-        <h2>Student Groups</h2>
-        {{#if userData.length}}
-        <table class="table table-bordered">
-            <thead style="background-color: #563d7c; color: rgb(244, 246, 248);" >
-                <tr>
-                    <th>Project</th>
-                    <th>USN</th>
-                    <th>Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each userData}}
-                <tr>
-                    <td>{{this.Project_Name}}</td>
-                    <td>{{this.USN}}</td>
-                    <td>{{this.Name}}</td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-        {{else}}
-        <p>No Data Found</p>
-        {{/if}}
+        <div class="container mt-4">
+            <h2>Student Groups</h2>
+            <table class="table table-bordered" id="groupTable">
+                <thead style="background-color: #563d7c; color: rgb(244, 246, 248);">
+                    <tr>
+                        <th>Project</th>
+                        <th>USN</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table body will be populated dynamically with JavaScript -->
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <script>
+        // Fetch data from the server
+        fetch('/auth/grouplist')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Received data from server:', data);
+
+                // Handle the data as needed (e.g., update the UI)
+                const tableBody = document.querySelector('#groupTable tbody');
+
+                if (data.userData.length > 0) {
+                    data.userData.forEach(group => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${group.Project_Name}</td>
+                            <td>${group.USN}</td>
+                            <td>${group.Name}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="3">No Data Found</td></tr>';
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
 </body>
 
 </html>
