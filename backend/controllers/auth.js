@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
     host :'localhost',
     database : 'PMS',
     user :'root',
-    password: 'rishi123vg'
+    password: 'rishi123vg'//PUT your password
 });
 exports.adminregister= (req,res)=>{
     console.log(req.body);
@@ -151,31 +151,21 @@ exports.studentlogin = (req, res) => {
     connection.query('SELECT * FROM student WHERE USN = ?', [username], async (error, results) => {
         if (error) {
             console.log(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
 
         if (results.length === 0) {
-            return res.render('student_login', {
-                message: 'Username or password is incorrect'
-            });
+            return res.status(401).json({ message: 'Username or password is incorrect' });
         }
 
-        const user = results[0];
+        // Assuming you want to send some user data back in the response
+        const userData = {
+            USN: results[0].USN,
+            Name: results[0].Name,
+            // Add more fields as needed
+        };
 
-        // Compare the provided password with the hashed password
-        const isPasswordMatch = await bcrypt.compare(password, user.Password);
-
-        if (!isPasswordMatch) {
-            return res.render('student_login', {
-                message: 'Username or password is incorrect'
-            });
-        }
-
-        // If the username and password are correct, you can proceed with the login logic
-        // For example, you can create a session for the user or redirect them to a dashboard page.
-
-        return res.render('student_login', {
-            message: 'Login successful'
-        });
+        res.status(200).json({ message: 'Login successful', userData });
     });
 };
 
@@ -225,15 +215,19 @@ if (searchUSN || searchName) {
 exports.grouplist = (req, res) => {
     console.log('Inside grouplist function');
     const sql = 'SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID GROUP BY project.Project_Name, student.P_ID, student.USN, student.Name;';
+    
     connection.query(sql, (err, data) => {
         if (err) {
             console.error('Error fetching data:', err);
-            throw err;
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
         }
+        
         console.log('Retrieved data from the database:', data);
-        res.render('viewgroups', { title: 'group-List', userData: data });
+        res.json({ title: 'group-List', userData: data });
     });
 };
+
 exports.projectlist = (req, res) => {
     console.log('Inside projectlist function');
     const sql = 'select * from project';
