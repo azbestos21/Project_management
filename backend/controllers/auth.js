@@ -13,74 +13,72 @@ const connection = mysql.createConnection({
     user :'root',
     password: 'rishi123vg'//PUT your password
 });
-exports.adminregister= (req,res)=>{
+exports.adminregister = async (req, res) => {
     console.log(req.body);
     adminTableModule.createAdminTable();
-    const {username,password,confirmpassword} = req.body;
-    connection.query('Select Username from admin where Username = ?',[username],async(error,results)=>{
-        if(error){
-            console.log(error);
-        }
-        if(results.length>0){
-            return res.render('register',{
-                message:'That username is already in use'
-            })
-        }
-        else if(password!=confirmpassword)
-        {
-            return res.render('register',{
-                message:'Password do not match'
-            })
-        }
-
-        let hashedPassword = await bcrypt.hash(password,8);
-        console.log(hashedPassword)
-
-        connection.query('INSERT INTO admin SET ?',{Username:username,Password:hashedPassword},async(error,results)=>{
-            if(error){
-                console.log(error);
-            }
-            else{
-                await console.log(results);
-                return res.render('register',{
-                    message:'User registered'
-                })
-            }
-        })
-    })
-}
-exports.adminlogin = (req, res) => {
-    const { username, password } = req.body;
-
-    connection.query('SELECT * FROM admin WHERE Username = ?', [username], async (error, results) => {
+    const { username, password, confirmpassword } = req.body;
+    connection.query('Select Username from admin where Username = ?', [username], async (error, results) => {
         if (error) {
             console.log(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        if (results.length > 0) {
+            return res.status(400).json({ message: 'That username is already in use' });
+        } else if (password !== confirmpassword) {
+            return res.status(400).json({ message: 'Passwords do not match' });
         }
 
-        if (results.length === 0) {
-            return res.render('login', {
-                message: 'Username or password is incorrect'
+        try {
+            let hashedPassword = await bcrypt.hash(password, 8);
+            console.log(hashedPassword);
+
+            connection.query('INSERT INTO admin SET ?', { Username: username, Password: hashedPassword }, async (error, results) => {
+                if (error) {
+                    console.log(error);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                } else {
+                    console.log(results);
+                    return res.status(200).json({ message: 'User registered' });
+                }
             });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
-
-        const user = results[0];
-
-        // Compare the provided password with the hashed password
-        const isPasswordMatch = await bcrypt.compare(password, user.Password);
-
-        if (!isPasswordMatch) {
-            return res.render('login', {
-                message: 'Username or password is incorrect'
-            });
-        }
-
-        return res.render('admindashboard', {
-            message: 'Login successful',
-            username: user.Username  
-        });
     });
 };
 
+exports.adminlogin = async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const results = await new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM admin WHERE Username = ?', [username], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'Username or password is incorrect' });
+        }
+
+        const user = results[0];
+        const isPasswordMatch = await bcrypt.compare(password, user.Password);
+
+        if (!isPasswordMatch) {
+            return res.status(401).json({ message: 'Username or password is incorrect' });
+        }
+
+        return res.status(200).json({ message: 'Login successful', username: user.Username });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 exports.studentregister = async (req, res) => {
     console.log(req.body);
@@ -91,7 +89,6 @@ exports.studentregister = async (req, res) => {
     const { username, password, confirmpassword, Name, email, phone, pid, mid } = req.body;
 
     try {
-        // Check if the username is already in use
         const existingUser = await new Promise((resolve, reject) => {
             connection.query('SELECT USN FROM student WHERE USN = ?', [username], (error, results) => {
                 if (error) {
@@ -103,24 +100,18 @@ exports.studentregister = async (req, res) => {
         });
 
         if (existingUser.length === 1) {
-            return res.render('student_register', {
-                message: 'That username is already in use'
-            });
+            return res.status(400).json({ message: 'That username is already in use' });
         } else if (password !== confirmpassword) {
-            return res.render('student_register', {
-                message: 'Passwords do not match'
-            });
+            return res.status(400).json({ message: 'Passwords do not match' });
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 8);
         console.log(hashedPassword);
 
-        // Insert the new student into the database
         await new Promise((resolve, reject) => {
             connection.query('INSERT INTO student SET ?', {
                 USN: username,
-                Name: Name, // Corrected to use the correct case 'Name'
+                Name: Name,
                 Email: email,
                 Password: hashedPassword,
                 Phone_No: phone,
@@ -135,13 +126,12 @@ exports.studentregister = async (req, res) => {
                 }
             });
         });
-        await sendemail(email)
-        return res.render('student_register', {
-            message: 'Student registered'
-        });
+
+        await sendemail(email);
+        return res.status(200).json({ message: 'Student registered' });
     } catch (error) {
         console.error(error);
-        return res.status(500).send('Internal Server Error');
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
