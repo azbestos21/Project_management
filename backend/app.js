@@ -4,9 +4,10 @@ const dotenv = require('dotenv');
 const path = require('path');
 const app = express();
 const port = 3000;
-
+const cors = require("cors");
 // Update the path for extracting HTML and CSS
 const publicDirectory = path.join(__dirname, '../frontend/public');
+app.use(cors())
 app.use(express.static(publicDirectory));
 
 // For parsing into JSON

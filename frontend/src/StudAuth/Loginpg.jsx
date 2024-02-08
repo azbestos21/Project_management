@@ -4,10 +4,13 @@ import RNSIT from "../assets/RNSIT.jpg";
 import { Carousel } from "antd";
 import CSE from "../assets/CSE.jpeg";
 import Backgimg from "../assets/Backgimg.jpg";
-
+import { studentlogin } from "./Services/Api";
 export default function Loginpg() {
   const [showSignIn, setShowSignIn] = useState(true);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [username,setUsername] = useState();
+  const [password, setPassword] = useState();
+  console.log(username,password);
   const [signInButtonStyle, setSignInButtonStyle] = useState({
     backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
   });
@@ -32,7 +35,15 @@ export default function Loginpg() {
       backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
     });
   };
-
+  const handlelogin= async(e)=>{
+    e.preventDefault()
+    try {
+      const data = await studentlogin({username,password})
+      console.log(data);
+    } catch (error) {
+      
+    }
+  }
   return (
     <div className="w-screen h-screen flex flex-row">
       <div className="w-1/2 h-screen items-center justify-around bg-slate-50">
@@ -60,16 +71,19 @@ export default function Loginpg() {
           </div>
           {showSignIn && (
             <div className="">
-              <form className="max-w-md mx-auto flex flex-col gap-8 p-3">
+              <form onSubmit={handlelogin} className="max-w-md mx-auto flex flex-col gap-8 p-3">
                 <input
                   className="p-3 border-none"
-                  type="email"
+                  type="text"
                   placeholder={"your@email.com"}
+                  onChange={(e)=>setUsername(e.target.value)}
                 />
                 <input
                   className="p-3 border-none"
                   type="password"
                   placeholder={"password"}
+                  onChange={(e)=>setPassword(e.target.value)}
+
                 />
                 <button className="bg-blue-300 p-3">Login</button>
               </form>

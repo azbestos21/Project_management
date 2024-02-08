@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
     host :'localhost',
     database : 'PMS',
     user :'root',
-    password: 'rishi123vg'//PUT your password
+    password: 'Rockydon'//PUT your password
 });
 exports.adminregister = async (req, res) => {
     console.log(req.body);
