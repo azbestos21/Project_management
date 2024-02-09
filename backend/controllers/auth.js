@@ -1,4 +1,3 @@
-const mysql = require('mysql2')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const adminTableModule = require('../models/admin');
@@ -7,12 +6,7 @@ const projectTableModule = require('../models/project');
 const studentTableModule = require('../models/student');
 const nodemailer = require("nodemailer")
 require("dotenv").config();
-const connection = mysql.createConnection({
-    host :'localhost',
-    database : 'PMS',
-    user :'root',
-    password: 'Rockydon'//PUT your password
-});
+const connection = require('../db/connect')
 exports.adminregister = async (req, res) => {
     console.log(req.body);
     adminTableModule.createAdminTable();
@@ -72,8 +66,8 @@ exports.adminlogin = async (req, res) => {
         if (!isPasswordMatch) {
             return res.status(401).json({ message: 'Username or password is incorrect' });
         }
-
-        return res.status(200).json({ message: 'Login successful', username: user.Username });
+        const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+        return res.status(200).json({ message: 'Login successful',token });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -147,15 +141,12 @@ exports.studentlogin = (req, res) => {
         if (results.length === 0) {
             return res.status(401).json({ message: 'Username or password is incorrect' });
         }
-
-        // Assuming you want to send some user data back in the response
         const userData = {
             USN: results[0].USN,
             Name: results[0].Name,
-            // Add more fields as needed
         };
-
-        res.status(200).json({ message: 'Login successful', userData });
+        const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+        res.status(200).json({ message: 'Login successful', userData,token });
     });
 };
 exports.grouplist = (req, res) => {
