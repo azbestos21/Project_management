@@ -80,7 +80,7 @@ exports.studentregister = async (req, res) => {
     projectTableModule.createProjectTable();
     studentTableModule.createStudentTable();
 
-    const { username, password, confirmpassword, Name, email, phone, pid, mid } = req.body;
+    const { username, password, confirmpassword, email } = req.body;
 
     try {
         const existingUser = await new Promise((resolve, reject) => {
@@ -102,16 +102,18 @@ exports.studentregister = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 8);
         console.log(hashedPassword);
 
+        const userData = {
+            USN: username,
+            Password: hashedPassword,
+            Email: email,
+            Name: null,
+            Phone_No: null,
+            P_ID: null, 
+            M_ID: null 
+        };
+
         await new Promise((resolve, reject) => {
-            connection.query('INSERT INTO student SET ?', {
-                USN: username,
-                Name: Name,
-                Email: email,
-                Password: hashedPassword,
-                Phone_No: phone,
-                P_ID: pid,
-                M_ID: mid
-            }, (error, results) => {
+            connection.query('INSERT INTO student SET ?', userData, (error, results) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -122,7 +124,7 @@ exports.studentregister = async (req, res) => {
         });
 
         await sendemail(email);
-        return res.status(200).json({ message: 'Student registered' });
+        return res.status(200).json({ message: 'Student registered' },userData);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
