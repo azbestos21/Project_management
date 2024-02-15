@@ -80,7 +80,7 @@ exports.studentregister = async (req, res) => {
     projectTableModule.createProjectTable();
     studentTableModule.createStudentTable();
 
-    const { username, password, confirmpassword, email } = req.body;
+    const { username,Name, password, confirmpassword, email } = req.body;
 
     try {
         const existingUser = await new Promise((resolve, reject) => {
@@ -106,7 +106,7 @@ exports.studentregister = async (req, res) => {
             USN: username,
             Password: hashedPassword,
             Email: email,
-            Name: null,
+            Name: Name,
             Phone_No: null,
             P_ID: null, 
             M_ID: null 
@@ -124,7 +124,7 @@ exports.studentregister = async (req, res) => {
         });
 
         await sendemail(email);
-        return res.status(200).json({ message: 'Student registered' },userData);
+        return res.status(200).json({ message: 'Student registered' });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
