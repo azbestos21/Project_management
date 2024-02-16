@@ -8,9 +8,15 @@ import { studentlogin } from "./Services/Api";
 export default function Loginpg() {
   const [showSignIn, setShowSignIn] = useState(true);
   const [showSignUp, setShowSignUp] = useState(false);
-  const [username,setUsername] = useState();
+  const [useremail, setUseremail] = useState();
   const [password, setPassword] = useState();
-  console.log(username,password);
+  const [username, setUsername] = useState();
+  const [name, setname] = useState();
+
+  console.log(useremail, password);
+  const [confirmpassword, setconfirmPassword] = useState();
+  console.log(username, name, useremail, password, confirmpassword);
+  1;
   const [signInButtonStyle, setSignInButtonStyle] = useState({
     backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
   });
@@ -35,15 +41,31 @@ export default function Loginpg() {
       backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
     });
   };
-  const handlelogin= async(e)=>{
-    e.preventDefault()
+  const handlelogin = async (e) => {
+    e.preventDefault();
     try {
-      const data = await studentlogin({username,password})
+      const data = await studentlogin({ useremail, password });
+      console.log(data);
+      console.log("bsdk", useremail, password);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await studentsignup({
+        username,
+        name,
+        useremail,
+        password,
+        confirmpassword,
+      });
       console.log(data);
     } catch (error) {
-      
+      console.log(error);
     }
-  }
+  };
   return (
     <div className="w-screen h-screen flex flex-row">
       <div className="w-1/2 h-screen items-center justify-around bg-slate-50">
@@ -71,19 +93,21 @@ export default function Loginpg() {
           </div>
           {showSignIn && (
             <div className="">
-              <form onSubmit={handlelogin} className="max-w-md mx-auto flex flex-col gap-8 p-3">
+              <form
+                onSubmit={handlelogin}
+                className="max-w-md mx-auto flex flex-col gap-8 p-3"
+              >
                 <input
                   className="p-3 border-none"
-                  type="text"
+                  type="email"
                   placeholder={"your@email.com"}
-                  onChange={(e)=>setUsername(e.target.value)}
+                  onChange={(e) => setUseremail(e.target.value)}
                 />
                 <input
                   className="p-3 border-none"
                   type="password"
                   placeholder={"password"}
-                  onChange={(e)=>setPassword(e.target.value)}
-
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button className="bg-blue-300 p-3">Login</button>
               </form>
@@ -91,26 +115,40 @@ export default function Loginpg() {
           )}
           {showSignUp && (
             <div className="-mt-5">
-              <form className="max-w-md mx-auto flex flex-col gap-5 p-3">
+              <form
+                className="max-w-md mx-auto flex flex-col gap-5 p-3"
+                onSubmit={handleSignup}
+              >
                 <input
                   className="p-3 border-none"
                   type="text"
                   placeholder={"Username"}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                  className="p-3 border-none"
+                  type="text"
+                  placeholder={"Name"}
+                  onChange={(e) => setname(e.target.value)}
                 />
                 <input
                   className="p-3 border-none"
                   type="email"
                   placeholder={"your@email.com"}
+                  onChange={(e) => setUseremail(e.target.value)}
                 />
+
                 <input
                   className="p-3 border-none"
                   type="password"
                   placeholder={"password"}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <input
                   className="p-3 border-none"
                   type="password"
                   placeholder={"Confirm Password"}
+                  onChange={(e) => setconfirmPassword(e.target.value)}
                 />
                 <button className="bg-blue-300 p-3">Register</button>
               </form>

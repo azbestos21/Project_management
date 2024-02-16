@@ -10,8 +10,8 @@ exports.createStudentTable = () => {
     Phone_No VARCHAR(10) NOT NULL,
     P_ID VARCHAR(10),
     M_ID VARCHAR(10),
-    FOREIGN KEY (P_ID) REFERENCES project (P_ID),
-    FOREIGN KEY (M_ID) REFERENCES mentor (M_ID)
+    FOREIGN KEY (P_ID) REFERENCES project (Project_ID),
+    FOREIGN KEY (M_ID) REFERENCES mentor (Mentor_ID)
 )
     `;
 
