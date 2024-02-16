@@ -80,7 +80,7 @@ exports.studentregister = async (req, res) => {
     projectTableModule.createProjectTable();
     studentTableModule.createStudentTable();
 
-    const { username,Name, password, confirmpassword, email } = req.body;
+    const { username,Name, password, confirmpassword, email,mid } = req.body;
 
     try {
         const existingUser = await new Promise((resolve, reject) => {
@@ -109,7 +109,7 @@ exports.studentregister = async (req, res) => {
             Name: Name,
             Phone_No: null,
             P_ID: null, 
-            M_ID: null 
+            M_ID: mid 
         };
 
         await new Promise((resolve, reject) => {
