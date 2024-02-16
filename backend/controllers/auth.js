@@ -80,7 +80,7 @@ exports.studentregister = async (req, res) => {
     projectTableModule.createProjectTable();
     studentTableModule.createStudentTable();
 
-    const { username,Name, password, confirmpassword, email,mid } = req.body;
+    const { username, password, confirmpassword, Name, email} = req.body;
 
     try {
         const existingUser = await new Promise((resolve, reject) => {
@@ -102,18 +102,16 @@ exports.studentregister = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 8);
         console.log(hashedPassword);
 
-        const userData = {
-            USN: username,
-            Password: hashedPassword,
-            Email: email,
-            Name: Name,
-            Phone_No: null,
-            P_ID: null, 
-            M_ID: mid 
-        };
-
         await new Promise((resolve, reject) => {
-            connection.query('INSERT INTO student SET ?', userData, (error, results) => {
+            connection.query('INSERT INTO student SET ?', {
+                USN: username,
+                Name: Name,
+                Email: email,
+                Password: hashedPassword,
+                Phone_No: null,
+                P_ID: null,
+                M_ID: null
+            }, (error, results) => {
                 if (error) {
                     reject(error);
                 } else {
