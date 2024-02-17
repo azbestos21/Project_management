@@ -93,35 +93,30 @@ exports.adminlogin = async (req, res) => {
 };
 
 exports.studentregister = async (req, res) => {
-  console.log(req.body);
-  mentorTableModule.createMentorTable();
-  projectTableModule.createProjectTable();
-  studentTableModule.createStudentTable();
 
-  const { username, password, confirmpassword, Name, email, phone, pid, mid } =
-    req.body;
+    console.log(req.body);
+    mentorTableModule.createMentorTable();
+    projectTableModule.createProjectTable();
+    studentTableModule.createStudentTable();
 
-  try {
-    const existingUser = await new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT USN FROM student WHERE USN = ?",
-        [username],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(results);
-          }
+    const { username,Name, password, confirmpassword, email,mid } = req.body;
+
+    try {
+        const existingUser = await new Promise((resolve, reject) => {
+            connection.query('SELECT USN FROM student WHERE USN = ?', [username], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+
+        if (existingUser.length === 1) {
+            return res.status(400).json({ message: 'That username is already in use' });
+        } else if (password !== confirmpassword) {
+            return res.status(400).json({ message: 'Passwords do not match' });
         }
-      );
-    });
-
-    if (existingUser.length === 1) {
-      return res
-        .status(400)
-        .json({ message: "That username is already in use" });
-    } else if (password !== confirmpassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 8);
