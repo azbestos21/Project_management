@@ -1,18 +1,17 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const adminTableModule = require("../models/admin");
 const mentorTableModule = require("../models/mentor");
 const projectTableModule = require("../models/project");
 const studentTableModule = require("../models/student");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const connection = require("../db/connect");
-exports.adminregister = async (req, res) => {
+exports.mentorregister = async (req, res) => {
   console.log(req.body);
-  adminTableModule.createAdminTable();
-  const { username, password, confirmpassword } = req.body;
+  mentorTableModule.createMentorTable();
+  const { username, password, confirmpassword, Name, email, phone, designation } = req.body;
   connection.query(
-    "Select Username from admin where Username = ?",
+    "Select Mentor_ID from mentor where Mentor_ID = ?",
     [username],
     async (error, results) => {
       if (error) {
@@ -32,15 +31,21 @@ exports.adminregister = async (req, res) => {
         console.log(hashedPassword);
 
         connection.query(
-          "INSERT INTO admin SET ?",
-          { Username: username, Password: hashedPassword },
+          "INSERT INTO mentor SET ?",
+          { Mentor_ID: username, Name: Name, Email: email, Phone: phone, Designation: designation, Password: hashedPassword },
           async (error, results) => {
             if (error) {
               console.log(error);
               return res.status(500).json({ error: "Internal Server Error" });
             } else {
               console.log(results);
-              return res.status(200).json({ message: "User registered" });
+              const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+              const userData = {
+                username: username,
+                email: email,
+                token: token,
+              };
+              return res.status(200).json({ message: "Mentor registered",userData});
             }
           }
         );
@@ -52,13 +57,14 @@ exports.adminregister = async (req, res) => {
   );
 };
 
-exports.adminlogin = async (req, res) => {
+
+exports.mentorlogin = async (req, res) => {
   const { username, password } = req.body;
 
   try {
     const results = await new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM admin WHERE Username = ?",
+        "SELECT * FROM mentor WHERE Mentor_ID = ?",
         [username],
         (error, results) => {
           if (error) {
@@ -73,7 +79,7 @@ exports.adminlogin = async (req, res) => {
     if (results.length === 0) {
       return res
         .status(401)
-        .json({ message: "Username or password is incorrect" });
+        .json({ message: "Mentor ID or password is incorrect" });
     }
 
     const user = results[0];
@@ -82,10 +88,15 @@ exports.adminlogin = async (req, res) => {
     if (!isPasswordMatch) {
       return res
         .status(401)
-        .json({ message: "Username or password is incorrect" });
+        .json({ message: "Mentor ID or password is incorrect" });
     }
+
     const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
-    return res.status(200).json({ message: "Login successful", token });
+    const userData = {
+      username: username,
+      token: token,
+    };
+    return res.status(200).json({ message: "Login successful", userData });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });

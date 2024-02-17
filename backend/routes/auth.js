@@ -2,8 +2,8 @@ const express = require('express');
 const authController = require('../controllers/auth');
 const router = express.Router();
 
-router.post('/register', authController.adminregister);
-router.post('/login', authController.adminlogin);
+router.post('/register', authController.mentorregister);
+router.post('/login', authController.mentorlogin);
 router.post('/studentregister', authController.studentregister);
 router.post('/studentlogin', authController.studentlogin);
 router.get('/viewstudents', authController.studentlist);
