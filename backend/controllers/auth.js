@@ -101,60 +101,65 @@ exports.studentregister = async (req, res) => {
   const { username, Name, password, confirmpassword, email, mid } = req.body;
 
   try {
-      const existingUser = await new Promise((resolve, reject) => {
-          connection.query('SELECT USN FROM student WHERE USN = ?', [username], (error, results) => {
-              if (error) {
-                  reject(error);
-              } else {
-                  resolve(results);
-              }
-          });
-      });
+    const existingUser = await new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT USN FROM student WHERE USN = ?",
+        [username],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
 
-      if (existingUser.length === 1) {
-          return res.status(400).json({ message: 'That username is already in use' });
-      } else if (password !== confirmpassword) {
-          return res.status(400).json({ message: 'Passwords do not match' });
-      }
+    if (existingUser.length === 1) {
+      return res
+        .status(400)
+        .json({ message: "That username is already in use" });
+    } else if (password !== confirmpassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
 
-      const hashedPassword = await bcrypt.hash(password, 8);
-      console.log(hashedPassword);
+    const hashedPassword = await bcrypt.hash(password, 8);
+    console.log(hashedPassword);
 
-      await new Promise((resolve, reject) => {
-          connection.query(
-              "INSERT INTO student SET ?",
-              {
-                  USN: username,
-                  Name: Name,
-                  Email: email,
-                  Password: hashedPassword,
-                  Phone_no : null,
-                  P_ID : null,
-                  M_ID: mid,
-              },
-              (error, results) => {
-                  if (error) {
-                      reject(error);
-                  } else {
-                      console.log(results);
-                      resolve();
-                  }
-              }
-          );
-      });
+    await new Promise((resolve, reject) => {
+      connection.query(
+        "INSERT INTO student SET ?",
+        {
+          USN: username,
+          Name: Name,
+          Email: email,
+          Password: hashedPassword,
+          Phone_no: null,
+          P_ID: null,
+          M_ID: mid,
+        },
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            console.log(results);
+            resolve();
+          }
+        }
+      );
+    });
 
-      await sendemail(email);
-      const userData = {
-          username: username,
-          email: email,
-      };
-      return res.status(200).json({ message: "Student registered", userData });
+    await sendemail(email);
+    const userData = {
+      username: username,
+      email: email,
+    };
+    return res.status(200).json({ message: "Student registered", userData });
   } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: "Internal Server Error" });
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 exports.studentlogin = (req, res) => {
   const { username, password } = req.body;
 
@@ -172,12 +177,26 @@ exports.studentlogin = (req, res) => {
           .status(401)
           .json({ message: "Username or password is incorrect" });
       }
+
+      const hashedPassword = results[0].Password;
+
+      // Compare the entered password with the hashed password from the database
+      const passwordMatch = await bcrypt.compare(password, hashedPassword);
+
+      if (!passwordMatch) {
+        return res
+          .status(401)
+          .json({ message: "Username or password is incorrect" });
+      }
+
+      // Assuming you want to send some user data back in the response
       const userData = {
         USN: results[0].USN,
         Name: results[0].Name,
+        // Add more fields as needed
       };
-      const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
-      res.status(200).json({ message: "Login successful", userData, token });
+
+      res.status(200).json({ message: "Login successful", userData });
     }
   );
 };

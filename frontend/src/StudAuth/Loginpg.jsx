@@ -4,19 +4,22 @@ import RNSIT from "../assets/RNSIT.jpg";
 import { Carousel } from "antd";
 import CSE from "../assets/CSE.jpeg";
 import Backgimg from "../assets/Backgimg.jpg";
-import { studentlogin } from "./Services/Api";
+import { studentlogin, studentsignup } from "./Services/Api";
+import { useNavigate } from "react-router-dom";
+
 export default function Loginpg() {
   const [showSignIn, setShowSignIn] = useState(true);
   const [showSignUp, setShowSignUp] = useState(false);
-  const [useremail, setUseremail] = useState();
+  const [email, setUseremail] = useState();
   const [password, setPassword] = useState();
-  const [username, setUsername] = useState();
-  const [name, setname] = useState();
-
-  console.log(useremail, password);
+  const [username, setUsn] = useState();
+  const [Name, setname] = useState();
+  const [mid, setMentorId] = useState();
+  const navigate = useNavigate();
+  console.log(email, password);
   const [confirmpassword, setconfirmPassword] = useState();
-  console.log(username, name, useremail, password, confirmpassword);
-  1;
+  console.log(username, Name, email, password, confirmpassword, mid);
+
   const [signInButtonStyle, setSignInButtonStyle] = useState({
     backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
   });
@@ -44,9 +47,10 @@ export default function Loginpg() {
   const handlelogin = async (e) => {
     e.preventDefault();
     try {
-      const data = await studentlogin({ useremail, password });
+      const data = await studentlogin({ username, password });
       console.log(data);
-      console.log("bsdk", useremail, password);
+      navigate("/dashboard");
+      console.log("bsdk", username, password);
     } catch (error) {
       console.log(error);
     }
@@ -56,12 +60,14 @@ export default function Loginpg() {
     try {
       const data = await studentsignup({
         username,
-        name,
-        useremail,
+        Name,
         password,
         confirmpassword,
+        email,
+        mid,
       });
       console.log(data);
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
     }
@@ -99,9 +105,9 @@ export default function Loginpg() {
               >
                 <input
                   className="p-3 border-none"
-                  type="email"
-                  placeholder={"your@email.com"}
-                  onChange={(e) => setUseremail(e.target.value)}
+                  type="text"
+                  placeholder={"USN"}
+                  onChange={(e) => setUsn(e.target.value)}
                 />
                 <input
                   className="p-3 border-none"
@@ -116,14 +122,14 @@ export default function Loginpg() {
           {showSignUp && (
             <div className="-mt-5">
               <form
-                className="max-w-md mx-auto flex flex-col gap-5 p-3"
+                className="max-w-md mx-auto flex flex-col gap-2 p-3"
                 onSubmit={handleSignup}
               >
                 <input
                   className="p-3 border-none"
                   type="text"
-                  placeholder={"Username"}
-                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder={"USN"}
+                  onChange={(e) => setUsn(e.target.value)}
                 />
                 <input
                   className="p-3 border-none"
@@ -136,6 +142,12 @@ export default function Loginpg() {
                   type="email"
                   placeholder={"your@email.com"}
                   onChange={(e) => setUseremail(e.target.value)}
+                />
+                <input
+                  className="p-3 border-none"
+                  type="text"
+                  placeholder={"Mentor_ID"}
+                  onChange={(e) => setMentorId(e.target.value)}
                 />
 
                 <input
@@ -150,6 +162,7 @@ export default function Loginpg() {
                   placeholder={"Confirm Password"}
                   onChange={(e) => setconfirmPassword(e.target.value)}
                 />
+
                 <button className="bg-blue-300 p-3">Register</button>
               </form>
             </div>
