@@ -93,69 +93,65 @@ exports.adminlogin = async (req, res) => {
 };
 
 exports.studentregister = async (req, res) => {
+  console.log(req.body);
+  mentorTableModule.createMentorTable();
+  projectTableModule.createProjectTable();
+  studentTableModule.createStudentTable();
 
-    console.log(req.body);
-    mentorTableModule.createMentorTable();
-    projectTableModule.createProjectTable();
-    studentTableModule.createStudentTable();
+  const { username, Name, password, confirmpassword, email, mid } = req.body;
 
-    const { username,Name, password, confirmpassword, email,mid } = req.body;
+  try {
+      const existingUser = await new Promise((resolve, reject) => {
+          connection.query('SELECT USN FROM student WHERE USN = ?', [username], (error, results) => {
+              if (error) {
+                  reject(error);
+              } else {
+                  resolve(results);
+              }
+          });
+      });
 
-    try {
-        const existingUser = await new Promise((resolve, reject) => {
-            connection.query('SELECT USN FROM student WHERE USN = ?', [username], (error, results) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(results);
-                }
-            });
-        });
+      if (existingUser.length === 1) {
+          return res.status(400).json({ message: 'That username is already in use' });
+      } else if (password !== confirmpassword) {
+          return res.status(400).json({ message: 'Passwords do not match' });
+      }
 
-        if (existingUser.length === 1) {
-            return res.status(400).json({ message: 'That username is already in use' });
-        } else if (password !== confirmpassword) {
-            return res.status(400).json({ message: 'Passwords do not match' });
-        }
-    }
+      const hashedPassword = await bcrypt.hash(password, 8);
+      console.log(hashedPassword);
 
-    const hashedPassword = await bcrypt.hash(password, 8);
-    console.log(hashedPassword);
+      await new Promise((resolve, reject) => {
+          connection.query(
+              "INSERT INTO student SET ?",
+              {
+                  USN: username,
+                  Name: Name,
+                  Email: email,
+                  Password: hashedPassword,
+                  Phone_no : null,
+                  P_ID : null,
+                  M_ID: mid,
+              },
+              (error, results) => {
+                  if (error) {
+                      reject(error);
+                  } else {
+                      console.log(results);
+                      resolve();
+                  }
+              }
+          );
+      });
 
-    await new Promise((resolve, reject) => {
-      connection.query(
-        "INSERT INTO student SET ?",
-        {
-          USN: username,
-          Name: Name,
-          Email: email,
-          Password: hashedPassword,
-          Phone_No: phone,
-          P_ID: pid,
-          M_ID: mid,
-        },
-        (error, results) => {
-          if (error) {
-            reject(error);
-          } else {
-            console.log(results);
-            resolve();
-          }
-        }
-      );
-    });
-
-    await sendemail(email);
-    const userData = {
-      username: username,
-      email: email,
-      password: password, // Note: You might want to reconsider sending password in response for security reasons
-      confirmpassword: confirmpassword,
-    };
-    return res.status(200).json({ message: "Student registered", userData });
+      await sendemail(email);
+      const userData = {
+          username: username,
+          email: email,
+      };
+      return res.status(200).json({ message: "Student registered", userData });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
