@@ -150,9 +150,11 @@ exports.studentregister = async (req, res) => {
     });
 
     await sendemail(email);
+    const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
     const userData = {
       username: username,
       email: email,
+      token: token,
     };
     return res.status(200).json({ message: "Student registered", userData });
   } catch (error) {
@@ -188,14 +190,15 @@ exports.studentlogin = (req, res) => {
           .status(401)
           .json({ message: "Username or password is incorrect" });
       }
+      const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
 
       // Assuming you want to send some user data back in the response
       const userData = {
         USN: results[0].USN,
         Name: results[0].Name,
+        token: token,
         // Add more fields as needed
       };
-
       res.status(200).json({ message: "Login successful", userData });
     }
   );

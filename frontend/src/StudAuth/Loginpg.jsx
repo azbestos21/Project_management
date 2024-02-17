@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RNSIT from "../assets/RNSIT.jpg";
 import { Carousel } from "antd";
 import CSE from "../assets/CSE.jpeg";
@@ -49,8 +49,8 @@ export default function Loginpg() {
     try {
       const data = await studentlogin({ username, password });
       console.log(data);
+      localStorage.setItem("studenttoken", data.userData.token);
       navigate("/dashboard");
-      console.log("bsdk", username, password);
     } catch (error) {
       console.log(error);
     }
@@ -66,12 +66,19 @@ export default function Loginpg() {
         email,
         mid,
       });
-      console.log(data);
+      localStorage.setItem("studenttoken", data.userData.token);
+
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    const handleLogout = () => {
+      localStorage.removeItem("studenttoken");
+    };
+    handleLogout();
+  }, []);
   return (
     <div className="w-screen h-screen flex flex-row">
       <div className="w-1/2 h-screen items-center justify-around bg-slate-50">
