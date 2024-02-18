@@ -1,34 +1,22 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
+
+const verifyToken = promisify(jwt.verify);
 
 const authenticationMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log(authHeader);
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(400).send({ msg: "No token provided" });
+    return res.status(400).send({ msg: "No token provided" });
   }
 
-  const token = authHeader.split(" ")[1];
-
+  const token = authHeader.split(" ")[1]; // Extract the token from the Authorization header
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    next();
-  } catch (error) {
-    res.status(404).send({ msg: "Not authorized to access this route" });
+    const decoded = await verifyToken(token, process.env.JWT_SECRET);
+    req.user = decoded.username; // Assuming USN is stored in the token
+    next(); // Move to the next middleware or route handler
+  } catch(err) {
+    res.status(401).send({ msg: "Invalid or expired token" });
   }
 };
 
-const studentAuthMiddlware= async (req,res,next)=>{
-  const token=req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-   return  res.status(400).send({ msg: "No token provided" });
-  }
-
-  try{
-    const decoded=jwt.verify(token,process.env.JWT_SECRET);
-    next();
-  } catch(err){
-    res.status(404).send({ msg: "Not authorized to access this route" });
-  }
-
-}
-module.exports = {authenticationMiddleware,studentAuthMiddlware};
+module.exports = { authenticationMiddleware };

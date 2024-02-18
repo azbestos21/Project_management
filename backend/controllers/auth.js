@@ -161,7 +161,7 @@ exports.studentregister = async (req, res) => {
     });
 
     await sendemail(email);
-    const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+    const token = jwt.sign({ username,password }, process.env.JWT_SECRET);
     const userData = {
       username: username,
       email: email,
@@ -192,8 +192,6 @@ exports.studentlogin = (req, res) => {
       }
 
       const hashedPassword = results[0].Password;
-
-      // Compare the entered password with the hashed password from the database
       const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
       if (!passwordMatch) {
@@ -201,19 +199,75 @@ exports.studentlogin = (req, res) => {
           .status(401)
           .json({ message: "Username or password is incorrect" });
       }
-      const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+      const token = jwt.sign({ username,password }, process.env.JWT_SECRET);
 
-      // Assuming you want to send some user data back in the response
       const userData = {
         USN: results[0].USN,
         Name: results[0].Name,
         token: token,
-        // Add more fields as needed
       };
       res.status(200).json({ message: "Login successful", userData });
     }
   );
 };
+exports.projectregister = (req, res) => {
+  const { projectTitle } = req.body;
+  const USN = req.user;
+  console.log(USN);
+
+  connection.query(
+    "SELECT Project_ID FROM project WHERE Project_Name = ?",
+    [projectTitle],
+    (error, results) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+
+      if (results.length > 0) {
+        const projectId = results[0].Project_ID;
+        console.log(projectId);
+        connection.query(
+          "UPDATE student SET P_ID = ? WHERE USN = ?",
+          [projectId, USN],
+          (error) => {
+            if (error) {
+              console.error(error);
+              return res.status(500).json({ error: "Internal Server Error" });
+            }
+            return res.status(200).json({ message: "Project ID assigned successfully" });
+          }
+        );
+      } else {
+        connection.query(
+          "INSERT INTO project (Project_Name) VALUES (?)",
+          [projectTitle],
+          (error, results) => {
+            if (error) {
+              console.error(error);
+              return res.status(500).json({ error: "Internal Server Error" });
+            }
+            
+            const projectId = results.insertId;
+            connection.query(
+              "UPDATE student SET P_ID = ? WHERE USN = ?",
+              [projectId, USN],
+              (error) => {
+                if (error) {
+                  console.error(error);
+                  return res.status(500).json({ error: "Internal Server Error" });
+                }
+                return res.status(200).json({ message: "Project registered and ID assigned successfully" });
+              }
+            );
+          }
+        );
+      }
+    }
+  );
+};
+
+
 exports.grouplist = (req, res) => {
   console.log("Inside grouplist function");
   const sql =
