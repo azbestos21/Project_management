@@ -308,7 +308,44 @@ exports.projectlist = (req, res) => {
   });
 };
 
+exports.studentlist = (req, res) => {
+  const searchUSN = req.query.usn;
+  const searchName = req.query.name;
 
+  if (searchUSN || searchName) {
+    const sql =
+      "SELECT student.USN, student.Name AS Student_Name, student.Email, student.Phone_No, project.Project_Name, mentor.Name FROM student JOIN project ON student.P_ID = project.Project_ID JOIN mentor ON student.M_ID = mentor.Mentor_ID WHERE (student.USN LIKE ? OR student.Name LIKE ?) ORDER BY student.USN ASC";
+
+    connection.query(
+      sql,
+      [`%${searchUSN}%`, `%${searchName}%`],
+      (err, data) => {
+        if (err) {
+          console.error("Error searching data:", err);
+          res.status(500).json({ error: "Internal Server Error" });
+          return;
+        }
+        console.log("Search results:", data);
+
+        res.json({ title: "Student List", userData: data });
+      }
+    );
+  } else {
+    const fullListSql =
+      "SELECT student.USN, student.Name AS Student_Name, student.Email, student.Phone_No, project.Project_Name, mentor.Name FROM student JOIN project ON student.P_ID = project.Project_ID JOIN mentor ON student.M_ID = mentor.Mentor_ID ORDER BY student.USN ASC";
+
+    connection.query(fullListSql, (err, data) => {
+      if (err) {
+        console.error("Error fetching data:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+        return;
+      }
+      console.log("Retrieved data from the database:", data);
+
+      res.json({ title: "Student List", userData: data });
+    });
+  }
+};
 const sendemail = async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
