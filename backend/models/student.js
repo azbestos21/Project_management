@@ -7,7 +7,6 @@ exports.createStudentTable = () => {
     Name VARCHAR(40) NOT NULL,
     Email VARCHAR(100) NOT NULL,
     Password VARCHAR(200) NOT NULL,
-    Phone_No VARCHAR(10) NOT NULL,
     P_ID INT,
     M_ID VARCHAR(10),
     FOREIGN KEY (P_ID) REFERENCES project (Project_ID),

@@ -145,7 +145,6 @@ exports.studentregister = async (req, res) => {
           Name: Name,
           Email: email,
           Password: hashedPassword,
-          Phone_no: null,
           P_ID: null,
           M_ID: mid,
         },
@@ -269,11 +268,12 @@ exports.projectregister = (req, res) => {
 
 
 exports.grouplist = (req, res) => {
+  const ID = req.user;
   console.log("Inside grouplist function");
   const sql =
-    "SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID GROUP BY project.Project_Name, student.P_ID, student.USN, student.Name;";
+    "SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID WHERE student.M_ID = ? GROUP BY project.Project_Name, student.P_ID, student.USN, student.Name;";
 
-  connection.query(sql, (err, data) => {
+  connection.query(sql, [ID], (err, data) => {
     if (err) {
       console.error("Error fetching data:", err);
       res.status(500).json({ error: "Internal Server Error" });
@@ -285,10 +285,19 @@ exports.grouplist = (req, res) => {
   });
 };
 
+
+
 exports.projectlist = (req, res) => {
+  // Extract the mentor ID from req.user
+  const mentorId = req.user;
+
   console.log("Inside projectlist function");
-  const sql = "select * from project";
-  connection.query(sql, (err, data) => {
+  
+  // SQL query to select projects associated with the mentor's ID
+  const sql = "SELECT * FROM project WHERE Project_ID IN (SELECT P_ID FROM student WHERE M_ID = ?)";
+  
+  // Execute the SQL query
+  connection.query(sql, [mentorId], (err, data) => {
     if (err) {
       console.error("Error fetching data:", err);
       res.status(500).json({ error: "Internal Server Error" });
@@ -298,6 +307,7 @@ exports.projectlist = (req, res) => {
     res.json({ title: "projects-List", userData: data });
   });
 };
+
 
 exports.studentlist = (req, res) => {
   const searchUSN = req.query.usn;
