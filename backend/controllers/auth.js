@@ -308,7 +308,6 @@ exports.projectlist = (req, res) => {
   });
 };
 
-
 exports.studentlist = (req, res) => {
   const searchUSN = req.query.usn;
   const searchName = req.query.name;
@@ -359,17 +358,60 @@ const sendemail = async (email) => {
   const mailSuperAdmin = {
     from: process.env.SECRET_EMAIL,
     to: email,
-    subject: "Verification Code for Registration",
+    subject: "Registration Confirmation",
     html: `
-        <p>Thank you</p>
-      `,
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Registration Confirmation</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  margin: 0;
+                  padding: 0;
+              }
+              .container {
+                  max-width: 600px;
+                  margin: auto;
+                  padding: 20px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+              }
+              h2 {
+                  color: #333;
+              }
+              p {
+                  color: #666;
+                  line-height: 1.6;
+              }
+              .footer {
+                  margin-top: 20px;
+                  text-align: center;
+                  color: #999;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h2>Registration Confirmation</h2>
+              <p>Dear Student,</p>
+              <p>Thank you for registering with us. We appreciate your interest and look forward to having you as a part of our community.</p>
+              <div class="footer">
+                  <p>Best regards,<br>RNSIT</p>
+              </div>
+          </div>
+      </body>
+      </html>
+    `,
   };
 
   try {
     await transporter.sendMail(mailSuperAdmin);
-    console.log("sent");
+    console.log("Email sent successfully");
   } catch (error) {
     console.error("Email sending error:", error);
-    throw new Error("Failed to send verification code to email.");
+    throw new Error("Failed to send registration confirmation email.");
   }
 };
