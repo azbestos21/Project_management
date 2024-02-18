@@ -1,18 +1,17 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const adminTableModule = require("../models/admin");
 const mentorTableModule = require("../models/mentor");
 const projectTableModule = require("../models/project");
 const studentTableModule = require("../models/student");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const connection = require("../db/connect");
-exports.adminregister = async (req, res) => {
+exports.mentorregister = async (req, res) => {
   console.log(req.body);
-  adminTableModule.createAdminTable();
-  const { username, password, confirmpassword } = req.body;
+  mentorTableModule.createMentorTable();
+  const { username, password, confirmpassword, Name, email, phone, designation } = req.body;
   connection.query(
-    "Select Username from admin where Username = ?",
+    "Select Mentor_ID from mentor where Mentor_ID = ?",
     [username],
     async (error, results) => {
       if (error) {
@@ -32,15 +31,21 @@ exports.adminregister = async (req, res) => {
         console.log(hashedPassword);
 
         connection.query(
-          "INSERT INTO admin SET ?",
-          { Username: username, Password: hashedPassword },
+          "INSERT INTO mentor SET ?",
+          { Mentor_ID: username, Name: Name, Email: email, Phone: phone, Designation: designation, Password: hashedPassword },
           async (error, results) => {
             if (error) {
               console.log(error);
               return res.status(500).json({ error: "Internal Server Error" });
             } else {
               console.log(results);
-              return res.status(200).json({ message: "User registered" });
+              const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+              const userData = {
+                username: username,
+                email: email,
+                token: token,
+              };
+              return res.status(200).json({ message: "Mentor registered",userData});
             }
           }
         );
@@ -52,13 +57,14 @@ exports.adminregister = async (req, res) => {
   );
 };
 
-exports.adminlogin = async (req, res) => {
+
+exports.mentorlogin = async (req, res) => {
   const { username, password } = req.body;
 
   try {
     const results = await new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM admin WHERE Username = ?",
+        "SELECT * FROM mentor WHERE Mentor_ID = ?",
         [username],
         (error, results) => {
           if (error) {
@@ -73,7 +79,7 @@ exports.adminlogin = async (req, res) => {
     if (results.length === 0) {
       return res
         .status(401)
-        .json({ message: "Username or password is incorrect" });
+        .json({ message: "Mentor ID or password is incorrect" });
     }
 
     const user = results[0];
@@ -82,10 +88,15 @@ exports.adminlogin = async (req, res) => {
     if (!isPasswordMatch) {
       return res
         .status(401)
-        .json({ message: "Username or password is incorrect" });
+        .json({ message: "Mentor ID or password is incorrect" });
     }
+
     const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
-    return res.status(200).json({ message: "Login successful", token });
+    const userData = {
+      username: username,
+      token: token,
+    };
+    return res.status(200).json({ message: "Login successful", userData });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -134,7 +145,6 @@ exports.studentregister = async (req, res) => {
           Name: Name,
           Email: email,
           Password: hashedPassword,
-          Phone_no: null,
           P_ID: null,
           M_ID: mid,
         },
@@ -150,7 +160,7 @@ exports.studentregister = async (req, res) => {
     });
 
     await sendemail(email);
-    const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+    const token = jwt.sign({ username,password }, process.env.JWT_SECRET);
     const userData = {
       username: username,
       email: email,
@@ -181,8 +191,6 @@ exports.studentlogin = (req, res) => {
       }
 
       const hashedPassword = results[0].Password;
-
-      // Compare the entered password with the hashed password from the database
       const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
       if (!passwordMatch) {
@@ -190,25 +198,82 @@ exports.studentlogin = (req, res) => {
           .status(401)
           .json({ message: "Username or password is incorrect" });
       }
-      const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+      const token = jwt.sign({ username,password }, process.env.JWT_SECRET);
 
-      // Assuming you want to send some user data back in the response
       const userData = {
         USN: results[0].USN,
         Name: results[0].Name,
         token: token,
-        // Add more fields as needed
       };
       res.status(200).json({ message: "Login successful", userData });
     }
   );
 };
+exports.projectregister = (req, res) => {
+  const { projectTitle } = req.body;
+  const USN = req.user;
+  console.log(USN);
+
+  connection.query(
+    "SELECT Project_ID FROM project WHERE Project_Name = ?",
+    [projectTitle],
+    (error, results) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+
+      if (results.length > 0) {
+        const projectId = results[0].Project_ID;
+        console.log(projectId);
+        connection.query(
+          "UPDATE student SET P_ID = ? WHERE USN = ?",
+          [projectId, USN],
+          (error) => {
+            if (error) {
+              console.error(error);
+              return res.status(500).json({ error: "Internal Server Error" });
+            }
+            return res.status(200).json({ message: "Project ID assigned successfully" });
+          }
+        );
+      } else {
+        connection.query(
+          "INSERT INTO project (Project_Name) VALUES (?)",
+          [projectTitle],
+          (error, results) => {
+            if (error) {
+              console.error(error);
+              return res.status(500).json({ error: "Internal Server Error" });
+            }
+            
+            const projectId = results.insertId;
+            connection.query(
+              "UPDATE student SET P_ID = ? WHERE USN = ?",
+              [projectId, USN],
+              (error) => {
+                if (error) {
+                  console.error(error);
+                  return res.status(500).json({ error: "Internal Server Error" });
+                }
+                return res.status(200).json({ message: "Project registered and ID assigned successfully" });
+              }
+            );
+          }
+        );
+      }
+    }
+  );
+};
+
+
 exports.grouplist = (req, res) => {
+  const ID = req.user;
   console.log("Inside grouplist function");
   const sql =
-    "SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID GROUP BY project.Project_Name, student.P_ID, student.USN, student.Name;";
+    "SELECT project.Project_Name, student.USN, student.Name FROM student JOIN project ON student.P_ID = project.Project_ID WHERE student.M_ID = ? GROUP BY project.Project_Name, student.P_ID, student.USN, student.Name;";
 
-  connection.query(sql, (err, data) => {
+  connection.query(sql, [ID], (err, data) => {
     if (err) {
       console.error("Error fetching data:", err);
       res.status(500).json({ error: "Internal Server Error" });
@@ -220,10 +285,19 @@ exports.grouplist = (req, res) => {
   });
 };
 
+
+
 exports.projectlist = (req, res) => {
+  // Extract the mentor ID from req.user
+  const mentorId = req.user;
+
   console.log("Inside projectlist function");
-  const sql = "select * from project";
-  connection.query(sql, (err, data) => {
+  
+  // SQL query to select projects associated with the mentor's ID
+  const sql = "SELECT * FROM project WHERE Project_ID IN (SELECT P_ID FROM student WHERE M_ID = ?)";
+  
+  // Execute the SQL query
+  connection.query(sql, [mentorId], (err, data) => {
     if (err) {
       console.error("Error fetching data:", err);
       res.status(500).json({ error: "Internal Server Error" });
@@ -234,44 +308,7 @@ exports.projectlist = (req, res) => {
   });
 };
 
-exports.studentlist = (req, res) => {
-  const searchUSN = req.query.usn;
-  const searchName = req.query.name;
 
-  if (searchUSN || searchName) {
-    const sql =
-      "SELECT student.USN, student.Name AS Student_Name, student.Email, student.Phone_No, project.Project_Name, mentor.Name FROM student JOIN project ON student.P_ID = project.Project_ID JOIN mentor ON student.M_ID = mentor.Mentor_ID WHERE (student.USN LIKE ? OR student.Name LIKE ?) ORDER BY student.USN ASC";
-
-    connection.query(
-      sql,
-      [`%${searchUSN}%`, `%${searchName}%`],
-      (err, data) => {
-        if (err) {
-          console.error("Error searching data:", err);
-          res.status(500).json({ error: "Internal Server Error" });
-          return;
-        }
-        console.log("Search results:", data);
-
-        res.json({ title: "Student List", userData: data });
-      }
-    );
-  } else {
-    const fullListSql =
-      "SELECT student.USN, student.Name AS Student_Name, student.Email, student.Phone_No, project.Project_Name, mentor.Name FROM student JOIN project ON student.P_ID = project.Project_ID JOIN mentor ON student.M_ID = mentor.Mentor_ID ORDER BY student.USN ASC";
-
-    connection.query(fullListSql, (err, data) => {
-      if (err) {
-        console.error("Error fetching data:", err);
-        res.status(500).json({ error: "Internal Server Error" });
-        return;
-      }
-      console.log("Retrieved data from the database:", data);
-
-      res.json({ title: "Student List", userData: data });
-    });
-  }
-};
 const sendemail = async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -284,17 +321,60 @@ const sendemail = async (email) => {
   const mailSuperAdmin = {
     from: process.env.SECRET_EMAIL,
     to: email,
-    subject: "Verification Code for Registration",
+    subject: "Registration Confirmation",
     html: `
-        <p>Thank you</p>
-      `,
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Registration Confirmation</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  margin: 0;
+                  padding: 0;
+              }
+              .container {
+                  max-width: 600px;
+                  margin: auto;
+                  padding: 20px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+              }
+              h2 {
+                  color: #333;
+              }
+              p {
+                  color: #666;
+                  line-height: 1.6;
+              }
+              .footer {
+                  margin-top: 20px;
+                  text-align: center;
+                  color: #999;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h2>Registration Confirmation</h2>
+              <p>Dear Student,</p>
+              <p>Thank you for registering with us. We appreciate your interest and look forward to having you as a part of our community.</p>
+              <div class="footer">
+                  <p>Best regards,<br>RNSIT</p>
+              </div>
+          </div>
+      </body>
+      </html>
+    `,
   };
 
   try {
     await transporter.sendMail(mailSuperAdmin);
-    console.log("sent");
+    console.log("Email sent successfully");
   } catch (error) {
     console.error("Email sending error:", error);
-    throw new Error("Failed to send verification code to email.");
+    throw new Error("Failed to send registration confirmation email.");
   }
 };

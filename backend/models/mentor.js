@@ -7,7 +7,8 @@ exports.createMentorTable = () => {
         Name varchar(20) not null ,
         Email varchar(40) not null,
         Phone  varchar(20) not null,
-        Designation varchar(20) not null
+        Designation varchar(20) not null,
+        Password varchar(200) not null
       )
     `;
 
