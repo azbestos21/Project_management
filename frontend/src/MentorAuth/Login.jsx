@@ -1,10 +1,11 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CSE from "../assets/CSE.jpeg";
 import Backgimg from "../assets/Backgimg.jpg";
 import RNSIT from "../assets/RNSIT.jpg";
 import { Carousel } from "antd";
-import { mentorlogin } from "./Services/Api.jsx";
+import { mentorlogin, mentorregister } from "./Services/Api.jsx";
 export default function Login() {
   const [showSignIn, setShowSignIn] = useState(true);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -12,8 +13,20 @@ export default function Login() {
   const [password, setPassword] = useState();
   const [Name, setname] = useState();
   const [email, setUseremail] = useState();
-  const [mid, setMentorId] = useState();
+  const [designation, setDesignation] = useState();
+  const [phone, setPhoneNo] = useState();
+  const [confirmpassword, setconfirmPassword] = useState();
+  const navigate = useNavigate();
   console.log(username, password);
+  console.log(
+    username,
+    password,
+    confirmpassword,
+    Name,
+    email,
+    phone,
+    designation
+  );
   const [signInButtonStyle, setSignInButtonStyle] = useState({
     backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
   });
@@ -43,6 +56,27 @@ export default function Login() {
     try {
       const data = await mentorlogin({ username, password });
       console.log(data);
+      localStorage.setItem("Mentortoken", data.userData.token);
+      navigate("/Mdashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await mentorregister({
+        username,
+        password,
+        confirmpassword,
+        Name,
+        email,
+        phone,
+        designation,
+      });
+      console.log(data);
+      localStorage.setItem("Mentortoken", data.userData.token);
+      navigate("/Mdashboard");
     } catch (error) {
       console.log(error);
     }
@@ -99,12 +133,12 @@ export default function Login() {
             <div className="-mt-7">
               <form
                 className="max-w-md mx-auto flex flex-col gap-1 p-3"
-                //onSubmit={handleSignup}
+                onSubmit={handleSignup}
               >
                 <input
                   className="p-3 border-none"
                   type="text"
-                  placeholder={"MentroId"}
+                  placeholder={"MentorId"}
                   onChange={(e) => setUsername(e.target.value)}
                 />
                 <input
@@ -123,26 +157,26 @@ export default function Login() {
                   className="p-3 border-none"
                   type="text"
                   placeholder={"Phone_no"}
-                  onChange={(e) => setMentorId(e.target.value)}
+                  onChange={(e) => setPhoneNo(e.target.value)}
                 />
                 <input
                   className="p-3 border-none"
                   type="text"
                   placeholder={"Designation"}
-                  onChange={(e) => setMentorId(e.target.value)}
+                  onChange={(e) => setDesignation(e.target.value)}
                 />
 
                 <input
                   className="p-3 border-none"
                   type="password"
                   placeholder={"password"}
-                  // onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <input
                   className="p-3 border-none"
                   type="password"
                   placeholder={"Confirm Password"}
-                  //onChange={(e) => setconfirmPassword(e.target.value)}
+                  onChange={(e) => setconfirmPassword(e.target.value)}
                 />
 
                 <button className="bg-blue-300 p-2">Register</button>
