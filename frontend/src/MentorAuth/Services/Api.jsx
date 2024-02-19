@@ -54,4 +54,27 @@ const viewprojects = async () => {
   }
 };
 
-export { viewprojects };
+const updateDetails=async (pid,action)=>{
+
+  try {
+    if(action == 1){
+      try{
+      const response = await axios.post(`${baseurl}/auth/acceptproject`,{
+        pid
+      } );
+      return true;
+    }catch(err){
+      throw err;
+    }
+    }
+    else{
+
+    }
+    
+  } catch (error) {
+    
+  }
+    
+}
+
+export { viewprojects,updateDetails };

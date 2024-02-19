@@ -10,4 +10,6 @@ router.post('/projectregister', mid.authenticationMiddleware,authController.proj
 router.get('/viewgroups', mid.mentorauthenticationMiddleware,authController.grouplist);
 router.get('/viewprojects', mid.mentorauthenticationMiddleware,authController.projectlist);
 router.get('/studentproject', mid.authenticationMiddleware,authController.studentproject);
+router.post('/studentupload',mid.authenticationMiddleware,authController.uploadphase)
+router.post('/acceptproject',authController.acceptProject);
 module.exports = router;
