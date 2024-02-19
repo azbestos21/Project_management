@@ -6,6 +6,7 @@ exports.createProjectTable = () => {
     Project_ID INT AUTO_INCREMENT PRIMARY KEY,
     Project_Name VARCHAR(20) NOT NULL,
     Project_Phase VARCHAR(10) NOT NULL,
+    File_Path VARCHAR(50) DEFAULT NULL,
     Phase_Status VARCHAR(10) NOT NULL,
     Project_Marks INT
 )

@@ -3,10 +3,11 @@ import { MdOutlineGroupAdd } from "react-icons/md";
 import { Layout, Button, theme } from "antd";
 import Logoimg from "../MNavbar/MLogoimg";
 import MenuItem from "../MNavbar/MMenuItem";
+import ActionButton from "../Buttons/Button";
 import ToggleButton from "../MNavbar/MToggle";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { GrProjects } from "react-icons/gr";
-import { viewgroups, viewprojects } from "../MentorAuth/Services/Api";
+import { viewgroups, viewprojects,updateDetails } from "../MentorAuth/Services/Api";
 const { Header, Sider, Content } = Layout;
 
 const MDashboard = () => {
@@ -38,7 +39,7 @@ const MDashboard = () => {
         setprojectdata(data);
         if (data && data.userData && data.userData.length > 0) {
           const completeProjectsCount = data.userData.filter(
-            (project) => project.Phase_Status === "Complete"
+            (project) => project.Phase_Status === "uploaded"
           ).length;
 
           setphasestatus(completeProjectsCount);
@@ -169,11 +170,18 @@ const MDashboard = () => {
                       Project phase
                     </th>
                     <th scope="col" className="px-6 py-3">
+                      File Path
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       Phase status
                     </th>
                     <th scope="col" className="px-6 py-3">
                       Project marks
                     </th>
+                    <th scope="col" className="px-6 py-3">
+                      Action
+                    </th>
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -191,8 +199,10 @@ const MDashboard = () => {
                         </th>
                         <td className="px-6 py-4">{data.Project_ID}</td>
                         <td className="px-6 py-4">{data.Project_Phase}</td>
+                        <td className="px-6 py-4">{data.File_Path}</td>
                         <td className="px-6 py-4">{data.Phase_Status}</td>
                         <td className="px-6 py-4">{data.Project_Marks}</td>
+                        <td className="px-6 py-4"><ActionButton label={"Accept"} onClick={()=> updateDetails(data.Project_ID,1)}/> <br></br> <ActionButton label={"Reject"} onClick={()=>{}}/> </td>
                       </tr>
                     ))}
                 </tbody>

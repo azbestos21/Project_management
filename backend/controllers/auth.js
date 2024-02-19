@@ -323,6 +323,53 @@ exports.studentproject = (req,res) =>{
   });
   
 }
+exports.uploadphase = (req,res) =>{
+  const usn = req.user;
+  const {file} = req.body;
+  console.log(usn);
+
+  const getPID="SELECT P_ID from student S where S.USN=?";
+  connection.query(getPID,[usn],(err,data)=>{
+
+    if(data){
+      const PID=data[0].P_ID;
+
+      // const insertProject_files="INSERT INTO project_files values (?,?)";
+
+      // connection.query(insertProject_files,[PID,file],(err,data)=>{
+      //   if(err){
+      //     console.log("Cant insert into project_files");
+      //     res.status(500).json({msg:"Internal server error"})
+      //   }
+      //   else{
+      //     console.log("successful insertion into project_files");
+      //     res.status(200).json({msg:"created record in project_files"})
+      //   }
+      // })
+
+      const updateProject=`UPDATE project SET Phase_Status='uploaded', File_Path = '${file}' WHERE project.Project_ID=${PID}`;
+
+      connection.query(updateProject,(err,data)=>{
+        if(err){
+          console.log("Cant update into project");
+          res.status(500).json({msg:"Internal server error"})
+        }
+        else{
+          console.log("successful updation into project");
+          res.status(200).json({msg:"updated record in project"})
+        }
+      })
+
+
+    }
+    else{
+      console.log("Internal server error");
+      res.status(500).json({msg:"Internal server error"})   
+     }
+    
+  })
+  
+}
 const sendemail = async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -392,3 +439,27 @@ const sendemail = async (email) => {
     throw new Error("Failed to send registration confirmation email.");
   }
 };
+
+exports.acceptProject=(req,res)=>{
+
+  const {pid} =req.body;
+
+  const acceptedQuery=`UPDATE project SET Project_Phase='CONCAT(Project_Phase, 'I')', File_Path=NULL ,Project_Status='pending', Project_Marks=Project_Marks+33 `;
+
+  try {
+    connection.query(acceptedQuery,(err,data)=>{
+      if(err){
+        console.log("Cant update into project");
+        res.status(500).json({msg:"Internal server error"})
+      }
+      else{
+        console.log("Updated project");
+        res.status(400).json({msg:"Project updation Done"})
+      }
+    })
+  } catch (error) {
+    console.log("Internal error");
+    res.status(500).json({msg:"Internal server error"})
+
+  }
+}
