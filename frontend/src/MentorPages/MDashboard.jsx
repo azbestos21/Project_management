@@ -202,7 +202,7 @@ const MDashboard = () => {
                         <td className="px-6 py-4">{data.File_Path}</td>
                         <td className="px-6 py-4">{data.Phase_Status}</td>
                         <td className="px-6 py-4">{data.Project_Marks}</td>
-                        <td className="px-6 py-4"><ActionButton label={"Accept"} onClick={()=> updateDetails(data.Project_ID,1)}/> <br></br> <ActionButton label={"Reject"} onClick={()=>{}}/> </td>
+                        <td className="px-6 py-4"><ActionButton label={"Accept"} onClick={()=> updateDetails(data.Project_ID,1)}/> <br></br> <ActionButton label={"Reject"} onClick={()=> updateDetails(data.Project_ID,0)}/> </td>
                       </tr>
                     ))}
                 </tbody>

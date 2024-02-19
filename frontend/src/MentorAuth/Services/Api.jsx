@@ -53,28 +53,33 @@ const viewprojects = async () => {
     throw error;
   }
 };
-
-const updateDetails=async (pid,action)=>{
-
-  try {
-    if(action == 1){
-      try{
-      const response = await axios.post(`${baseurl}/auth/acceptproject`,{
-        pid
-      } );
-      return true;
-    }catch(err){
-      throw err;
+  const updateDetails = async (pid, action) => {
+    console.log(pid);
+    try {
+      if (action === 1) {
+        try {
+          const response = await axios.post(`${baseurl}/auth/acceptproject`, {
+            pid
+          });
+          window.location.reload();
+          return true;
+        } catch (err) {
+          throw err;
+        }
+      } else if (action === 0) {
+        try {
+          const response = await axios.post(`${baseurl}/auth/rejectproject`, {
+            pid
+          });
+          window.location.reload();
+          return true;
+        } catch (err) {
+          throw err;
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
-    }
-    else{
-
-    }
-    
-  } catch (error) {
-    
-  }
-    
-}
+  };
 
 export { viewprojects,updateDetails };

@@ -12,4 +12,5 @@ router.get('/viewprojects', mid.mentorauthenticationMiddleware,authController.pr
 router.get('/studentproject', mid.authenticationMiddleware,authController.studentproject);
 router.post('/studentupload',mid.authenticationMiddleware,authController.uploadphase)
 router.post('/acceptproject',authController.acceptProject);
+router.post('/rejectproject',authController.rejectProject);
 module.exports = router;

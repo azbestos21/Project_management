@@ -333,20 +333,6 @@ exports.uploadphase = (req,res) =>{
 
     if(data){
       const PID=data[0].P_ID;
-
-      // const insertProject_files="INSERT INTO project_files values (?,?)";
-
-      // connection.query(insertProject_files,[PID,file],(err,data)=>{
-      //   if(err){
-      //     console.log("Cant insert into project_files");
-      //     res.status(500).json({msg:"Internal server error"})
-      //   }
-      //   else{
-      //     console.log("successful insertion into project_files");
-      //     res.status(200).json({msg:"created record in project_files"})
-      //   }
-      // })
-
       const updateProject=`UPDATE project SET Phase_Status='uploaded', File_Path = '${file}' WHERE project.Project_ID=${PID}`;
 
       connection.query(updateProject,(err,data)=>{
@@ -443,8 +429,8 @@ const sendemail = async (email) => {
 exports.acceptProject=(req,res)=>{
 
   const {pid} =req.body;
-
-  const acceptedQuery=`UPDATE project SET Project_Phase='CONCAT(Project_Phase, 'I')', File_Path=NULL ,Project_Status='pending', Project_Marks=Project_Marks+33 `;
+  console.log(pid);
+  const acceptedQuery = `UPDATE project SET Project_Phase = CONCAT(Project_Phase, 'I'), Phase_Status = 'Pending', File_Path = NULL, Project_Marks = Project_Marks + 33 WHERE Project_ID = ${pid}`;
 
   try {
     connection.query(acceptedQuery,(err,data)=>{
@@ -463,3 +449,24 @@ exports.acceptProject=(req,res)=>{
 
   }
 }
+exports.rejectProject = (req, res) => {
+  const { pid } = req.body;
+  console.log(pid);
+  const rejectedQuery = `UPDATE project SET Phase_Status = 'Rejected re-upload' WHERE Project_ID = ${pid}`;
+
+  try {
+    connection.query(rejectedQuery, (err, data) => {
+      if (err) {
+        console.log("Can't update project");
+        console.log(err);
+        res.status(500).json({ msg: "Internal server error" });
+      } else {
+        console.log("Project rejected");
+        res.status(400).json({ msg: "Project rejection done" });
+      }
+    });
+  } catch (error) {
+    console.log("Internal error");
+    res.status(500).json({ msg: "Internal server error" });
+  }
+};
