@@ -406,50 +406,56 @@ const sendemail = async (email) => {
     to: email,
     subject: "Registration Confirmation",
     html: `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Registration Confirmation</title>
-          <style>
-              body {
-                  font-family: Arial, sans-serif;
-                  margin: 0;
-                  padding: 0;
-              }
-              .container {
-                  max-width: 600px;
-                  margin: auto;
-                  padding: 20px;
-                  border: 1px solid #ccc;
-                  border-radius: 5px;
-              }
-              h2 {
-                  color: #333;
-              }
-              p {
-                  color: #666;
-                  line-height: 1.6;
-              }
-              .footer {
-                  margin-top: 20px;
-                  text-align: center;
-                  color: #999;
-              }
-          </style>
-      </head>
-      <body>
-          <div class="container">
-              <h2>Registration Confirmation</h2>
-              <p>Dear Student,</p>
-              <p>Thank you for registering with us. We appreciate your interest and look forward to having you as a part of our community.</p>
-              <div class="footer">
-                  <p>Best regards,<br>RNSIT</p>
-              </div>
-          </div>
-      </body>
-      </html>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registration Celebration</title>
+        <style>
+            body {
+                font-family: 'Montserrat', sans-serif;
+                margin: 0;
+                padding: 0;
+                background: linear-gradient(to right, #00adb5, #ffd700); /* Gradient from Teal to Gold */
+            }
+            .container {
+                max-width: 700px;
+                margin: 50px auto;
+                padding: 30px;
+                border: 3px solid #393e46; /* Dark Gray Color */
+                border-radius: 25px;
+                background-color: #eeeeee; /* Light Gray Background */
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); /* Box Shadow for Container */
+            }
+            h2 {
+                color: #393e46; /* Dark Gray Color */
+                text-align: center;
+            }
+            p {
+                color: #555; /* Gray Color */
+                line-height: 1.8;
+                text-align: justify;
+            }
+            .footer {
+                margin-top: 30px;
+                text-align: center;
+                color: #888; /* Light Gray Color */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Registration Confirmation</h2>
+            <p>Hello and Congratulations!</p>
+            <p>
+            Welcome to our project management initiative! We're excited to have you on board and look forward to working on successful projects together.</p>
+            <div class="footer">
+                <p>Warm regards,<br>RNSIT Team</p>
+            </div>
+        </div>
+    </body>
+    </html>
     `,
   };
 
