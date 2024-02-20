@@ -1,34 +1,33 @@
-import React, { useState } from "react";
-import { Layout, Button, theme } from "antd";
-import Logoimg from "../MNavbar/MLogoimg";
-import MenuItem from "../MNavbar/MMenuItem";
-import ToggleButton from "../MNavbar/MToggle";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
-import { viewgroups } from "../MentorAuth/Services/Api.jsx";
-const { Header, Sider, Content } = Layout;
+import React, { useEffect, useState } from "react";
 
-const MyMentees = () => {
+import { Layout, Button, theme } from "antd";
+import Logoimg from "../Navbar/Logoimg";
+import MenuItem from "../Navbar/MenuItem";
+import ToggleButton from "../Navbar/ToggleButton";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+
+import { studentproject } from "../StudAuth/Services/Api.jsx";
+const { Header, Sider, Content } = Layout;
+const Sprojects = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const [groupdata, setviewgroupdata] = useState(null);
+  const [details, setProjectdetails] = useState(null);
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
   useEffect(() => {
-    console.log(1231);
-    const fetchgroups = async () => {
+    console.log(123);
+    const fetchdetails = async () => {
       try {
-        const data = await viewgroups();
+        const data = await studentproject();
         console.log(data);
-        setviewgroupdata(data);
+        setProjectdetails(data);
       } catch (error) {}
     };
-    fetchgroups();
+    fetchdetails();
   }, []);
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
@@ -52,42 +51,49 @@ const MyMentees = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto">
-          {" "}
-          <h3 className="text-lg text-center font-bold uppercase p-1 bg-blue-300 border-b-2 border-blue-700 opacity-50 sticky">
-            Student Details
-          </h3>
-          <div className="relative overflow-x-auto">
+        <Content>
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-50">
+              Project Details
+            </h3>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 ">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">
-                    Sl.No
+                    Project name
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    USN
+                    Project id
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Name
+                    Project phase
+                  </th>
+
+                  <th scope="col" className="px-6 py-3">
+                    Phase status
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Project Name
+                    Project marks
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {groupdata &&
-                  groupdata.userData.map((data, index) => (
-                    <tr className="bg-white dark:bg-gray-800" key={index}>
+                {details &&
+                  details.userData.map((data, index) => (
+                    <tr
+                      key={index}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    >
                       <th
                         scope="row"
                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        {index + 1}
+                        {data.Project_Name}
                       </th>
-                      <td className="px-6 py-4">{data.USN}</td>
-                      <td className="px-6 py-4">{data.Name}</td>
-                      <td className="px-6 py-4">{data.Project_Name}</td>
+                      <td className="px-6 py-4">{data.Project_ID}</td>
+                      <td className="px-6 py-4">{data.Project_Phase}</td>
+                      <td className="px-6 py-4">{data.Phase_Status}</td>
+                      <td className="px-6 py-4">{data.Project_Marks}</td>
                     </tr>
                   ))}
               </tbody>
@@ -99,4 +105,4 @@ const MyMentees = () => {
   );
 };
 
-export default MyMentees;
+export default Sprojects;

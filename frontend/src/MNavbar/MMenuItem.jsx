@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { MdOutlineGroups } from "react-icons/md";
-
+import { Link } from "react-router-dom";
 const MenuItem = ({ darkTheme }) => {
   return (
     <Menu
@@ -14,13 +14,13 @@ const MenuItem = ({ darkTheme }) => {
       className="h-screen flex flex-col items-center gap-4  relative mt-4"
     >
       <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-        Dashboard
+        <Link to="/Mdashboard">Dashboard</Link>
       </Menu.Item>
       <Menu.Item key="project" icon={<ProjectOutlined />}>
-        Projects
+        <Link to="/Mprojects">Projects</Link>
       </Menu.Item>
       <Menu.Item key="Mentor" icon={<MdOutlineGroups />}>
-        My Mentees
+        <Link to="/Mymentees">My Mentees</Link>
       </Menu.Item>
       <Menu.Item key="Calendar" icon={<CalendarOutlined />}>
         Calendar

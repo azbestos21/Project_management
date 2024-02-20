@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   DashboardOutlined,
   ProjectOutlined,
@@ -12,16 +13,16 @@ const MenuItem = ({ darkTheme }) => {
       theme={darkTheme ? "dark" : "light"}
       className="h-screen flex flex-col items-center gap-4  relative mt-4"
     >
-      <Menu.Item key="dashboard" icon=<DashboardOutlined />>
-        Dashboard
+      <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
+        <Link to="/dashboard">Dashboard</Link>
       </Menu.Item>
-      <Menu.Item key="project" icon=<ProjectOutlined />>
-        My Projects
+      <Menu.Item key="project" icon={<ProjectOutlined />}>
+        <Link to="/MyProjects"> My Projects</Link>
       </Menu.Item>
-      <Menu.Item key="Mentor" icon=<GiTeacher />>
-        Mentor
+      <Menu.Item key="Mentor" icon={<GiTeacher />}>
+        <Link to="/Mentor">Mentor</Link>
       </Menu.Item>
-      <Menu.Item key="Calendar" icon=<CalendarOutlined />>
+      <Menu.Item key="Calendar" icon={<CalendarOutlined />}>
         Calendar
       </Menu.Item>
     </Menu>
