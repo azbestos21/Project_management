@@ -209,6 +209,8 @@ exports.studentlogin = (req, res) => {
     }
   );
 };
+
+//FRONTEND PENDING
 exports.projectregister = (req, res) => {
   const { projectTitle } = req.body;
   const USN = req.user;
@@ -308,6 +310,7 @@ exports.projectlist = (req, res) => {
   });
 };
 
+
 exports.studentproject = (req,res) =>{
   const usn = req.user;
   console.log(usn);
@@ -323,6 +326,39 @@ exports.studentproject = (req,res) =>{
   });
   
 }
+
+
+//FRONTEND PENDING
+exports.studentteam = (req, res) => {
+  const usn = req.user;
+  console.log(usn);
+  
+  const query = `SELECT P_ID FROM student WHERE USN = "${usn}"`;
+  
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    
+    if (results.length > 0) {
+      const projectId = results[0].P_ID;
+      console.log(projectId);
+      const studentsQuery = `SELECT USN,Name FROM student WHERE P_ID = ${projectId}`;
+      
+      connection.query(studentsQuery, (error, studentResults) => {
+        if (error) {
+          console.error(error);
+          return res.status(500).json({ error: "Internal Server Error" });
+        }
+        res.status(200).json({ students: studentResults });
+      });
+    }
+  });
+};
+
+
+//FRONTEND PENDING
 exports.uploadphase = (req,res) =>{
   const usn = req.user;
   const {file} = req.body;
