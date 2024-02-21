@@ -3,6 +3,7 @@ const { promisify } = require('util');
 
 const verifyToken = promisify(jwt.verify);
 
+
 const authenticationMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {

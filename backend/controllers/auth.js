@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const mentorTableModule = require("../models/mentor");
 const projectTableModule = require("../models/project");
 const studentTableModule = require("../models/student");
+const multer = require("multer")
+const fs = require("fs");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const connection = require("../db/connect");
@@ -358,40 +360,75 @@ exports.studentteam = (req, res) => {
 };
 
 
-//FRONTEND PENDING
 exports.uploadphase = (req,res) =>{
   const usn = req.user;
-  const {file} = req.body;
+  
   console.log(usn);
+
+  
 
   const getPID="SELECT P_ID from student S where S.USN=?";
   connection.query(getPID,[usn],(err,data)=>{
 
     if(data){
       const PID=data[0].P_ID;
-      const updateProject=`UPDATE project SET Phase_Status='uploaded', File_Path = '${file}' WHERE project.Project_ID=${PID}`;
+      const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+          const uploadDir = "C:/uploadsRishi/";
+    
+          // Check if the directory exists
+          if (!fs.existsSync(uploadDir)) {
+            // If not, create the directory
+            fs.mkdirSync(uploadDir);
+          }
+    
+          cb(null, uploadDir);
+        },
+        filename: function (req, file, cb) {
+          cb(null, file.originalname); // Specify how the uploaded files will be named
+        },
+      });
+    
+      const upload = multer({ storage: storage });
+    
+      upload.single("document")(req, res, async function (err) {
+        if (err) {
+          return res.status(500).send("invalid document");
+    }
+    
+      const uploadedFile = await req.file;
+      console.log(uploadedFile);
+    
+      const path=uploadedFile.destination + uploadedFile.filename;
+      console.log(path);
+      const updateProjectFile=`UPDATE project SET Phase_Status='uploaded', File_Path='${path}' WHERE project.Project_ID=${PID}`;
 
-      connection.query(updateProject,(err,data)=>{
+      connection.query(updateProjectFile,(err,data)=>{
         if(err){
-          console.log("Cant update into project");
-          res.status(500).json({msg:"Internal server error"})
+          console.log("Cant update file into project");
+          
+          return res.status(500).json({msg:"Internal server error",err})
         }
         else{
-          console.log("successful updation into project");
-          res.status(200).json({msg:"updated record in project"})
+          console.log("successful updation of file into project");
+          return res.status(200).json({msg:"updated record in project"})
         }
       })
+    });
+
+      
+      
 
 
     }
     else{
       console.log("Internal server error");
-      res.status(500).json({msg:"Internal server error"})   
+      return res.status(500).json({msg:"Internal server error"})   
      }
     
   })
-  
 }
+
 const sendemail = async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -462,11 +499,31 @@ const sendemail = async (email) => {
   }
 };
 
-exports.acceptProject=(req,res)=>{
+exports.acceptProject=(req,res)=>{  
 
   const {pid} =req.body;
   console.log(pid);
-  const acceptedQuery = `UPDATE project SET Project_Phase = CONCAT(Project_Phase, 'I'), Phase_Status = 'Pending', File_Path = NULL, Project_Marks = Project_Marks + 33 WHERE Project_ID = ${pid}`;
+  const acceptedQuery = `
+    UPDATE project 
+    SET 
+      Project_Phase = CASE 
+                        WHEN Project_Phase < 4 THEN Project_Phase + 1 
+                        ELSE Project_Phase 
+                      END,
+      Phase_Status = CASE 
+                        WHEN Project_Phase < 4 THEN 'Pending' 
+                        ELSE Phase_Status 
+                      END,
+      File_Path = CASE 
+                    WHEN Project_Phase < 4 THEN NULL 
+                    ELSE File_Path 
+                  END,
+      Project_Marks = CASE 
+                        WHEN Project_Phase <= 4 THEN Project_Marks + 25 
+                        ELSE Project_Marks 
+                      END
+    WHERE Project_ID = ${pid}
+  `;
 
   try {
     connection.query(acceptedQuery,(err,data)=>{
