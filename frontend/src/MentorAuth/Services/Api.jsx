@@ -1,4 +1,5 @@
 import axios from "axios";
+import React from "react";
 const baseurl = "http://localhost:3000";
 
 const mentorlogin = async (data) => {
@@ -57,11 +58,13 @@ const viewprojects = async () => {
 const updateDetails=async (pid,action)=>{
 
   try {
+    console.log(pid);
     if(action == 1){
       try{
       const response = await axios.post(`${baseurl}/auth/acceptproject`,{
         pid
       } );
+      
       return true;
     }catch(err){
       throw err;
