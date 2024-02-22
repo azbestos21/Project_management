@@ -37,3 +37,46 @@ const studentproject = async () => {
   }
 };
 export { studentproject };
+
+const projectregister = async (data) => {
+  try {
+    const token = localStorage.getItem("studenttoken");
+    console.log("token = ", token);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const res = await axios.post(
+      `${baseurl}/auth/projectregister?projectTitle=${data}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { projectregister };
+
+const studentteam = async () => {
+  try {
+    const token = localStorage.getItem("studenttoken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const res = await axios.get(`${baseurl}/auth//studentteam`, config);
+    console.log(res);
+    return res.data;
+  } catch (error) {}
+};
+
+export { studentteam };
