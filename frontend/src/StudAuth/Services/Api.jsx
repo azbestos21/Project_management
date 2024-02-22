@@ -73,10 +73,29 @@ const studentteam = async () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const res = await axios.get(`${baseurl}/auth//studentteam`, config);
+    const res = await axios.get(`${baseurl}/auth/studentteam`, config);
     console.log(res);
     return res.data;
   } catch (error) {}
 };
 
-export { studentteam };
+const uploadFile = async (formData) => {
+  try {
+    const token = localStorage.getItem("studenttoken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(
+      `${baseurl}/auth/studentupload`,
+      formData,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { studentteam, uploadFile };

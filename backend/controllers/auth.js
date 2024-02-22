@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const mentorTableModule = require("../models/mentor");
 const projectTableModule = require("../models/project");
 const studentTableModule = require("../models/student");
-const multer = require("multer")
+const multer = require("multer");
 const fs = require("fs");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
@@ -383,20 +383,20 @@ exports.studentteam = (req, res) => {
 exports.studentmentor = (req, res) => {
   const usn = req.user;
   console.log(usn);
-  
+
   const query = `SELECT M_ID FROM student WHERE USN = "${usn}"`;
-  
+
   connection.query(query, (error, results) => {
     if (error) {
       console.error(error);
       return res.status(500).json({ error: "Internal Server Error" });
     }
-    
+
     if (results.length > 0) {
       const mentorId = results[0].M_ID;
       console.log(mentorId);
       const studentsQuery = `SELECT Name FROM mentor WHERE Mentor_ID = ${mentorId}`;
-      
+
       connection.query(studentsQuery, (error, studentResults) => {
         if (error) {
           console.error(error);
@@ -408,76 +408,63 @@ exports.studentmentor = (req, res) => {
   });
 };
 
-
-exports.uploadphase = (req,res) =>{
+exports.uploadphase = (req, res) => {
   const usn = req.user;
-  
+
   console.log(usn);
 
-  
-
-  const getPID="SELECT P_ID from student S where S.USN=?";
-  connection.query(getPID,[usn],(err,data)=>{
-
-    if(data){
-      const PID=data[0].P_ID;
+  const getPID = "SELECT P_ID from student S where S.USN=?";
+  connection.query(getPID, [usn], (err, data) => {
+    if (data) {
+      const PID = data[0].P_ID;
       const storage = multer.diskStorage({
         destination: function (req, file, cb) {
           const uploadDir = "C:/uploadsRishi/";
-    
+
           // Check if the directory exists
           if (!fs.existsSync(uploadDir)) {
             // If not, create the directory
             fs.mkdirSync(uploadDir);
           }
-    
+
           cb(null, uploadDir);
         },
         filename: function (req, file, cb) {
           cb(null, file.originalname); // Specify how the uploaded files will be named
         },
       });
-    
+
       const upload = multer({ storage: storage });
-    
+
       upload.single("document")(req, res, async function (err) {
         if (err) {
           return res.status(500).send("invalid document");
-    }
-    
-      const uploadedFile = await req.file;
-      console.log(uploadedFile);
-    
-      const path=uploadedFile.destination + uploadedFile.filename;
-      console.log(path);
-      const updateProjectFile=`UPDATE project SET Phase_Status='uploaded', File_Path='${path}' WHERE project.Project_ID=${PID}`;
-
-      connection.query(updateProjectFile,(err,data)=>{
-        if(err){
-          console.log("Cant update file into project");
-          
-          return res.status(500).json({msg:"Internal server error",err})
         }
-        else{
-          console.log("successful updation of file into project");
-          return res.status(200).json({msg:"updated record in project"})
-        }
-      })
-    });
-    
 
-      
-      
+        const uploadedFile = await req.file;
+        console.log(uploadedFile);
 
+        const path = uploadedFile.destination + uploadedFile.filename;
+        console.log(path);
+        const updateProjectFile = `UPDATE project SET Phase_Status='uploaded', File_Path='${path}' WHERE project.Project_ID=${PID}`;
 
-    }
-    else{
+        connection.query(updateProjectFile, (err, data) => {
+          if (err) {
+            console.log("Cant update file into project");
+
+            return res.status(500).json({ msg: "Internal server error", err });
+          } else {
+            console.log("successful updation of file into project");
+            return res.status(200).json({ msg: "updated record in project" });
+          }
+        });
+      });
+    } else {
       console.log("Internal server error");
-      return res.status(500).json({msg:"Internal server error"})   
-     }
-    
-  })
-}
+      return res.status(500).json({ msg: "Internal server error" });
+    }
+  });
+};
 
 const sendemail = async (email) => {
   const transporter = nodemailer.createTransport({
@@ -549,9 +536,8 @@ const sendemail = async (email) => {
   }
 };
 
-exports.acceptProject=(req,res)=>{  
-
-  const {pid} =req.body;
+exports.acceptProject = (req, res) => {
+  const { pid } = req.body;
   console.log(pid);
   const acceptedQuery = `
     UPDATE project 

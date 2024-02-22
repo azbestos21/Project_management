@@ -5,6 +5,7 @@ import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";
 import ToggleButton from "../Navbar/ToggleButton";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { uploadFile } from "../StudAuth/Services/Api.jsx";
 
 import { studentproject } from "../StudAuth/Services/Api.jsx";
 const { Header, Sider, Content } = Layout;
@@ -12,6 +13,7 @@ const Sprojects = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [details, setProjectdetails] = useState(null);
+  const [file, setFile] = useState(null);
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
@@ -23,12 +25,29 @@ const Sprojects = () => {
     const fetchdetails = async () => {
       try {
         const data = await studentproject();
-        console.log(data);
+        console.log("d=", data);
         setProjectdetails(data);
       } catch (error) {}
     };
     fetchdetails();
   }, []);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("document", file);
+
+    try {
+      const result = await uploadFile(formData);
+      console.log("Upload successful:", result);
+    } catch (error) {
+      console.error("Error during upload:", error);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
@@ -98,6 +117,33 @@ const Sprojects = () => {
                   ))}
               </tbody>
             </table>
+            <div>
+              <form onSubmit={submitHandler}>
+                <div className="flex items-center justify-center w-full">
+                  <label
+                    htmlFor="dropzone-file"
+                    className="flex flex-col items-center justify-center w-full h-64 border-2 bg-white border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-100"
+                  >
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                        <span className="font-semibold">Click to upload</span>{" "}
+                        or drag and drop
+                      </p>
+                    </div>
+                    <input
+                      id="dropzone-file"
+                      type="file"
+                      onChange={handleFileChange}
+                      name="excelFile"
+                      className="w-fit block bg-transparent text-xs"
+                      accept=".xlsx, .xls"
+                      required
+                    />
+                  </label>
+                </div>
+                <button type="submit">add file</button>
+              </form>
+            </div>
           </div>
         </Content>
       </Layout>
