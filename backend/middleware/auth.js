@@ -3,6 +3,7 @@ const { promisify } = require("util");
 
 const verifyToken = promisify(jwt.verify);
 
+
 const authenticationMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   console.log("auth = ", authHeader);
