@@ -358,6 +358,33 @@ exports.studentteam = (req, res) => {
     }
   });
 };
+exports.studentmentor = (req, res) => {
+  const usn = req.user;
+  console.log(usn);
+  
+  const query = `SELECT M_ID FROM student WHERE USN = "${usn}"`;
+  
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    
+    if (results.length > 0) {
+      const mentorId = results[0].M_ID;
+      console.log(mentorId);
+      const studentsQuery = `SELECT Name FROM mentor WHERE Mentor_ID = ${mentorId}`;
+      
+      connection.query(studentsQuery, (error, studentResults) => {
+        if (error) {
+          console.error(error);
+          return res.status(500).json({ error: "Internal Server Error" });
+        }
+        res.status(200).json({ students: studentResults });
+      });
+    }
+  });
+};
 
 
 exports.uploadphase = (req,res) =>{
@@ -415,6 +442,7 @@ exports.uploadphase = (req,res) =>{
         }
       })
     });
+    
 
       
       
@@ -519,7 +547,7 @@ exports.acceptProject=(req,res)=>{
                     ELSE File_Path 
                   END,
       Project_Marks = CASE 
-                        WHEN Project_Phase <= 4 THEN Project_Marks + 25 
+                        WHEN Project_Marks<100 THEN Project_Marks + 25 
                         ELSE Project_Marks 
                       END
     WHERE Project_ID = ${pid}
