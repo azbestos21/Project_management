@@ -24,7 +24,6 @@ function App() {
           <Route path="/MyProjects" element={<Sprojects />} />
           <Route path="/Mentor" element={<Smentor />} />
         </Route>
-        <Route path="/dashboard" element={<SDashboard />} />
       </Route>
       <Route path="/login" element={<Loginpg />} />
       <Route path="/Mlogin" element={<Login />} />

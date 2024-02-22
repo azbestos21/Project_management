@@ -1,21 +1,50 @@
-import React, { useState } from "react";
-import { RiTimeLine } from "react-icons/ri";
+import React, { useEffect, useState } from "react";
+import { MdOutlineGroupAdd } from "react-icons/md";
 import { Layout, Button, theme } from "antd";
 import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";
 import ToggleButton from "../Navbar/ToggleButton";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { GrProjects } from "react-icons/gr";
+import { projectregister } from "../StudAuth/Services/Api";
+import { studentteam } from "../StudAuth/Services/Api";
 const { Header, Sider, Content } = Layout;
 const SDashboard = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+  const [title, setTitle] = useState();
+  const [team, setTeam] = useState();
+
+  console.log(title, team);
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await projectregister(title);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await studentteam();
+        console.log(data);
+        setTeam(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
@@ -39,19 +68,88 @@ const SDashboard = () => {
           />
         </Header>
         <Content>
-          <div className="flex justify-between">
-            <div className="w-80 h-40 bg-orange-300 m-4 rounded-xl">
-              <div className="w-14 h-14 bg-gradient-to-b from-orange-300 to-orange-600 rounded-full mt-6 m-8 ">
-                <GrProjects className="w-8 h-8" />
+          <div className="flex justify-around gap-4">
+            <div className="w-fit h-12 bg-purple-800 m-4 rounded-xl flex items-center  relative px-5">
+              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
+                <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <div className="ml-4 text-base text-balance text-white ">
+                No.Of Projects :
               </div>
             </div>
-            <div className="w-80 h-40 bg-blue-300 m-4 rounded-xl flex  ">
-              <div className="w-14 h-14 bg-blue-700 rounded-full mt-6 m-8 ">
-                <RiTimeLine className="min-w-6 min-h-6 absolute" />
+            <div className="w-fit h-12 bg-orange-800 m-4 rounded-xl flex items-center  relative px-5">
+              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
+                <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
               </div>
-              <div className="">Time line</div>
+              <div className="ml-4 text-base text-balance text-white ">
+                Phase Status :
+              </div>
             </div>
-            <div className="w-80 h-40 bg-slate-300 m-4 rounded-xl"></div>
+            <div className="w-fit h-12 bg-green-800 m-4 rounded-xl flex items-center  relative px-5">
+              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
+                <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <div className="ml-4 text-base text-balance text-white ">
+                No.Of Projects : 2
+              </div>
+            </div>
+            <div className="w-fit h-12 bg-blue-800 m-4 rounded-xl flex items-center px-5">
+              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
+                <MdOutlineGroupAdd className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <div className="ml-4 text-base text-white">No Of Students :</div>
+            </div>
+          </div>
+          <div className="bg-slate-300 flex items-center gap-x-4 w-full h-1/6">
+            <div className="div">
+              <h1 className="text-xl">Project Title:</h1>
+            </div>
+            <form className="flex flex-row gap-5" onSubmit={handlesubmit}>
+              <input
+                type="text"
+                placeholder="Enter the title of the project"
+                className="p-3"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <button className="bg-blue-400 p-3 ">Register</button>
+            </form>
+          </div>
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-50">
+              Team Details
+            </h3>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left">
+                    {" "}
+                    {/* Adjusted alignment */}
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left">
+                    {" "}
+                    {/* Adjusted alignment */}
+                    USN
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {team &&
+                  team.students.map((data, index) => (
+                    <tr
+                      key={index}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    >
+                      <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {data.Name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {data.USN}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
         </Content>
       </Layout>

@@ -80,103 +80,101 @@ export default function Loginpg() {
     handleLogout();
   }, []);
   return (
-    <div className="w-screen h-screen flex flex-row">
-      <div className="w-1/2 h-screen items-center justify-around bg-slate-50">
-        <div className="my-20">
-          <h2 className="text-2xl text-center mb-3 ml-3">Student</h2>
-          <div className="flex ml-60 gap-3 my-7">
-            <div className="w-30 h-10 bg-slate-50 rounded-2xl">
-              <button
-                className="primary w-full h-full p-2 rounded-3xl"
-                onClick={handleSignInclick}
-                style={signInButtonStyle}
-              >
-                SIGN IN
-              </button>
-            </div>
-            <div className="w-30 h-10 rounded-4xl bg-slate-50">
-              <button
-                className="secondary w-full h-full p-2 rounded-3xl"
-                onClick={handleSignUpclick}
-                style={signUpButtonStyle}
-              >
-                SIGN UP
-              </button>
-            </div>
+    <div className="w-full h-screen flex flex-row">
+      <div className="w-1/2 h-screen flex flex-col justify-start items-center bg-slate-50">
+        <h2 className="text-2xl text-center m-3">Student</h2>
+        <div className="flex gap-3 my-5">
+          <div className=" bg-slate-50 rounded-2xl">
+            <button
+              className="primary w-full h-full p-2 rounded-3xl text-wrap"
+              onClick={handleSignInclick}
+              style={signInButtonStyle}
+            >
+              SIGN IN
+            </button>
           </div>
-          {showSignIn && (
-            <div className="">
-              <form
-                onSubmit={handlelogin}
-                className="max-w-md mx-auto flex flex-col gap-8 p-3"
-              >
-                <input
-                  className="p-3 border-none"
-                  type="text"
-                  placeholder={"USN"}
-                  onChange={(e) => setUsn(e.target.value)}
-                />
-                <input
-                  className="p-3 border-none"
-                  type="password"
-                  placeholder={"password"}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button className="bg-blue-300 p-3">Login</button>
-              </form>
-            </div>
-          )}
-          {showSignUp && (
-            <div className="-mt-5">
-              <form
-                className="max-w-md mx-auto flex flex-col gap-2 p-3"
-                onSubmit={handleSignup}
-              >
-                <input
-                  className="p-3 border-none"
-                  type="text"
-                  placeholder={"USN"}
-                  onChange={(e) => setUsn(e.target.value)}
-                />
-                <input
-                  className="p-3 border-none"
-                  type="text"
-                  placeholder={"Name"}
-                  onChange={(e) => setname(e.target.value)}
-                />
-                <input
-                  className="p-3 border-none"
-                  type="email"
-                  placeholder={"your@email.com"}
-                  onChange={(e) => setUseremail(e.target.value)}
-                />
-                <input
-                  className="p-3 border-none"
-                  type="text"
-                  placeholder={"Mentor_ID"}
-                  onChange={(e) => setMentorId(e.target.value)}
-                />
-
-                <input
-                  className="p-3 border-none"
-                  type="password"
-                  placeholder={"password"}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <input
-                  className="p-3 border-none"
-                  type="password"
-                  placeholder={"Confirm Password"}
-                  onChange={(e) => setconfirmPassword(e.target.value)}
-                />
-
-                <button className="bg-blue-300 p-3">Register</button>
-              </form>
-            </div>
-          )}
+          <div className="rounded-4xl bg-slate-50">
+            <button
+              className="secondary w-full h-full p-2 rounded-3xl"
+              onClick={handleSignUpclick}
+              style={signUpButtonStyle}
+            >
+              SIGN UP
+            </button>
+          </div>
         </div>
+        {showSignIn && (
+          <div className="w-full">
+            <form
+              onSubmit={handlelogin}
+              className="max-w-md mx-auto flex flex-col gap-8 p-3"
+            >
+              <input
+                className="p-3 border-none"
+                type="text"
+                placeholder={"USN"}
+                onChange={(e) => setUsn(e.target.value)}
+              />
+              <input
+                className="p-3 border-none"
+                type="password"
+                placeholder={"password"}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button className="bg-blue-300 p-3">Login</button>
+            </form>
+          </div>
+        )}
+        {showSignUp && (
+          <div className="w-full">
+            <form
+              className="max-w-md mx-auto flex flex-col gap-2 p-3"
+              onSubmit={handleSignup}
+            >
+              <input
+                className="p-3 border-none"
+                type="text"
+                placeholder={"USN"}
+                onChange={(e) => setUsn(e.target.value)}
+              />
+              <input
+                className="p-3 border-none"
+                type="text"
+                placeholder={"Name"}
+                onChange={(e) => setname(e.target.value)}
+              />
+              <input
+                className="p-3 border-none"
+                type="email"
+                placeholder={"your@email.com"}
+                onChange={(e) => setUseremail(e.target.value)}
+              />
+              <input
+                className="p-3 border-none"
+                type="text"
+                placeholder={"Mentor_ID"}
+                onChange={(e) => setMentorId(e.target.value)}
+              />
+
+              <input
+                className="p-3 border-none"
+                type="password"
+                placeholder={"password"}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <input
+                className="p-3 border-none"
+                type="password"
+                placeholder={"Confirm Password"}
+                onChange={(e) => setconfirmPassword(e.target.value)}
+              />
+
+              <button className="bg-blue-300 p-3">Register</button>
+            </form>
+          </div>
+        )}
       </div>
-      <div className="w-1/2 h-screen ">
+      <div className="w-1/2 h-screen">
         <Carousel autoplay>
           <div className="bg-orange-300 w-1/2 h-screen ">
             <img src={RNSIT} className="w-11/12 h-72 ml-7 mt-7" />
