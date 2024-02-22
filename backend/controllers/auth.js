@@ -408,35 +408,6 @@ exports.studentmentor = (req, res) => {
   });
 };
 
-<<<<<<< HEAD
-//FRONTEND PENDING
-exports.uploadphase = (req, res) => {
-  const usn = req.user;
-  const { file } = req.body;
-  console.log(usn);
-
-  const getPID = "SELECT P_ID from student S where S.USN=?";
-  connection.query(getPID, [usn], (err, data) => {
-    if (data) {
-      const PID = data[0].P_ID;
-      const updateProject = `UPDATE project SET Phase_Status='uploaded', File_Path = '${file}' WHERE project.Project_ID=${PID}`;
-
-      connection.query(updateProject, (err, data) => {
-        if (err) {
-          console.log("Cant update into project");
-          res.status(500).json({ msg: "Internal server error" });
-        } else {
-          console.log("successful updation into project");
-          res.status(200).json({ msg: "updated record in project" });
-        }
-      });
-    } else {
-      console.log("Internal server error");
-      res.status(500).json({ msg: "Internal server error" });
-    }
-  });
-};
-=======
 
 exports.uploadphase = (req,res) =>{
   const usn = req.user;
@@ -508,7 +479,6 @@ exports.uploadphase = (req,res) =>{
   })
 }
 
->>>>>>> 63a8affd497b05308cf77d6bd7864b89b2d7d58f
 const sendemail = async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -579,14 +549,9 @@ const sendemail = async (email) => {
   }
 };
 
-<<<<<<< HEAD
-exports.acceptProject = (req, res) => {
-  const { pid } = req.body;
-=======
 exports.acceptProject=(req,res)=>{  
 
   const {pid} =req.body;
->>>>>>> 63a8affd497b05308cf77d6bd7864b89b2d7d58f
   console.log(pid);
   const acceptedQuery = `
     UPDATE project 
