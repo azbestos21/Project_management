@@ -11,7 +11,15 @@ const connection = require("../db/connect");
 exports.mentorregister = async (req, res) => {
   console.log(req.body);
   mentorTableModule.createMentorTable();
-  const { username, password, confirmpassword, Name, email, phone, designation } = req.body;
+  const {
+    username,
+    password,
+    confirmpassword,
+    Name,
+    email,
+    phone,
+    designation,
+  } = req.body;
   connection.query(
     "Select Mentor_ID from mentor where Mentor_ID = ?",
     [username],
@@ -34,20 +42,32 @@ exports.mentorregister = async (req, res) => {
 
         connection.query(
           "INSERT INTO mentor SET ?",
-          { Mentor_ID: username, Name: Name, Email: email, Phone: phone, Designation: designation, Password: hashedPassword },
+          {
+            Mentor_ID: username,
+            Name: Name,
+            Email: email,
+            Phone: phone,
+            Designation: designation,
+            Password: hashedPassword,
+          },
           async (error, results) => {
             if (error) {
               console.log(error);
               return res.status(500).json({ error: "Internal Server Error" });
             } else {
               console.log(results);
-              const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+              const token = jwt.sign(
+                { username, password },
+                process.env.JWT_SECRET
+              );
               const userData = {
                 username: username,
                 email: email,
                 token: token,
               };
-              return res.status(200).json({ message: "Mentor registered",userData});
+              return res
+                .status(200)
+                .json({ message: "Mentor registered", userData });
             }
           }
         );
@@ -58,7 +78,6 @@ exports.mentorregister = async (req, res) => {
     }
   );
 };
-
 
 exports.mentorlogin = async (req, res) => {
   const { username, password } = req.body;
@@ -162,7 +181,7 @@ exports.studentregister = async (req, res) => {
     });
 
     await sendemail(email);
-    const token = jwt.sign({ username,password }, process.env.JWT_SECRET);
+    const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
     const userData = {
       username: username,
       email: email,
@@ -200,7 +219,7 @@ exports.studentlogin = (req, res) => {
           .status(401)
           .json({ message: "Username or password is incorrect" });
       }
-      const token = jwt.sign({ username,password }, process.env.JWT_SECRET);
+      const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
 
       const userData = {
         USN: results[0].USN,
@@ -214,7 +233,8 @@ exports.studentlogin = (req, res) => {
 
 //FRONTEND PENDING
 exports.projectregister = (req, res) => {
-  const { projectTitle } = req.body;
+  const { projectTitle } = req.query;
+  console.log("title = ", projectTitle);
   const USN = req.user;
   console.log(USN);
 
@@ -238,7 +258,9 @@ exports.projectregister = (req, res) => {
               console.error(error);
               return res.status(500).json({ error: "Internal Server Error" });
             }
-            return res.status(200).json({ message: "Project ID assigned successfully" });
+            return res
+              .status(200)
+              .json({ message: "Project ID assigned successfully" });
           }
         );
       } else {
@@ -250,7 +272,7 @@ exports.projectregister = (req, res) => {
               console.error(error);
               return res.status(500).json({ error: "Internal Server Error" });
             }
-            
+
             const projectId = results.insertId;
             connection.query(
               "UPDATE student SET P_ID = ? WHERE USN = ?",
@@ -258,9 +280,13 @@ exports.projectregister = (req, res) => {
               (error) => {
                 if (error) {
                   console.error(error);
-                  return res.status(500).json({ error: "Internal Server Error" });
+                  return res
+                    .status(500)
+                    .json({ error: "Internal Server Error" });
                 }
-                return res.status(200).json({ message: "Project registered and ID assigned successfully" });
+                return res.status(200).json({
+                  message: "Project registered and ID assigned successfully",
+                });
               }
             );
           }
@@ -269,7 +295,6 @@ exports.projectregister = (req, res) => {
     }
   );
 };
-
 
 exports.grouplist = (req, res) => {
   const ID = req.user;
@@ -289,17 +314,16 @@ exports.grouplist = (req, res) => {
   });
 };
 
-
-
 exports.projectlist = (req, res) => {
   // Extract the mentor ID from req.user
   const mentorId = req.user;
 
   console.log("Inside projectlist function");
-  
+
   // SQL query to select projects associated with the mentor's ID
-  const sql = "SELECT * FROM project WHERE Project_ID IN (SELECT P_ID FROM student WHERE M_ID = ?)";
-  
+  const sql =
+    "SELECT * FROM project WHERE Project_ID IN (SELECT P_ID FROM student WHERE M_ID = ?)";
+
   // Execute the SQL query
   connection.query(sql, [mentorId], (err, data) => {
     if (err) {
@@ -312,12 +336,12 @@ exports.projectlist = (req, res) => {
   });
 };
 
-
-exports.studentproject = (req,res) =>{
+exports.studentproject = (req, res) => {
   const usn = req.user;
   console.log(usn);
-  const sql = "SELECT p.Project_ID, p.Project_Name, p.Project_Phase, p.Phase_Status, p.Project_Marks FROM project p, student s WHERE s.P_ID = p.Project_ID AND s.USN = ?";
-  connection.query(sql,[usn],(err,data)=>{
+  const sql =
+    "SELECT p.Project_ID, p.Project_Name, p.Project_Phase, p.Phase_Status, p.Project_Marks FROM project p, student s WHERE s.P_ID = p.Project_ID AND s.USN = ?";
+  connection.query(sql, [usn], (err, data) => {
     if (err) {
       console.error("Error fetching data:", err);
       res.status(500).json({ error: "Internal Server Error" });
@@ -326,28 +350,26 @@ exports.studentproject = (req,res) =>{
     console.log("Retrieved data from the database:", data);
     res.json({ title: "student-project", userData: data });
   });
-  
-}
-
+};
 
 //FRONTEND PENDING
 exports.studentteam = (req, res) => {
   const usn = req.user;
   console.log(usn);
-  
+
   const query = `SELECT P_ID FROM student WHERE USN = "${usn}"`;
-  
+
   connection.query(query, (error, results) => {
     if (error) {
       console.error(error);
       return res.status(500).json({ error: "Internal Server Error" });
     }
-    
+
     if (results.length > 0) {
       const projectId = results[0].P_ID;
       console.log(projectId);
       const studentsQuery = `SELECT USN,Name FROM student WHERE P_ID = ${projectId}`;
-      
+
       connection.query(studentsQuery, (error, studentResults) => {
         if (error) {
           console.error(error);
@@ -359,6 +381,35 @@ exports.studentteam = (req, res) => {
   });
 };
 
+<<<<<<< HEAD
+//FRONTEND PENDING
+exports.uploadphase = (req, res) => {
+  const usn = req.user;
+  const { file } = req.body;
+  console.log(usn);
+
+  const getPID = "SELECT P_ID from student S where S.USN=?";
+  connection.query(getPID, [usn], (err, data) => {
+    if (data) {
+      const PID = data[0].P_ID;
+      const updateProject = `UPDATE project SET Phase_Status='uploaded', File_Path = '${file}' WHERE project.Project_ID=${PID}`;
+
+      connection.query(updateProject, (err, data) => {
+        if (err) {
+          console.log("Cant update into project");
+          res.status(500).json({ msg: "Internal server error" });
+        } else {
+          console.log("successful updation into project");
+          res.status(200).json({ msg: "updated record in project" });
+        }
+      });
+    } else {
+      console.log("Internal server error");
+      res.status(500).json({ msg: "Internal server error" });
+    }
+  });
+};
+=======
 
 exports.uploadphase = (req,res) =>{
   const usn = req.user;
@@ -429,6 +480,7 @@ exports.uploadphase = (req,res) =>{
   })
 }
 
+>>>>>>> 63a8affd497b05308cf77d6bd7864b89b2d7d58f
 const sendemail = async (email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -499,9 +551,14 @@ const sendemail = async (email) => {
   }
 };
 
+<<<<<<< HEAD
+exports.acceptProject = (req, res) => {
+  const { pid } = req.body;
+=======
 exports.acceptProject=(req,res)=>{  
 
   const {pid} =req.body;
+>>>>>>> 63a8affd497b05308cf77d6bd7864b89b2d7d58f
   console.log(pid);
   const acceptedQuery = `
     UPDATE project 
@@ -526,22 +583,20 @@ exports.acceptProject=(req,res)=>{
   `;
 
   try {
-    connection.query(acceptedQuery,(err,data)=>{
-      if(err){
+    connection.query(acceptedQuery, (err, data) => {
+      if (err) {
         console.log("Cant update into project");
-        res.status(500).json({msg:"Internal server error"})
-      }
-      else{
+        res.status(500).json({ msg: "Internal server error" });
+      } else {
         console.log("Updated project");
-        res.status(400).json({msg:"Project updation Done"})
+        res.status(400).json({ msg: "Project updation Done" });
       }
-    })
+    });
   } catch (error) {
     console.log("Internal error");
-    res.status(500).json({msg:"Internal server error"})
-
+    res.status(500).json({ msg: "Internal server error" });
   }
-}
+};
 exports.rejectProject = (req, res) => {
   const { pid } = req.body;
   console.log(pid);
