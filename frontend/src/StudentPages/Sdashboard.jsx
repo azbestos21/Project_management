@@ -9,6 +9,8 @@ import { GrProjects } from "react-icons/gr";
 import { projectregister } from "../StudAuth/Services/Api";
 import { studentteam } from "../StudAuth/Services/Api";
 import { studentproject } from "../StudAuth/Services/Api.jsx";
+import { useNavigate } from "react-router-dom";
+
 const { Header, Sider, Content } = Layout;
 const SDashboard = () => {
   const [darkTheme, setDarkTheme] = useState(true);
@@ -17,6 +19,7 @@ const SDashboard = () => {
   const [details, setProjectdetails] = useState([]);
   const [title, setTitle] = useState();
   const [team, setTeam] = useState();
+  const navigate=useNavigate();
 
   useEffect(() => {
     console.log(123);
@@ -46,6 +49,7 @@ const SDashboard = () => {
       const data = await projectregister(title);
       console.log(data);
       setTitleDisp(false);
+      navigate("/MyProjects");
     } catch (error) {
       console.log(error);
     }

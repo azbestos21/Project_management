@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { Layout, Button, theme } from "antd";
 import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";
@@ -89,6 +89,10 @@ const Sprojects = () => {
                   </th>
 
                   <th scope="col" className="px-6 py-3">
+                    File Path
+                  </th>
+                  
+                  <th scope="col" className="px-6 py-3">
                     Phase status
                   </th>
                   <th scope="col" className="px-6 py-3">
@@ -111,6 +115,8 @@ const Sprojects = () => {
                       </th>
                       <td className="px-6 py-4">{data.Project_ID}</td>
                       <td className="px-6 py-4">{data.Project_Phase}</td>
+                      <td className="px-6 py-4">{data.File_Path}</td>
+
                       <td className="px-6 py-4">{data.Phase_Status}</td>
                       <td className="px-6 py-4">{data.Project_Marks}</td>
                     </tr>
@@ -141,7 +147,9 @@ const Sprojects = () => {
                     />
                   </label>
                 </div>
-                <button type="submit">add file</button>
+                <div className="flex item-center mt-3">
+                <button className="w-32 mr-auto mt-auto mb-3 ml-auto text-center p-4 bg-blue-300 rounded-full  border-2 border-black hover:bg-white " type="submit">ADD FILES</button>
+              </div>
               </form>
             </div>
           </div>

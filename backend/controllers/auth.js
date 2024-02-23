@@ -340,7 +340,7 @@ exports.studentproject = (req, res) => {
   const usn = req.user;
   console.log(usn);
   const sql =
-    "SELECT p.Project_ID, p.Project_Name, p.Project_Phase, p.Phase_Status, p.Project_Marks FROM project p, student s WHERE s.P_ID = p.Project_ID AND s.USN = ?";
+    "SELECT p.Project_ID, p.Project_Name, p.Project_Phase, p.Phase_Status,p.File_Path, p.Project_Marks FROM project p, student s WHERE s.P_ID = p.Project_ID AND s.USN = ?";
   connection.query(sql, [usn], (err, data) => {
     if (err) {
       console.error("Error fetching data:", err);
