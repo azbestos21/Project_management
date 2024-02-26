@@ -53,13 +53,13 @@ const MProjects = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto">
+        <Content className="overflow-y-auto p-10">
           {" "}
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-50">
-              Project Details
-            </h3>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80 text-black">
+            Project Details
+          </h3>
+            <table className="w-full text-sm text-left rtl:text-right text-black-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">
@@ -109,8 +109,9 @@ const MProjects = () => {
                           onClick={() => updateDetails(data.Project_ID, 1)}
                         />{" "}
                         <br></br>{" "}
-                        <ActionButton
-                          label={"Reject"}
+                        <ActionButton 
+                          
+                          label={"  Reject  "}
                           onClick={() => updateDetails(data.Project_ID, 0)}
                         />{" "}
                       </td>

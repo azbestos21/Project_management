@@ -13,6 +13,8 @@ router.get('/studentproject', mid.authenticationMiddleware,authController.studen
 router.post('/studentupload',mid.authenticationMiddleware,authController.uploadphase)
 router.get('/studentteam',mid.authenticationMiddleware,authController.studentteam)
 router.get('/studentmentor',mid.authenticationMiddleware,authController.studentmentor);
+router.get('/mentorlist',authController.mentorlist);
 router.post('/acceptproject',authController.acceptProject);
+router.post('/searchdomain',authController.searchdomain);
 router.post('/rejectproject',authController.rejectProject);
 module.exports = router;

@@ -40,6 +40,7 @@ const Sprojects = () => {
     try {
       const result = await uploadFile(formData);
       console.log("Upload successful:", result);
+      window.location.reload();
     } catch (error) {
       console.error("Error during upload:", error);
     }
@@ -72,10 +73,10 @@ const Sprojects = () => {
         </Header>
         <Content>
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-50">
+            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80">
               Project Details
             </h3>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <table className="w-full text-sm text-left rtl:text-right text-black-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">

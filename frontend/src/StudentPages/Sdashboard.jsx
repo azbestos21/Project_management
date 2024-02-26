@@ -108,14 +108,6 @@ const SDashboard = () => {
                 Phase Status :
               </div>
             </div>
-            <div className="w-fit h-12 bg-green-800 m-4 rounded-xl flex items-center  relative px-5">
-              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
-                <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-              </div>
-              <div className="ml-4 text-base text-balance text-white ">
-                No.Of Projects : 2
-              </div>
-            </div>
             <div className="w-fit h-12 bg-blue-800 m-4 rounded-xl flex items-center px-5">
               <div className="w-8 h-8 bg-gray-100 rounded-full relative">
                 <MdOutlineGroupAdd className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
@@ -140,7 +132,7 @@ const SDashboard = () => {
             </div>
           )}
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-50">
+            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80">
               Team Details
             </h3>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

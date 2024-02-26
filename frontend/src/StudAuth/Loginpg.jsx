@@ -14,11 +14,11 @@ export default function Loginpg() {
   const [password, setPassword] = useState();
   const [username, setUsn] = useState();
   const [Name, setname] = useState();
-  const [mid, setMentorId] = useState();
+  const [mentorName, setMentorName] = useState();
   const navigate = useNavigate();
   console.log(email, password);
   const [confirmpassword, setconfirmPassword] = useState();
-  console.log(username, Name, email, password, confirmpassword, mid);
+  console.log(username, Name, email, password, confirmpassword, mentorName);
 
   const [signInButtonStyle, setSignInButtonStyle] = useState({
     backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
@@ -64,7 +64,7 @@ export default function Loginpg() {
         password,
         confirmpassword,
         email,
-        mid,
+        mentorName,
       });
       localStorage.setItem("studenttoken", data.userData.token);
 
@@ -152,8 +152,8 @@ export default function Loginpg() {
               <input
                 className="p-3 border-none"
                 type="text"
-                placeholder={"Mentor_ID"}
-                onChange={(e) => setMentorId(e.target.value)}
+                placeholder={"Mentor_Name"}
+                onChange={(e) => setMentorName(e.target.value)}
               />
 
               <input

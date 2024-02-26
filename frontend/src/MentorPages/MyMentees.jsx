@@ -52,14 +52,14 @@ const MyMentees = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto">
+        <Content className="overflow-y-auto p-10">
           {" "}
-          <h3 className="text-lg text-center font-bold uppercase p-1 bg-blue-300 border-b-2 border-blue-700 opacity-50 sticky">
+          <h3 className="text-lg text-center font-bold uppercase p-1 bg-blue-300 border-b-2 border-blue-700 opacity-80 sticky">
             Student Details
           </h3>
           <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 ">
+            <table className="w-full text-sm  text-left rtl:text-right text-black-500 dark:text-gray-400">
+              <thead className="text-xs text-black-700  uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 ">
                 <tr>
                   <th scope="col" className="px-6 py-3">
                     Sl.No
