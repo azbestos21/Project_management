@@ -8,12 +8,33 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { GrProjects } from "react-icons/gr";
 import { projectregister } from "../StudAuth/Services/Api";
 import { studentteam } from "../StudAuth/Services/Api";
+import { studentproject } from "../StudAuth/Services/Api.jsx";
+import { useNavigate } from "react-router-dom";
+
 const { Header, Sider, Content } = Layout;
 const SDashboard = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-
+  const [titleDisp, setTitleDisp] = useState(true);
+  const [details, setProjectdetails] = useState([]);
+  const [title, setTitle] = useState();
   const [team, setTeam] = useState();
+  const navigate=useNavigate();
+
+  useEffect(() => {
+    console.log(123);
+    const fetchdetails = async () => {
+      try {
+        const { userData } = await studentproject();
+        console.log("d=", userData);
+        setProjectdetails(userData);
+        if (userData.length > 0) {
+          setTitleDisp(false);
+        }
+      } catch (error) {}
+    };
+    fetchdetails();
+  }, []);
 
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
@@ -21,7 +42,17 @@ const SDashboard = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await projectregister(title);
+      console.log(data);
+      setTitleDisp(false);
+      navigate("/MyProjects");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,7 +96,7 @@ const SDashboard = () => {
                 <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
               </div>
               <div className="ml-4 text-base text-balance text-white ">
-                No.Of Projects :
+                No.Of Projects :{details.length}
               </div>
             </div>
             <div className="w-fit h-12 bg-orange-800 m-4 rounded-xl flex items-center  relative px-5">
@@ -76,14 +107,6 @@ const SDashboard = () => {
                 Phase Status :
               </div>
             </div>
-            <div className="w-fit h-12 bg-green-800 m-4 rounded-xl flex items-center  relative px-5">
-              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
-                <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-              </div>
-              <div className="ml-4 text-base text-balance text-white ">
-                No.Of Projects : 2
-              </div>
-            </div>
             <div className="w-fit h-12 bg-blue-800 m-4 rounded-xl flex items-center px-5">
               <div className="w-8 h-8 bg-gray-100 rounded-full relative">
                 <MdOutlineGroupAdd className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
@@ -91,9 +114,24 @@ const SDashboard = () => {
               <div className="ml-4 text-base text-white">No Of Students :</div>
             </div>
           </div>
-
+          {titleDisp && (
+            <div className="bg-slate-300 flex items-center gap-x-4 w-full h-1/6">
+              <div className="div">
+                <h1 className="text-xl">Project Title:</h1>
+              </div>
+              <form className="flex flex-row gap-5" onSubmit={handlesubmit}>
+                <input
+                  type="text"
+                  placeholder="Enter the title of the project"
+                  className="p-3"
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+                <button className="bg-blue-400 p-3 ">Register</button>
+              </form>
+            </div>
+          )}
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-50">
+            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80">
               Team Details
             </h3>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -101,12 +139,10 @@ const SDashboard = () => {
                 <tr>
                   <th scope="col" className="px-6 py-3 text-left">
                     {" "}
-                    {/* Adjusted alignment */}
                     Name
                   </th>
                   <th scope="col" className="px-6 py-3 text-left">
                     {" "}
-                    {/* Adjusted alignment */}
                     USN
                   </th>
                 </tr>

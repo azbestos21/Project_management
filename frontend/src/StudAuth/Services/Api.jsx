@@ -13,7 +13,9 @@ export { studentlogin };
 
 const studentsignup = async (data) => {
   try {
+    console.log(data);
     const res = await axios.post(`${baseurl}/auth/studentregister`, data);
+    console.log(res.data);
     return res.data;
   } catch (error) {
     throw error;
@@ -73,10 +75,41 @@ const studentteam = async () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const res = await axios.get(`${baseurl}/auth//studentteam`, config);
+    const res = await axios.get(`${baseurl}/auth/studentteam`, config);
     console.log(res);
     return res.data;
   } catch (error) {}
 };
 
-export { studentteam };
+const uploadFile = async (formData) => {
+  try {
+    const token = localStorage.getItem("studenttoken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.post(
+      `${baseurl}/auth/studentupload`,
+      formData,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { studentteam, uploadFile };
+
+const mentorlist = async () => {
+  try {
+    const res = await axios.get(`${baseurl}/auth/mentorlist`);
+
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { mentorlist };

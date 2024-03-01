@@ -96,14 +96,6 @@ const MDashboard = () => {
                 {projectdata && projectdata.userData.length}
               </div>
             </div>
-            <div className="w-fit h-12 bg-green-800 m-4 rounded-xl flex items-center  relative px-5 shadow-lg shadow-slate-500">
-              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
-                <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-              </div>
-              <div className="ml-4 text-base text-balance text-white ">
-                No.Of Projects : 2
-              </div>
-            </div>
             <div className="w-fit h-12 bg-blue-800 m-4 rounded-xl flex items-center px-5 shadow-lg shadow-slate-500">
               <div className="w-8 h-8 bg-gray-100 rounded-full relative">
                 <MdOutlineGroupAdd className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />

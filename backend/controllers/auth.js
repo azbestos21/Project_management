@@ -123,6 +123,27 @@ exports.mentorlogin = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+//TN implement this in mentor dashboard & mentor view projects
+exports.searchdomain = (req, res) => {
+  const { domain } = req.body;
+
+  try {
+    connection.query(
+      "SELECT Project_ID, Project_Name, Phase_Status, Project_Marks, File_Path, Project_Phase FROM project WHERE domain LIKE ?",
+      [`%${domain}%`],
+      (error, results) => {
+        if (error) {
+          console.error(error);
+          return res.status(500).json({ error: "Internal Server Error" });
+        }
+        return res.status(200).json({ projects: results });
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 exports.studentregister = async (req, res) => {
   console.log(req.body);
@@ -130,15 +151,37 @@ exports.studentregister = async (req, res) => {
   projectTableModule.createProjectTable();
   studentTableModule.createStudentTable();
 
-  const { username, Name, password, confirmpassword, email, mid } = req.body;
+  const { username, Name, password, confirmpassword, email, mentorName } =
+    req.body;
 
   try {
+    const mentor = await new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT Mentor_ID FROM mentor WHERE Name = ?",
+        [mentorName],
+        (error, results) => {
+          if (error) {
+            reject(error);
+            console.log(error);
+          } else {
+            resolve(results[0]);
+          }
+        }
+      );
+    });
+
+    if (!mentor) {
+      return res.status(400).json({ message: "Mentor not found" });
+    }
+    const M_ID = mentor.Mentor_ID;
+
     const existingUser = await new Promise((resolve, reject) => {
       connection.query(
         "SELECT USN FROM student WHERE USN = ?",
         [username],
         (error, results) => {
           if (error) {
+            console.log(error);
             reject(error);
           } else {
             resolve(results);
@@ -157,6 +200,34 @@ exports.studentregister = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 8);
     console.log(hashedPassword);
+    console.log(M_ID);
+
+    const totalProjects = await new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT COUNT(*) AS totalProjects FROM project",
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results[0].totalProjects);
+          }
+        }
+      );
+    });
+    console.log(totalProjects);
+    const nextProjectID = await new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT MAX(P_ID) AS maxProjectID FROM student",
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            console.log(results[0].maxProjectID);
+            resolve((results[0].maxProjectID % totalProjects) + 1);
+          }
+        }
+      );
+    });
 
     await new Promise((resolve, reject) => {
       connection.query(
@@ -166,8 +237,8 @@ exports.studentregister = async (req, res) => {
           Name: Name,
           Email: email,
           Password: hashedPassword,
-          P_ID: null,
-          M_ID: mid,
+          P_ID: nextProjectID,
+          M_ID: M_ID,
         },
         (error, results) => {
           if (error) {
@@ -181,18 +252,42 @@ exports.studentregister = async (req, res) => {
     });
 
     await sendemail(email);
+
     const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
     const userData = {
       username: username,
       email: email,
       token: token,
     };
+
     return res.status(200).json({ message: "Student registered", userData });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+//implement this in student register provide drop down list to display available mentors
+exports.mentorlist = (req, res) => {
+  try {
+    connection.query("SELECT * FROM mentor", (error, results) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+      const mentorNames = [];
+      for (let i = 0; i < results.length; i++) {
+        mentorNames.push(results[i].Name);
+      }
+      console.log(mentorNames);
+      return res.status(200).json({ mentorNames });
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 exports.studentlogin = (req, res) => {
   const { username, password } = req.body;
 
@@ -231,69 +326,72 @@ exports.studentlogin = (req, res) => {
   );
 };
 
-//FRONTEND PENDING
-exports.projectregister = (req, res) => {
-  const { projectTitle } = req.query;
-  console.log("title = ", projectTitle);
-  const USN = req.user;
-  console.log(USN);
+exports.teamregister = async (req, res) => {
+  const capusn = req.user;
+  console.log(capusn);
 
-  connection.query(
-    "SELECT Project_ID FROM project WHERE Project_Name = ?",
-    [projectTitle],
-    (error, results) => {
-      if (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
+  const { teammates } = req.body;
 
-      if (results.length > 0) {
-        const projectId = results[0].Project_ID;
-        console.log(projectId);
-        connection.query(
-          "UPDATE student SET P_ID = ? WHERE USN = ?",
-          [projectId, USN],
-          (error) => {
-            if (error) {
-              console.error(error);
-              return res.status(500).json({ error: "Internal Server Error" });
-            }
-            return res
-              .status(200)
-              .json({ message: "Project ID assigned successfully" });
+  try {
+    // Retrieve captain's details from the database
+    const captainDetails = await new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT P_ID, M_ID, Password FROM student WHERE USN = ?",
+        [capusn],
+        (error, results) => {
+          if (error) {
+            console.error(error);
+            reject(error);
+          } else {
+            resolve(results[0]);
           }
-        );
-      } else {
+        }
+      );
+    });
+
+    if (!captainDetails) {
+      return res.status(400).json({ message: "Captain not found" });
+    }
+
+    // Extract captain's project ID (P_ID), mentor ID (M_ID), and password
+    const { P_ID, M_ID, Password } = captainDetails;
+
+    // Insert teammate records into the database
+    for (const teammate of teammates) {
+      const { usn, name, email } = teammate;
+
+      // Insert teammate record into the database
+      await new Promise((resolve, reject) => {
         connection.query(
-          "INSERT INTO project (Project_Name) VALUES (?)",
-          [projectTitle],
+          "INSERT INTO student SET ?",
+          {
+            USN: usn,
+            Name: name,
+            Email: email,
+            Password: Password, // Use captain's password for teammates
+            P_ID: P_ID, // Use captain's project ID for teammates
+            M_ID: M_ID, // Use captain's mentor ID for teammates
+          },
           (error, results) => {
             if (error) {
               console.error(error);
-              return res.status(500).json({ error: "Internal Server Error" });
+              reject(error);
+            } else {
+              console.log(results);
+              resolve();
             }
-
-            const projectId = results.insertId;
-            connection.query(
-              "UPDATE student SET P_ID = ? WHERE USN = ?",
-              [projectId, USN],
-              (error) => {
-                if (error) {
-                  console.error(error);
-                  return res
-                    .status(500)
-                    .json({ error: "Internal Server Error" });
-                }
-                return res.status(200).json({
-                  message: "Project registered and ID assigned successfully",
-                });
-              }
-            );
           }
         );
-      }
+      });
+
+      console.log(`Teammate ${name} registered successfully`);
     }
-  );
+
+    return res.status(200).json({ message: "Teammates registered successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 exports.grouplist = (req, res) => {
@@ -340,7 +438,7 @@ exports.studentproject = (req, res) => {
   const usn = req.user;
   console.log(usn);
   const sql =
-    "SELECT p.Project_ID, p.Project_Name, p.Project_Phase, p.Phase_Status, p.Project_Marks FROM project p, student s WHERE s.P_ID = p.Project_ID AND s.USN = ?";
+    "SELECT p.Project_ID, p.Project_Name, p.Project_Phase, p.Phase_Status,p.File_Path, p.Project_Marks FROM project p, student s WHERE s.P_ID = p.Project_ID AND s.USN = ?";
   connection.query(sql, [usn], (err, data) => {
     if (err) {
       console.error("Error fetching data:", err);
@@ -369,6 +467,35 @@ exports.studentteam = (req, res) => {
       const projectId = results[0].P_ID;
       console.log(projectId);
       const studentsQuery = `SELECT USN,Name FROM student WHERE P_ID = ${projectId}`;
+
+      connection.query(studentsQuery, (error, studentResults) => {
+        if (error) {
+          console.error(error);
+          return res.status(500).json({ error: "Internal Server Error" });
+        }
+        res.status(200).json({ students: studentResults });
+      });
+    }
+  });
+};
+
+//TN implement this in student dashboard
+exports.studentmentor = (req, res) => {
+  const usn = req.user;
+  console.log(usn);
+
+  const query = `SELECT M_ID FROM student WHERE USN = "${usn}"`;
+
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    if (results.length > 0) {
+      const mentorId = results[0].M_ID;
+      console.log(mentorId);
+      const studentsQuery = `SELECT Name FROM mentor WHERE Mentor_ID = ${mentorId}`;
 
       connection.query(studentsQuery, (error, studentResults) => {
         if (error) {
@@ -528,7 +655,7 @@ exports.acceptProject = (req, res) => {
                     ELSE File_Path 
                   END,
       Project_Marks = CASE 
-                        WHEN Project_Phase <= 4 THEN Project_Marks + 25 
+                        WHEN Project_Marks<100 THEN Project_Marks + 25 
                         ELSE Project_Marks 
                       END
     WHERE Project_ID = ${pid}

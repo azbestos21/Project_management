@@ -4,7 +4,7 @@ import RNSIT from "../assets/RNSIT.jpg";
 import { Carousel } from "antd";
 import CSE from "../assets/CSE.jpeg";
 import Backgimg from "../assets/Backgimg.jpg";
-import { studentlogin, studentsignup } from "./Services/Api";
+import { studentlogin, studentsignup, mentorlist } from "./Services/Api";
 import { useNavigate } from "react-router-dom";
 
 export default function Loginpg() {
@@ -14,11 +14,12 @@ export default function Loginpg() {
   const [password, setPassword] = useState();
   const [username, setUsn] = useState();
   const [Name, setname] = useState();
-  const [mid, setMentorId] = useState();
+  const [mentorName, setMentorName] = useState();
+  const [Mlist, setMentorList] = useState();
   const navigate = useNavigate();
   console.log(email, password);
   const [confirmpassword, setconfirmPassword] = useState();
-  console.log(username, Name, email, password, confirmpassword, mid);
+  console.log(username, Name, email, password, confirmpassword, mentorName);
 
   const [signInButtonStyle, setSignInButtonStyle] = useState({
     backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
@@ -64,7 +65,7 @@ export default function Loginpg() {
         password,
         confirmpassword,
         email,
-        mid,
+        mentorName,
       });
       localStorage.setItem("studenttoken", data.userData.token);
 
@@ -73,6 +74,18 @@ export default function Loginpg() {
       console.log(error);
     }
   };
+  useEffect(() => {
+    const datafetch = async () => {
+      try {
+        const list = await mentorlist();
+        console.log(list);
+        setMentorList(list);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    datafetch();
+  }, []);
   useEffect(() => {
     const handleLogout = () => {
       localStorage.removeItem("studenttoken");
@@ -149,12 +162,21 @@ export default function Loginpg() {
                 placeholder={"your@email.com"}
                 onChange={(e) => setUseremail(e.target.value)}
               />
-              <input
+              <select
                 className="p-3 border-none"
                 type="text"
-                placeholder={"Mentor_ID"}
-                onChange={(e) => setMentorId(e.target.value)}
-              />
+                placeholder={"Mentor_Name"}
+                onChange={(e) => setMentorName(e.target.value)}
+                defaultValue="Choose Mentor" // Set default value to empty string
+              >
+                <option value="">Choose Mentor</option>{" "}
+                {Mlist &&
+                  Mlist.data.mentorNames.map((mentorName, index) => (
+                    <option key={index} value={mentorName}>
+                      {mentorName}
+                    </option>
+                  ))}
+              </select>
 
               <input
                 className="p-3 border-none"
