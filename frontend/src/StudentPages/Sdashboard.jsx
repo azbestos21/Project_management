@@ -12,25 +12,16 @@ const { Header, Sider, Content } = Layout;
 const SDashboard = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const [title, setTitle] = useState();
+
   const [team, setTeam] = useState();
 
-  console.log(title, team);
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const handlesubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const data = await projectregister(title);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -100,20 +91,7 @@ const SDashboard = () => {
               <div className="ml-4 text-base text-white">No Of Students :</div>
             </div>
           </div>
-          <div className="bg-slate-300 flex items-center gap-x-4 w-full h-1/6">
-            <div className="div">
-              <h1 className="text-xl">Project Title:</h1>
-            </div>
-            <form className="flex flex-row gap-5" onSubmit={handlesubmit}>
-              <input
-                type="text"
-                placeholder="Enter the title of the project"
-                className="p-3"
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <button className="bg-blue-400 p-3 ">Register</button>
-            </form>
-          </div>
+
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-50">
               Team Details
