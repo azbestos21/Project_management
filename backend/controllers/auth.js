@@ -125,7 +125,7 @@ exports.mentorlogin = async (req, res) => {
 };
 //TN implement this in mentor dashboard & mentor view projects
 exports.searchdomain = (req, res) => {
-  const { domain } = req.body; 
+  const { domain } = req.body;
 
   try {
     connection.query(
@@ -145,14 +145,14 @@ exports.searchdomain = (req, res) => {
   }
 };
 
-
 exports.studentregister = async (req, res) => {
   console.log(req.body);
   mentorTableModule.createMentorTable();
   projectTableModule.createProjectTable();
   studentTableModule.createStudentTable();
 
-  const { username, Name, password, confirmpassword, email, mentorName } = req.body;
+  const { username, Name, password, confirmpassword, email, mentorName } =
+    req.body;
 
   try {
     const mentor = await new Promise((resolve, reject) => {
@@ -164,7 +164,7 @@ exports.studentregister = async (req, res) => {
             reject(error);
             console.log(error);
           } else {
-            resolve(results[0]); 
+            resolve(results[0]);
           }
         }
       );
@@ -191,7 +191,9 @@ exports.studentregister = async (req, res) => {
     });
 
     if (existingUser.length === 1) {
-      return res.status(400).json({ message: "That username is already in use" });
+      return res
+        .status(400)
+        .json({ message: "That username is already in use" });
     } else if (password !== confirmpassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
@@ -268,21 +270,18 @@ exports.studentregister = async (req, res) => {
 //implement this in student register provide drop down list to display available mentors
 exports.mentorlist = (req, res) => {
   try {
-    connection.query(
-      "SELECT * FROM mentor",
-      (error, results) => {
-        if (error) {
-          console.error(error);
-          return res.status(500).json({ error: "Internal Server Error" });
-        }
-        const mentorNames = [];
-        for (let i = 0; i < results.length; i++) {
-          mentorNames.push(results[i].Name);
-        }
-        console.log(mentorNames);
-        return res.status(200).json({ mentorNames });
+    connection.query("SELECT * FROM mentor", (error, results) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
       }
-    );
+      const mentorNames = [];
+      for (let i = 0; i < results.length; i++) {
+        mentorNames.push(results[i].Name);
+      }
+      console.log(mentorNames);
+      return res.status(200).json({ mentorNames });
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });

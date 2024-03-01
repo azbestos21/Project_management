@@ -13,7 +13,9 @@ export { studentlogin };
 
 const studentsignup = async (data) => {
   try {
+    console.log(data);
     const res = await axios.post(`${baseurl}/auth/studentregister`, data);
+    console.log(res.data);
     return res.data;
   } catch (error) {
     throw error;
@@ -99,3 +101,15 @@ const uploadFile = async (formData) => {
 };
 
 export { studentteam, uploadFile };
+
+const mentorlist = async () => {
+  try {
+    const res = await axios.get(`${baseurl}/auth/mentorlist`);
+
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { mentorlist };
