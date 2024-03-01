@@ -326,69 +326,72 @@ exports.studentlogin = (req, res) => {
   );
 };
 
-//FRONTEND PENDING
-exports.projectregister = (req, res) => {
-  const { projectTitle } = req.query;
-  console.log("title = ", projectTitle);
-  const USN = req.user;
-  console.log(USN);
+exports.teamregister = async (req, res) => {
+  const capusn = req.user;
+  console.log(capusn);
 
-  connection.query(
-    "SELECT Project_ID FROM project WHERE Project_Name = ?",
-    [projectTitle],
-    (error, results) => {
-      if (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
+  const { teammates } = req.body;
 
-      if (results.length > 0) {
-        const projectId = results[0].Project_ID;
-        console.log(projectId);
-        connection.query(
-          "UPDATE student SET P_ID = ? WHERE USN = ?",
-          [projectId, USN],
-          (error) => {
-            if (error) {
-              console.error(error);
-              return res.status(500).json({ error: "Internal Server Error" });
-            }
-            return res
-              .status(200)
-              .json({ message: "Project ID assigned successfully" });
+  try {
+    // Retrieve captain's details from the database
+    const captainDetails = await new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT P_ID, M_ID, Password FROM student WHERE USN = ?",
+        [capusn],
+        (error, results) => {
+          if (error) {
+            console.error(error);
+            reject(error);
+          } else {
+            resolve(results[0]);
           }
-        );
-      } else {
+        }
+      );
+    });
+
+    if (!captainDetails) {
+      return res.status(400).json({ message: "Captain not found" });
+    }
+
+    // Extract captain's project ID (P_ID), mentor ID (M_ID), and password
+    const { P_ID, M_ID, Password } = captainDetails;
+
+    // Insert teammate records into the database
+    for (const teammate of teammates) {
+      const { usn, name, email } = teammate;
+
+      // Insert teammate record into the database
+      await new Promise((resolve, reject) => {
         connection.query(
-          "INSERT INTO project (Project_Name) VALUES (?)",
-          [projectTitle],
+          "INSERT INTO student SET ?",
+          {
+            USN: usn,
+            Name: name,
+            Email: email,
+            Password: Password, // Use captain's password for teammates
+            P_ID: P_ID, // Use captain's project ID for teammates
+            M_ID: M_ID, // Use captain's mentor ID for teammates
+          },
           (error, results) => {
             if (error) {
               console.error(error);
-              return res.status(500).json({ error: "Internal Server Error" });
+              reject(error);
+            } else {
+              console.log(results);
+              resolve();
             }
-
-            const projectId = results.insertId;
-            connection.query(
-              "UPDATE student SET P_ID = ? WHERE USN = ?",
-              [projectId, USN],
-              (error) => {
-                if (error) {
-                  console.error(error);
-                  return res
-                    .status(500)
-                    .json({ error: "Internal Server Error" });
-                }
-                return res.status(200).json({
-                  message: "Project registered and ID assigned successfully",
-                });
-              }
-            );
           }
         );
-      }
+      });
+
+      console.log(`Teammate ${name} registered successfully`);
     }
-  );
+
+    return res.status(200).json({ message: "Teammates registered successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 exports.grouplist = (req, res) => {
