@@ -113,3 +113,20 @@ const mentorlist = async () => {
 };
 
 export { mentorlist };
+const mentorinfo = async () => {
+  try {
+    const token = localStorage.getItem("studenttoken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const res = await axios.get(`${baseurl}/auth/studentmentor`, config);
+    console.log(res);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { mentorinfo };

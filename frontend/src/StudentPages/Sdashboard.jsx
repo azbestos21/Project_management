@@ -6,20 +6,15 @@ import MenuItem from "../Navbar/MenuItem";
 import ToggleButton from "../Navbar/ToggleButton";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { GrProjects } from "react-icons/gr";
-import { projectregister } from "../StudAuth/Services/Api";
-import { studentteam } from "../StudAuth/Services/Api";
+
 import { studentproject } from "../StudAuth/Services/Api.jsx";
-import { useNavigate } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 const SDashboard = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const [titleDisp, setTitleDisp] = useState(true);
+
   const [details, setProjectdetails] = useState([]);
-  const [title, setTitle] = useState();
-  const [team, setTeam] = useState();
-  const navigate=useNavigate();
 
   useEffect(() => {
     console.log(123);
@@ -28,46 +23,17 @@ const SDashboard = () => {
         const { userData } = await studentproject();
         console.log("d=", userData);
         setProjectdetails(userData);
-        if (userData.length > 0) {
-          setTitleDisp(false);
-        }
       } catch (error) {}
     };
     fetchdetails();
   }, []);
 
-  console.log(title, team);
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const handlesubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const data = await projectregister(title);
-      console.log(data);
-      setTitleDisp(false);
-      navigate("/MyProjects");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await studentteam();
-        console.log(data);
-        setTeam(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
@@ -114,57 +80,6 @@ const SDashboard = () => {
               </div>
               <div className="ml-4 text-base text-white">No Of Students :</div>
             </div>
-          </div>
-          {titleDisp && (
-            <div className="bg-slate-300 flex items-center gap-x-4 w-full h-1/6">
-              <div className="div">
-                <h1 className="text-xl">Project Title:</h1>
-              </div>
-              <form className="flex flex-row gap-5" onSubmit={handlesubmit}>
-                <input
-                  type="text"
-                  placeholder="Enter the title of the project"
-                  className="p-3"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <button className="bg-blue-400 p-3 ">Register</button>
-              </form>
-            </div>
-          )}
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80">
-              Team Details
-            </h3>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-left">
-                    {" "}
-                    Name
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left">
-                    {" "}
-                    USN
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {team &&
-                  team.students.map((data, index) => (
-                    <tr
-                      key={index}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                    >
-                      <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {data.Name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {data.USN}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
           </div>
         </Content>
       </Layout>

@@ -1,21 +1,36 @@
-import React, { useState } from "react";
-import { RiTimeLine } from "react-icons/ri";
+import React, { useEffect, useState } from "react";
+
 import { Layout, Button, theme } from "antd";
 import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";
 import ToggleButton from "../Navbar/ToggleButton";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { GrProjects } from "react-icons/gr";
+
+import { mentorinfo } from "../StudAuth/Services/Api";
 const { Header, Sider, Content } = Layout;
 const Smentor = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+  const [info, setInfo] = useState();
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  useEffect(() => {
+    const fetchdata = async () => {
+      try {
+        const data = await mentorinfo();
+        setInfo(data);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchdata();
+  }, []);
+
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
@@ -38,7 +53,53 @@ const Smentor = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content></Content>
+        <Content style={{ overflow: "auto", padding: "24px" }}>
+          <div className="container mx-auto">
+            <h2 className="text-2xl font-bold text-center mb-4 bg-purple-100 p-2 border-b-2 border-purple-600">
+              Mentor Information
+            </h2>
+            <div className="bg-white p-4 rounded shadow">
+              {info &&
+                info.students.map((mentor, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center space-y-4"
+                  >
+                    <div className="flex items-center">
+                      <div className="font-bold text-lg">Name:</div>
+                      <div className="ml-2">
+                        <h3 className="text-lg font-semibold">{mentor.Name}</h3>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="font-bold text-lg">Designation:</div>
+                      <div className="ml-2">
+                        <p className="text-gray-600">{mentor.Designation}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="font-bold text-lg">Email:</div>
+                      <div className="ml-2">
+                        <p className="text-gray-600">{mentor.Email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="font-bold text-lg">Phone:</div>
+                      <div className="ml-2">
+                        <p className="text-gray-600">{mentor.Phone}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="font-bold text-lg">Mentor ID:</div>
+                      <div className="ml-2">
+                        <p className="text-gray-600">{mentor.Mentor_ID}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </Content>
       </Layout>
     </Layout>
   );
