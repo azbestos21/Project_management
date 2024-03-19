@@ -8,6 +8,7 @@ const fs = require("fs");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const connection = require("../db/connect");
+const { log } = require("console");
 exports.mentorregister = async (req, res) => {
   console.log(req.body);
   mentorTableModule.createMentorTable();
