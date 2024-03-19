@@ -6,20 +6,15 @@ import MenuItem from "../Navbar/MenuItem";
 import ToggleButton from "../Navbar/ToggleButton";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { GrProjects } from "react-icons/gr";
-import { projectregister } from "../StudAuth/Services/Api";
-import { studentteam } from "../StudAuth/Services/Api";
-import { studentproject } from "../StudAuth/Services/Api.jsx";
-import { useNavigate } from "react-router-dom";
+
+import { studentproject, studentteam } from "../StudAuth/Services/Api.jsx";
 
 const { Header, Sider, Content } = Layout;
 const SDashboard = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const [titleDisp, setTitleDisp] = useState(true);
-  const [details, setProjectdetails] = useState([]);
-  const [title, setTitle] = useState();
   const [team, setTeam] = useState();
-  const navigate=useNavigate();
+  const [details, setProjectdetails] = useState([]);
 
   useEffect(() => {
     console.log(123);
@@ -28,9 +23,6 @@ const SDashboard = () => {
         const { userData } = await studentproject();
         console.log("d=", userData);
         setProjectdetails(userData);
-        if (userData.length > 0) {
-          setTitleDisp(false);
-        }
       } catch (error) {}
     };
     fetchdetails();
@@ -67,6 +59,12 @@ const SDashboard = () => {
     fetchData();
   }, []);
 
+  const toggleTheme = () => {
+    setDarkTheme(!darkTheme);
+  };
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
@@ -89,7 +87,7 @@ const SDashboard = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content>
+        <Content className="overflow-y-auto">
           <div className="flex justify-around gap-4">
             <div className="w-fit h-12 bg-purple-800 m-4 rounded-xl flex items-center  relative px-5">
               <div className="w-8 h-8 bg-gray-100 rounded-full relative">
@@ -114,22 +112,6 @@ const SDashboard = () => {
               <div className="ml-4 text-base text-white">No Of Students :</div>
             </div>
           </div>
-          {titleDisp && (
-            <div className="bg-slate-300 flex items-center gap-x-4 w-full h-1/6">
-              <div className="div">
-                <h1 className="text-xl">Project Title:</h1>
-              </div>
-              <form className="flex flex-row gap-5" onSubmit={handlesubmit}>
-                <input
-                  type="text"
-                  placeholder="Enter the title of the project"
-                  className="p-3"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <button className="bg-blue-400 p-3 ">Register</button>
-              </form>
-            </div>
-          )}
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80">
               Team Details

@@ -53,33 +53,60 @@ const viewprojects = async () => {
     throw error;
   }
 };
-  const updateDetails = async (pid, action) => {
-    console.log(pid);
-    try {
-      if (action === 1) {
-        try {
-          const response = await axios.post(`${baseurl}/auth/acceptproject`, {
-            pid
-          });
-          window.location.reload();
-          return true;
-        } catch (err) {
-          throw err;
-        }
-      } else if (action === 0) {
-        try {
-          const response = await axios.post(`${baseurl}/auth/rejectproject`, {
-            pid
-          });
-          window.location.reload();
-          return true;
-        } catch (err) {
-          throw err;
-        }
+const updateDetails = async (pid, action) => {
+  console.log(pid);
+  try {
+    if (action === 1) {
+      try {
+        const response = await axios.post(`${baseurl}/auth/acceptproject`, {
+          pid,
+        });
+        window.location.reload();
+        return true;
+      } catch (err) {
+        throw err;
       }
-    } catch (error) {
-      console.log(error);
+    } else if (action === 0) {
+      try {
+        const response = await axios.post(`${baseurl}/auth/rejectproject`, {
+          pid,
+        });
+        window.location.reload();
+        return true;
+      } catch (err) {
+        throw err;
+      }
     }
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export { viewprojects,updateDetails };
+export { viewprojects, updateDetails };
+
+const domainproject = async (data) => {
+  try {
+    const res = await axios.post(`${baseurl}/auth/searchdomain`, data);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { domainproject };
+
+const mentordetails = async () => {
+  try {
+    const token = localStorage.getItem("Mentortoken");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const res = await axios.get(`${baseurl}/auth/mentormentor`, config);
+    console.log(res);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { mentordetails };

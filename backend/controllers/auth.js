@@ -123,7 +123,7 @@ exports.mentorlogin = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-//TN implement this in mentor dashboard & mentor view projects
+//pending
 exports.searchdomain = (req, res) => {
   const { domain } = req.body;
 
@@ -266,8 +266,6 @@ exports.studentregister = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-//implement this in student register provide drop down list to display available mentors
 exports.mentorlist = (req, res) => {
   try {
     connection.query("SELECT * FROM mentor", (error, results) => {
@@ -325,7 +323,7 @@ exports.studentlogin = (req, res) => {
     }
   );
 };
-
+//pending
 exports.teamregister = async (req, res) => {
   const capusn = req.user;
   console.log(capusn);
@@ -387,7 +385,9 @@ exports.teamregister = async (req, res) => {
       console.log(`Teammate ${name} registered successfully`);
     }
 
-    return res.status(200).json({ message: "Teammates registered successfully" });
+    return res
+      .status(200)
+      .json({ message: "Teammates registered successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -450,7 +450,6 @@ exports.studentproject = (req, res) => {
   });
 };
 
-//FRONTEND PENDING
 exports.studentteam = (req, res) => {
   const usn = req.user;
   console.log(usn);
@@ -478,8 +477,21 @@ exports.studentteam = (req, res) => {
     }
   });
 };
+//pending
+exports.mentormentor = (req, res) => {
+  const mid = req.user;
+  console.log(mid);
+  const mentorQuery = `SELECT Mentor_ID,NAME,Email,Phone,Designation FROM mentor WHERE Mentor_ID = '${mid}'`;
 
-//TN implement this in student dashboard
+  connection.query(mentorQuery, (error, Results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    res.status(200).json({ mentor: Results });
+  });
+};
+//pending
 exports.studentmentor = (req, res) => {
   const usn = req.user;
   console.log(usn);
@@ -495,7 +507,7 @@ exports.studentmentor = (req, res) => {
     if (results.length > 0) {
       const mentorId = results[0].M_ID;
       console.log(mentorId);
-      const studentsQuery = `SELECT Name FROM mentor WHERE Mentor_ID = ${mentorId}`;
+      const studentsQuery = `SELECT Mentor_ID,Name,Designation,Phone,Email FROM mentor WHERE Mentor_ID ="${mentorId}"`;
 
       connection.query(studentsQuery, (error, studentResults) => {
         if (error) {

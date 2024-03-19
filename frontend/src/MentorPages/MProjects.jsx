@@ -8,16 +8,32 @@ import ActionButton from "../Buttons/Button";
 import { useEffect } from "react";
 const { Header, Sider, Content } = Layout;
 import { viewprojects, updateDetails } from "../MentorAuth/Services/Api.jsx";
+import { domainproject } from "../MentorAuth/Services/Api.jsx";
 const MProjects = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [projectdata, setprojectdata] = useState(null);
+  const [search, setSearch] = useState();
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    console.log(search);
+    const domain = async () => {
+      try {
+        const data = await domainproject(search);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    domain();
+  };
+
   useEffect(() => {
     const fetchproject = async () => {
       try {
@@ -53,12 +69,22 @@ const MProjects = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto p-10">
+        <Content className="overflow-y-auto p-10 ">
           {" "}
+          <div className="flex justify-end mb-3">
+            <div className="relative">
+              <input
+                className="p-3 pl-10 pr-4 border-none rounded-full bg-gray-100 focus:ring focus:ring-blue-200"
+                type="text"
+                placeholder="Search Domain"
+                onChange={handleSearch}
+              />
+            </div>
+          </div>
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80 text-black">
-            Project Details
-          </h3>
+            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80 text-black">
+              Project Details
+            </h3>
             <table className="w-full text-sm text-left rtl:text-right text-black-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -109,8 +135,7 @@ const MProjects = () => {
                           onClick={() => updateDetails(data.Project_ID, 1)}
                         />{" "}
                         <br></br>{" "}
-                        <ActionButton 
-                          
+                        <ActionButton
                           label={"  Reject  "}
                           onClick={() => updateDetails(data.Project_ID, 0)}
                         />{" "}

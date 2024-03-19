@@ -7,7 +7,11 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import ToggleButton from "../MNavbar/MToggle";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { GrProjects } from "react-icons/gr";
-import { viewgroups, viewprojects } from "../MentorAuth/Services/Api";
+import {
+  mentordetails,
+  viewgroups,
+  viewprojects,
+} from "../MentorAuth/Services/Api";
 const { Header, Sider, Content } = Layout;
 
 const MDashboard = () => {
@@ -16,6 +20,7 @@ const MDashboard = () => {
   const [groupdata, setviewgroupdata] = useState(null);
   const [projectdata, setprojectdata] = useState(null);
   const [phasestatus, setphasestatus] = useState(null);
+  const [mentor, setMentordata] = useState();
 
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
@@ -52,6 +57,20 @@ const MDashboard = () => {
       }
     };
     fetchproject();
+  }, []);
+  useEffect(() => {
+    console.log(12);
+    const details = async () => {
+      try {
+        const mentordata = await mentordetails();
+        setMentordata(mentordata);
+        console.log(mentor);
+        console.log(mentordata);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    details();
   }, []);
 
   return (
@@ -103,6 +122,41 @@ const MDashboard = () => {
               <div className="ml-4 text-base text-white">
                 No Of Students : {groupdata && groupdata.userData.length}
               </div>
+            </div>
+          </div>
+          <div className="container mx-auto p-8">
+            <h3 className="bg-green-100 text-center text-lg font-bold uppercase border-b-2 border-green-600 p-2 opacity-80 w-full">
+              Profile
+            </h3>
+            <div className="bg-white rounded-lg shadow-md overflow-hidden mt-4">
+              {mentor &&
+                mentor.mentor.map((data, index) => (
+                  <div key={index} className="p-4">
+                    <div className="text-lg font-bold mb-2">Details</div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-sm font-bold">Mentor ID:</div>
+                        <div>{data.Mentor_ID}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">Name:</div>
+                        <div>{data.NAME}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">Email:</div>
+                        <div>{data.Email}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">Phone:</div>
+                        <div>{data.Phone}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold">Designation:</div>
+                        <div>{data.Designation}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </Content>
