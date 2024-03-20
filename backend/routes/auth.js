@@ -11,9 +11,9 @@ router.get('/viewprojects', mid.mentorauthenticationMiddleware,authController.pr
 router.get('/studentproject', mid.authenticationMiddleware,authController.studentproject);
 router.post('/studentupload',mid.authenticationMiddleware,authController.uploadphase)
 router.get('/studentteam',mid.authenticationMiddleware,authController.studentteam)
-router.get('/studentmentor',mid.authenticationMiddleware,authController.studentmentor);//pending
+router.get('/studentmentor',mid.authenticationMiddleware,authController.studentmentor);
 router.post('/teamregister',mid.authenticationMiddleware,authController.teamregister);//pending
-router.get('/mentormentor',mid.mentorauthenticationMiddleware,authController.mentormentor)//pending
+router.get('/mentormentor',mid.mentorauthenticationMiddleware,authController.mentormentor)
 router.get('/mentorlist',authController.mentorlist);
 router.post('/acceptproject',authController.acceptProject);
 router.post('/searchdomain',authController.searchdomain);//pending

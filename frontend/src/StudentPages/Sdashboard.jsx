@@ -47,13 +47,13 @@ const SDashboard = () => {
     fetchData();
   }, []);
   const handleteam = () => {
-    if (team.length < 4) {
-      setShowteam(true);
-    }
-    if (team.length >= 3) {
-      setShowteam(false);
+    console.log(team.students.length);
+    if (team.students.length >= 4) {
       setshowbutton(false);
-      localStorage.setItem("showButton", "false");
+      setShowteam(false);
+    } else {
+      setshowbutton(true);
+      setShowteam(true);
     }
   };
 
@@ -62,11 +62,6 @@ const SDashboard = () => {
     const data = await registerteam({ usn, name, mail });
     console.log(data);
     setShowteam(false);
-    if (team.length >= 3) {
-      setShowteam(false);
-      setshowbutton(false);
-      localStorage.setItem("showButton", "false");
-    }
   };
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);

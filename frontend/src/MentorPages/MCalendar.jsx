@@ -14,11 +14,11 @@ const getListData = (value) => {
       listData = [
         {
           type: "warning",
-          content: "This is warning event.",
+          content: "Task1",
         },
         {
           type: "success",
-          content: "This is usual event.",
+          content: "Task2",
         },
       ];
       break;
@@ -26,15 +26,15 @@ const getListData = (value) => {
       listData = [
         {
           type: "warning",
-          content: "This is warning event.",
+          content: "Ongoing task",
         },
         {
           type: "success",
-          content: "This is usual event.",
+          content: "Completed task",
         },
         {
           type: "error",
-          content: "This is error event.",
+          content: "Pending task",
         },
       ];
       break;
@@ -42,27 +42,27 @@ const getListData = (value) => {
       listData = [
         {
           type: "warning",
-          content: "This is warning event",
+          content: "Ongoing task",
         },
         {
           type: "success",
-          content: "This is very long usual event......",
+          content: "Completed task",
         },
         {
           type: "error",
-          content: "This is error event 1.",
+          content: "Pending task.",
         },
         {
           type: "error",
-          content: "This is error event 2.",
+          content: "Pending task.",
         },
         {
           type: "error",
-          content: "This is error event 3.",
+          content: "Pending task",
         },
         {
           type: "error",
-          content: "This is error event 4.",
+          content: "Pending task",
         },
       ];
       break;
