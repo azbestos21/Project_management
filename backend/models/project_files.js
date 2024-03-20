@@ -4,9 +4,8 @@ exports.createProjectfilesTable = () => {
   const createTableQuery = `
   CREATE TABLE IF NOT EXISTS project_files (
     File_Path VARCHAR(30) NOT NULL PRIMARY KEY,
-    File_Name VARCHAR(10) NOT NULL,
-    P_ID VARCHAR(10),
-    FOREIGN KEY (P_ID) REFERENCES project (P_ID)
+    P_ID int,
+    FOREIGN KEY (P_ID) REFERENCES project (Project_ID)
 );
 
 

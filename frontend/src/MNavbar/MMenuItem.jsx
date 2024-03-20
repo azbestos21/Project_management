@@ -1,12 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import {
   DashboardOutlined,
   ProjectOutlined,
   CalendarOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
-import { GiTeacher } from "react-icons/gi";
+import { MdOutlineGroups } from "react-icons/md";
+import { Link } from "react-router-dom";
 const MenuItem = ({ darkTheme }) => {
   return (
     <Menu
@@ -14,13 +14,13 @@ const MenuItem = ({ darkTheme }) => {
       className="h-screen flex flex-col items-center gap-4  relative mt-4"
     >
       <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-        <Link to="/dashboard">Dashboard</Link>
+        <Link to="/Mdashboard">Dashboard</Link>
       </Menu.Item>
       <Menu.Item key="project" icon={<ProjectOutlined />}>
-        <Link to="/MyProjects"> My Projects</Link>
+        <Link to="/Mprojects">Projects</Link>
       </Menu.Item>
-      <Menu.Item key="Mentor" icon={<GiTeacher />}>
-        <Link to="/Mentor">Mentor</Link>
+      <Menu.Item key="Mentor" icon={<MdOutlineGroups />}>
+        <Link to="/Mymentees">My Mentees</Link>
       </Menu.Item>
       <Menu.Item key="Calendar" icon={<CalendarOutlined />}>
         Calendar
@@ -28,5 +28,4 @@ const MenuItem = ({ darkTheme }) => {
     </Menu>
   );
 };
-
 export default MenuItem;
