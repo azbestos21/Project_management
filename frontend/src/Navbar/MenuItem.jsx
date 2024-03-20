@@ -23,7 +23,7 @@ const MenuItem = ({ darkTheme }) => {
         <Link to="/Mentor">Mentor</Link>
       </Menu.Item>
       <Menu.Item key="Calendar" icon={<CalendarOutlined />}>
-        Calendar
+        <Link to="/SCalendar">Calendar</Link>
       </Menu.Item>
     </Menu>
   );

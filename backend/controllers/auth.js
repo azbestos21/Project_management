@@ -653,25 +653,26 @@ exports.acceptProject = (req, res) => {
   const { pid } = req.body;
   console.log(pid);
   const acceptedQuery = `
-    UPDATE project 
-    SET 
-      Project_Phase = CASE 
-                        WHEN Project_Phase < 4 THEN Project_Phase + 1 
-                        ELSE Project_Phase 
-                      END,
-      Phase_Status = CASE 
-                        WHEN Project_Phase < 4 THEN 'Pending' 
-                        ELSE Phase_Status 
-                      END,
-      File_Path = CASE 
-                    WHEN Project_Phase < 4 THEN NULL 
-                    ELSE File_Path 
-                  END,
-      Project_Marks = CASE 
-                        WHEN Project_Marks<100 THEN Project_Marks + 25 
-                        ELSE Project_Marks 
-                      END
-    WHERE Project_ID = ${pid}
+  UPDATE project 
+  SET 
+    Project_Phase = CASE 
+                      WHEN Project_Phase < 4 THEN Project_Phase + 1 
+                      ELSE Project_Phase 
+                    END,
+    Phase_Status = CASE 
+                      WHEN Project_Phase < 4 THEN 'Pending'
+                      WHEN Project_Phase = 4 THEN 'Completed'
+                      ELSE Phase_Status  
+                    END,
+    File_Path = CASE 
+                  WHEN Project_Phase < 4 THEN NULL 
+                  ELSE File_Path 
+                END,
+    Project_Marks = CASE 
+                      WHEN Project_Marks<100 THEN Project_Marks + 25 
+                      ELSE Project_Marks 
+                    END
+  WHERE Project_ID = ${pid}
   `;
 
   try {

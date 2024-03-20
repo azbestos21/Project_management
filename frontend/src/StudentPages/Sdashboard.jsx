@@ -16,6 +16,7 @@ const SDashboard = () => {
   const [team, setTeam] = useState();
   const [details, setProjectdetails] = useState([]);
   const [showteam, setShowteam] = useState(false);
+  const [showbutton, setshowbutton] = useState(true);
   const [name, setName] = useState();
   const [usn, setUsn] = useState();
   const [mail, setMail] = useState();
@@ -46,9 +47,16 @@ const SDashboard = () => {
     fetchData();
   }, []);
   const handleteam = () => {
-    setShowteam(true);
+    console.log(team.students.length);
+    if (team.students.length >= 4) {
+      setshowbutton(false);
+      setShowteam(false);
+    } else {
+      setshowbutton(true);
+      setShowteam(true);
+    }
   };
-  console.log(usn, name, mail);
+
   const handlesubmit = async (e) => {
     e.preventDefault();
     const data = await registerteam({ usn, name, mail });
@@ -83,7 +91,7 @@ const SDashboard = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto">
+        <Content className="overflow-y-auto p-2">
           <div className="flex justify-around gap-4">
             <div className="w-fit h-12 bg-purple-800 m-4 rounded-xl flex items-center  relative px-5">
               <div className="w-8 h-8 bg-gray-100 rounded-full relative">
@@ -109,12 +117,14 @@ const SDashboard = () => {
             </div>
           </div>
           <div className="flex justify-center">
-            <button
-              onClick={handleteam}
-              className="p-4 bg-blue-500 rounded-full  border-2 border-black hover:bg-white m-2 "
-            >
-              Add Teammates
-            </button>
+            {showbutton && (
+              <button
+                onClick={handleteam}
+                className="p-4 bg-blue-500 rounded-full  border-2 border-black hover:bg-white m-2 "
+              >
+                Add Teammates
+              </button>
+            )}
           </div>
           {showteam && (
             <div className="">
