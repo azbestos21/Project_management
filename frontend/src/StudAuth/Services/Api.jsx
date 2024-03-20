@@ -130,3 +130,35 @@ const mentorinfo = async () => {
 };
 
 export { mentorinfo };
+
+const registerteam = async (data) => {
+  try {
+    console.log(data);
+    const token = localStorage.getItem("studenttoken");
+    const Arraydata = {
+      teammates: [
+        {
+          usn: data.usn,
+          name: data.name,
+          email: data.mail,
+        },
+      ],
+    };
+    console.log(Arraydata);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const res = await axios.post(
+      `${baseurl}/auth/teamregister`,
+      Arraydata,
+      config
+    );
+    console.log(res);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { registerteam };

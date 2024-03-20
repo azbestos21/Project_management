@@ -6,7 +6,7 @@ import MenuItem from "../Navbar/MenuItem";
 import ToggleButton from "../Navbar/ToggleButton";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { GrProjects } from "react-icons/gr";
-
+import { registerteam } from "../StudAuth/Services/Api.jsx";
 import { studentproject, studentteam } from "../StudAuth/Services/Api.jsx";
 
 const { Header, Sider, Content } = Layout;
@@ -15,6 +15,10 @@ const SDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [team, setTeam] = useState();
   const [details, setProjectdetails] = useState([]);
+  const [showteam, setShowteam] = useState(false);
+  const [name, setName] = useState();
+  const [usn, setUsn] = useState();
+  const [mail, setMail] = useState();
 
   useEffect(() => {
     console.log(123);
@@ -27,6 +31,7 @@ const SDashboard = () => {
     };
     fetchdetails();
   }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,7 +45,16 @@ const SDashboard = () => {
 
     fetchData();
   }, []);
-
+  const handleteam = () => {
+    setShowteam(true);
+  };
+  console.log(usn, name, mail);
+  const handlesubmit = async (e) => {
+    e.preventDefault();
+    const data = await registerteam({ usn, name, mail });
+    console.log(data);
+    setShowteam(false);
+  };
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
@@ -94,6 +108,48 @@ const SDashboard = () => {
               <div className="ml-4 text-base text-white">No Of Students :</div>
             </div>
           </div>
+          <div className="flex justify-center">
+            <button
+              onClick={handleteam}
+              className="p-4 bg-blue-500 rounded-full  border-2 border-black hover:bg-white m-2 "
+            >
+              Add Teammates
+            </button>
+          </div>
+          {showteam && (
+            <div className="">
+              <div className=""></div>
+              <div className=" bg-red-300 max-w-md mx-auto rounded-md p-4 m-2">
+                <form
+                  className="max-w-md mx-auto flex flex-col gap-2 p-3"
+                  onSubmit={handlesubmit}
+                >
+                  <input
+                    type="text"
+                    onChange={(e) => setName(e.target.value)}
+                    className="p-3 border-none"
+                    placeholder="Enter Name"
+                  />
+                  <input
+                    type="text"
+                    className="p-3 border-none"
+                    onChange={(e) => setUsn(e.target.value)}
+                    placeholder="Enter USN"
+                  />
+                  <input
+                    type="email"
+                    className="p-3 border-none"
+                    onChange={(e) => setMail(e.target.value)}
+                    placeholder="your@gmail.com"
+                  />
+                  <button className="p-3 border-none bg-blue-300">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80">
               Team Details
