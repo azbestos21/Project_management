@@ -92,7 +92,7 @@ const Sprojects = () => {
                   <th scope="col" className="px-6 py-3">
                     File Path
                   </th>
-                  
+
                   <th scope="col" className="px-6 py-3">
                     Phase status
                   </th>
@@ -149,8 +149,13 @@ const Sprojects = () => {
                   </label>
                 </div>
                 <div className="flex item-center mt-3">
-                <button className="w-32 mr-auto mt-auto mb-3 ml-auto text-center p-4 bg-blue-300 rounded-full  border-2 border-black hover:bg-white " type="submit">ADD FILES</button>
-              </div>
+                  <button
+                    className="w-32 mr-auto mt-auto mb-3 ml-auto text-center p-4 bg-blue-300 rounded-full  border-2 border-black hover:bg-white "
+                    type="submit"
+                  >
+                    ADD FILES
+                  </button>
+                </div>
               </form>
             </div>
           </div>

@@ -45,7 +45,7 @@ const MDashboard = () => {
         setprojectdata(data);
         if (data && data.userData && data.userData.length > 0) {
           const completeProjectsCount = data.userData.filter(
-            (project) => project.Phase_Status === "uploaded"
+            (project) => project.Phase_Status === "Completed"
           ).length;
 
           setphasestatus(completeProjectsCount);
