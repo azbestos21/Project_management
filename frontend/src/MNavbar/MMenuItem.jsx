@@ -22,8 +22,8 @@ const MenuItem = ({ darkTheme }) => {
       <Menu.Item key="Mentor" icon={<MdOutlineGroups />}>
         <Link to="/Mymentees">My Mentees</Link>
       </Menu.Item>
-      <Menu.Item key="Calendar" icon={<CalendarOutlined />}>
-        Calendar
+      <Menu.Item key="Mentor" icon={<MdOutlineGroups />}>
+        <Link to="/MCalendar">Calendar</Link>
       </Menu.Item>
     </Menu>
   );

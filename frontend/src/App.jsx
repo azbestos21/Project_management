@@ -14,6 +14,9 @@ import SDashboard from "./StudentPages/Sdashboard.jsx";
 import MulPages from "./StudentPages/MulPages.jsx";
 import Sprojects from "./StudentPages/Sprojects.jsx";
 import Smentor from "./StudentPages/Smentor.jsx";
+import SCalendar from "./StudentPages/SCalendar.jsx";
+import MCalendar from "./MentorPages/MCalendar.jsx";
+
 function App() {
   return (
     <Routes>
@@ -22,8 +25,10 @@ function App() {
           <Route path="/dashboard" element={<SDashboard />} />
           <Route path="/MyProjects" element={<Sprojects />} />
           <Route path="/Mentor" element={<Smentor />} />
+          <Route path="/SCalendar" element={<SCalendar />} />
         </Route>
       </Route>
+
       <Route path="/login" element={<Loginpg />} />
       <Route path="/Mlogin" element={<Login />} />
       <Route path="/" element={<PrivateMentRoute />}>
@@ -31,6 +36,7 @@ function App() {
           <Route path="/Mdashboard" element={<MDashboard />} />
           <Route path="/Mymentees" element={<MyMentees />} />
           <Route path="/Mprojects" element={<MProjects />} />
+          <Route path="/MCalendar" element={<MCalendar />} />
         </Route>
       </Route>
     </Routes>
