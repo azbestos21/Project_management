@@ -110,7 +110,7 @@ const MDashboard = () => {
                 <FaRegCheckCircle className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
               </div>
               <div className="ml-4 text-base text-balance text-white ">
-                Phase Status : {phasestatus}
+                Projects Completed : {phasestatus}
                 {"/"}
                 {projectdata && projectdata.userData.length}
               </div>

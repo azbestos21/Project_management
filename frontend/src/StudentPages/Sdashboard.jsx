@@ -92,35 +92,11 @@ const SDashboard = () => {
           />
         </Header>
         <Content className="overflow-y-auto p-2">
-          <div className="flex justify-around gap-4">
-            <div className="w-fit h-12 bg-purple-800 m-4 rounded-xl flex items-center  relative px-5">
-              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
-                <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-              </div>
-              <div className="ml-4 text-base text-balance text-white ">
-                No.Of Projects :{details.length}
-              </div>
-            </div>
-            <div className="w-fit h-12 bg-orange-800 m-4 rounded-xl flex items-center  relative px-5">
-              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
-                <GrProjects className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-              </div>
-              <div className="ml-4 text-base text-balance text-white ">
-                Phase Status :
-              </div>
-            </div>
-            <div className="w-fit h-12 bg-blue-800 m-4 rounded-xl flex items-center px-5">
-              <div className="w-8 h-8 bg-gray-100 rounded-full relative">
-                <MdOutlineGroupAdd className="w-4 h-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-              </div>
-              <div className="ml-4 text-base text-white">No Of Students :</div>
-            </div>
-          </div>
           <div className="flex justify-center">
             {showbutton && (
               <button
                 onClick={handleteam}
-                className="p-4 bg-blue-500 rounded-full  border-2 border-black hover:bg-white m-2 "
+                className="p-4 bg-blue-300 rounded-full  border-2 border-black hover:bg-white m-2 "
               >
                 Add Teammates
               </button>
@@ -129,7 +105,7 @@ const SDashboard = () => {
           {showteam && (
             <div className="">
               <div className=""></div>
-              <div className=" bg-red-300 max-w-md mx-auto rounded-md p-4 m-2">
+              <div className=" bg-blue-100 max-w-md mx-auto rounded-md p-4 m-2">
                 <form
                   className="max-w-md mx-auto flex flex-col gap-2 p-3"
                   onSubmit={handlesubmit}
