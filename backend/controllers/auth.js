@@ -3,12 +3,117 @@ const bcrypt = require("bcryptjs");
 const mentorTableModule = require("../models/mentor");
 const projectTableModule = require("../models/project");
 const studentTableModule = require("../models/student");
+const adminTableModule = require("../models/admin");
 const multer = require("multer");
 const fs = require("fs");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const connection = require("../db/connect");
 const { log } = require("console");
+exports.adminregister = async(req,res) =>{
+  console.log(req.body);
+  adminTableModule.createAdminTable();
+  const{username,password,confirmpassword} = req.body;
+  connection.query(
+    "Select username from admin where username = ?",
+    [username],
+    async (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+      if (results.length > 0) {
+        return res
+          .status(400)
+          .json({ message: "That username is already in use" });
+      } else if (password !== confirmpassword) {
+        return res.status(400).json({ message: "Passwords do not match" });
+      }
+
+      try {
+        let hashedPassword = await bcrypt.hash(password, 8);
+        console.log(hashedPassword);
+
+        connection.query(
+          "INSERT INTO admin SET ?",
+          {
+            username: username,
+            Password: hashedPassword,
+          },
+          async (error, results) => {
+            if (error) {
+              console.log(error);
+              return res.status(500).json({ error: "Internal Server Error" });
+            } else {
+              console.log(results);
+              const token = jwt.sign(
+                { username, password },
+                process.env.JWT_SECRET
+              );
+              const userData = {
+                username: username,
+                token: token,
+              };
+              return res
+                .status(200)
+                .json({ message: "Admin registered", userData });
+            }
+          }
+        );
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+    }
+  );
+}
+
+exports.adminlogin = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const results = await new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT * FROM admin WHERE username = ?",
+        [username],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+
+    if (results.length === 0) {
+      return res.status(401).json({ message: "Username or password is incorrect" });
+    }
+
+    const user = results[0];
+    if (!user.password) {
+      console.error("Password field is undefined for user:", username);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatch) {
+      return res.status(401).json({ message: "Username or password is incorrect" });
+    }
+
+    const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
+    const userData = {
+      username: username,
+      token: token,
+    };
+    return res.status(200).json({ message: "Login successful", userData });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 exports.mentorregister = async (req, res) => {
   console.log(req.body);
   mentorTableModule.createMentorTable();
@@ -711,3 +816,53 @@ exports.rejectProject = (req, res) => {
     res.status(500).json({ msg: "Internal server error" });
   }
 };
+
+exports.adminprojectlist = (req,res) =>{
+
+  // SQL query to select projects associated with the mentor's ID
+  const sql =
+    "SELECT * FROM project";
+
+  // Execute the SQL query
+  connection.query(sql, (err, data) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
+    }
+    console.log("Retrieved data from the database:", data);
+    res.json({ title: "projects-List", userData: data });
+  });
+}
+exports.adminmentorlist = (req,res) =>{
+
+  // SQL query to select projects associated with the mentor's ID
+  const sql =
+    "SELECT Mentor_ID,Name,Designation,Phone,Email,Phone FROM  mentor";
+
+  // Execute the SQL query
+  connection.query(sql, (err, data) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
+    }
+    console.log("Retrieved data from the database:", data);
+    res.json({ title: "mentor-List", userData: data });
+  });
+}
+exports.assignmentor = (req, res) => {
+  const { mid , pid } = req.body;
+  console.log(req.body);
+  const sql = "UPDATE student SET M_ID= ? WHERE P_ID = ?";
+  connection.query(sql, [mid, pid], (err, data) => {
+    if (err) {
+      console.error("Error", err);
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
+    }
+
+    res.status(200).json({ message: "Mentor assigned successfully" });
+  });
+};
+
