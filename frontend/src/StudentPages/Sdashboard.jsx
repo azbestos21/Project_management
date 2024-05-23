@@ -120,7 +120,7 @@ const SDashboard = () => {
             {showbutton && (
               <button
                 onClick={handleteam}
-                className="p-4 bg-blue-500 rounded-full  border-2 border-black hover:bg-white m-2 "
+                className="p-4 bg-blue-300 rounded-full  border-2 border-black hover:bg-white m-2 "
               >
                 Add Teammates
               </button>
@@ -129,7 +129,7 @@ const SDashboard = () => {
           {showteam && (
             <div className="">
               <div className=""></div>
-              <div className=" bg-red-300 max-w-md mx-auto rounded-md p-4 m-2">
+              <div className=" bg-gray-500 max-w-md mx-auto rounded-md p-4 m-2">
                 <form
                   className="max-w-md mx-auto flex flex-col gap-2 p-3"
                   onSubmit={handlesubmit}

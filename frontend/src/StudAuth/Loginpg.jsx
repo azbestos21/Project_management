@@ -14,12 +14,10 @@ export default function Loginpg() {
   const [password, setPassword] = useState();
   const [username, setUsn] = useState();
   const [Name, setname] = useState();
-  const [mentorName, setMentorName] = useState();
-  const [Mlist, setMentorList] = useState();
   const navigate = useNavigate();
   console.log(email, password);
   const [confirmpassword, setconfirmPassword] = useState();
-  console.log(username, Name, email, password, confirmpassword, mentorName);
+  console.log(username, Name, email, password, confirmpassword);
 
   const [signInButtonStyle, setSignInButtonStyle] = useState({
     backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
@@ -65,7 +63,6 @@ export default function Loginpg() {
         password,
         confirmpassword,
         email,
-        mentorName,
       });
       localStorage.setItem("studenttoken", data.userData.token);
 
@@ -74,18 +71,6 @@ export default function Loginpg() {
       console.log(error);
     }
   };
-  useEffect(() => {
-    const datafetch = async () => {
-      try {
-        const list = await mentorlist();
-        console.log(list);
-        setMentorList(list);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    datafetch();
-  }, []);
   useEffect(() => {
     const handleLogout = () => {
       localStorage.removeItem("studenttoken");
@@ -162,22 +147,6 @@ export default function Loginpg() {
                 placeholder={"your@email.com"}
                 onChange={(e) => setUseremail(e.target.value)}
               />
-              <select
-                className="p-3 border-none"
-                type="text"
-                placeholder={"Mentor_Name"}
-                onChange={(e) => setMentorName(e.target.value)}
-                defaultValue="Choose Mentor" // Set default value to empty string
-              >
-                <option value="">Choose Mentor</option>{" "}
-                {Mlist &&
-                  Mlist.data.mentorNames.map((mentorName, index) => (
-                    <option key={index} value={mentorName}>
-                      {mentorName}
-                    </option>
-                  ))}
-              </select>
-
               <input
                 className="p-3 border-none"
                 type="password"

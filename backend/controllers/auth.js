@@ -10,6 +10,7 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 const connection = require("../db/connect");
 const { log } = require("console");
+
 exports.adminregister = async(req,res) =>{
   console.log(req.body);
   adminTableModule.createAdminTable();
@@ -184,6 +185,34 @@ exports.mentorregister = async (req, res) => {
     }
   );
 };
+/*exports.checkmentor = async (req, res) => {
+  const usn = req.user;
+  console.log(usn);
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      connection.query("SELECT M_ID FROM student WHERE USN = ?", [usn], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    if (result.length > 0 && result[0].M_ID) {
+      // Mentor assigned
+      res.json({ assignedMentor: true });
+    } else {
+      // No mentor assigned
+      res.json({ assignedMentor: false });
+    }
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};*/
 
 exports.mentorlogin = async (req, res) => {
   const { username, password } = req.body;
@@ -257,29 +286,10 @@ exports.studentregister = async (req, res) => {
   projectTableModule.createProjectTable();
   studentTableModule.createStudentTable();
 
-  const { username, Name, password, confirmpassword, email, mentorName } =
+  const { username, Name, password, confirmpassword, email} =
     req.body;
 
   try {
-    const mentor = await new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT Mentor_ID FROM mentor WHERE Name = ?",
-        [mentorName],
-        (error, results) => {
-          if (error) {
-            reject(error);
-            console.log(error);
-          } else {
-            resolve(results[0]);
-          }
-        }
-      );
-    });
-
-    if (!mentor) {
-      return res.status(400).json({ message: "Mentor not found" });
-    }
-    const M_ID = mentor.Mentor_ID;
 
     const existingUser = await new Promise((resolve, reject) => {
       connection.query(
@@ -344,7 +354,6 @@ exports.studentregister = async (req, res) => {
           Email: email,
           Password: hashedPassword,
           P_ID: nextProjectID,
-          M_ID: M_ID,
         },
         (error, results) => {
           if (error) {
@@ -610,10 +619,10 @@ exports.studentmentor = (req, res) => {
       return res.status(500).json({ error: "Internal Server Error" });
     }
 
-    if (results.length > 0) {
+    if (results.length > 0 && results[0].M_ID) {
       const mentorId = results[0].M_ID;
       console.log(mentorId);
-      const studentsQuery = `SELECT Mentor_ID,Name,Designation,Phone,Email FROM mentor WHERE Mentor_ID ="${mentorId}"`;
+      const studentsQuery = `SELECT Mentor_ID, Name, Designation, Phone, Email FROM mentor WHERE Mentor_ID = "${mentorId}"`;
 
       connection.query(studentsQuery, (error, studentResults) => {
         if (error) {
@@ -622,9 +631,12 @@ exports.studentmentor = (req, res) => {
         }
         res.status(200).json({ students: studentResults });
       });
+    } else {
+      res.status(200).json({ message: "Project not assigned to mentor currently" });
     }
   });
 };
+
 
 exports.uploadphase = (req, res) => {
   const usn = req.user;

@@ -5,11 +5,14 @@ import Loginpg from "./StudAuth/Loginpg.jsx";
 import { PrivateRoute } from "./StudAuth/privateroute.jsx";
 import Login from "./MentorAuth/Login.jsx";
 import { PrivateMentRoute } from "./MentorAuth/PrivateMentRoute.jsx";
+import LogPg from "./AdminAuth/logPg.jsx";
+import {  PrivateRouter } from "./AdminAuth/PrivateRoute.jsx";
 
 import MyMentees from "./MentorPages/MyMentees.jsx";
 import MProjects from "./MentorPages/MProjects.jsx";
 import Multipage from "./MentorPages/Multipage.jsx";
 import MDashboard from "./MentorPages/MDashboard.jsx";
+
 import SDashboard from "./StudentPages/Sdashboard.jsx";
 import MulPages from "./StudentPages/MulPages.jsx";
 import Sprojects from "./StudentPages/Sprojects.jsx";
@@ -31,6 +34,7 @@ function App() {
 
       <Route path="/login" element={<Loginpg />} />
       <Route path="/Mlogin" element={<Login />} />
+      <Route path="/Alogin" element={<LogPg />} />
       <Route path="/" element={<PrivateMentRoute />}>
         <Route path="/" element={<Multipage />}>
           <Route path="/Mdashboard" element={<MDashboard />} />
@@ -40,6 +44,7 @@ function App() {
         </Route>
       </Route>
     </Routes>
+    
   );
 }
 

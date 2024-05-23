@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import axios from "axios"; // Make sure axios is imported
 import { Layout, Button, theme } from "antd";
 import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";
@@ -7,25 +7,36 @@ import ToggleButton from "../Navbar/ToggleButton";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 import { mentorinfo } from "../StudAuth/Services/Api";
+
 const { Header, Sider, Content } = Layout;
+
 const Smentor = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const [info, setInfo] = useState();
+  const [info, setInfo] = useState(null);
+  const [message, setMessage] = useState("");
+  
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   useEffect(() => {
     const fetchdata = async () => {
       try {
         const data = await mentorinfo();
-        setInfo(data);
+        if (data.students) {
+          setInfo(data.students);
+        } else if (data.message) {
+          setMessage(data.message);
+        }
         console.log(data);
       } catch (error) {
         console.log(error);
+        setMessage("An error occurred while fetching data.");
       }
     };
     fetchdata();
@@ -59,12 +70,12 @@ const Smentor = () => {
               Mentor Information
             </h2>
             <div className="bg-white p-4 rounded shadow">
-              {info &&
-                info.students.map((mentor, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-center space-y-4"
-                  >
+              {message ? (
+                <div className="text-red-600 text-center">{message}</div>
+              ) : (
+                info &&
+                info.map((mentor, index) => (
+                  <div key={index} className="flex flex-col items-center space-y-4">
                     <div className="flex items-center">
                       <div className="font-bold text-lg">Name:</div>
                       <div className="ml-2">
@@ -96,7 +107,8 @@ const Smentor = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              )}
             </div>
           </div>
         </Content>
