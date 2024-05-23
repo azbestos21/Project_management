@@ -1,0 +1,29 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  DashboardOutlined,
+  ProjectOutlined,
+  CalendarOutlined,
+} from "@ant-design/icons";
+import { Menu } from "antd";
+import { GiTeacher } from "react-icons/gi";
+const MenuItem = ({ darkTheme }) => {
+  return (
+    <Menu
+      theme={darkTheme ? "dark" : "light"}
+      className="h-screen flex flex-col items-center gap-4  relative mt-4"
+    >
+      <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
+        <Link to="/Adashboard">Dashboard</Link>
+      </Menu.Item>
+      <Menu.Item key="Actions" icon={<CalendarOutlined />}>
+        <Link to="/Actions">Actions</Link>
+      </Menu.Item>
+      <Menu.Item key="Calendar" icon={<CalendarOutlined />}>
+        <Link to="/ACalendar">Calendar</Link>
+      </Menu.Item>
+    </Menu>
+  );
+};
+
+export default MenuItem;

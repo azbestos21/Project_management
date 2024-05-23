@@ -12,13 +12,15 @@ import MyMentees from "./MentorPages/MyMentees.jsx";
 import MProjects from "./MentorPages/MProjects.jsx";
 import Multipage from "./MentorPages/Multipage.jsx";
 import MDashboard from "./MentorPages/MDashboard.jsx";
-
+import Actions from "./Adminpages/Actions.jsx";
 import SDashboard from "./StudentPages/Sdashboard.jsx";
 import MulPages from "./StudentPages/MulPages.jsx";
 import Sprojects from "./StudentPages/Sprojects.jsx";
 import Smentor from "./StudentPages/Smentor.jsx";
 import SCalendar from "./StudentPages/SCalendar.jsx";
 import MCalendar from "./MentorPages/MCalendar.jsx";
+import ACalendar from "./Adminpages/ACalender.jsx";
+import ADashboard from "./Adminpages/ADashboard.jsx";
 
 function App() {
   return (
@@ -37,6 +39,9 @@ function App() {
       <Route path="/Alogin" element={<LogPg />} />
       <Route path="/" element={<PrivateMentRoute />}>
         <Route path="/" element={<Multipage />}>
+        <Route path="/Adashboard" element={<ADashboard />} />
+        <Route path="/ACalendar" element={<ACalendar />} />
+        <Route path="/Actions" element={<Actions />} />
           <Route path="/Mdashboard" element={<MDashboard />} />
           <Route path="/Mymentees" element={<MyMentees />} />
           <Route path="/Mprojects" element={<MProjects />} />
