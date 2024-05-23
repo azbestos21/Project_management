@@ -11,7 +11,7 @@ router.post('/studentlogin', authController.studentlogin);
 router.post('/assignmentor', authController.assignmentor);//pending
 router.get('/viewgroups', mid.mentorauthenticationMiddleware,authController.grouplist);
 router.get('/viewprojects', mid.mentorauthenticationMiddleware,authController.projectlist);
-router.get('/studentproject', mid.authenticationMiddleware,authController.studentproject);
+router.get('/studentproject',mid.authenticationMiddleware,authController.studentproject);
 router.post('/studentupload',mid.authenticationMiddleware,authController.uploadphase)
 router.get('/studentteam',mid.authenticationMiddleware,authController.studentteam)
 router.get('/studentmentor',mid.authenticationMiddleware,authController.studentmentor);
@@ -20,8 +20,10 @@ router.get('/mentormentor',mid.mentorauthenticationMiddleware,authController.men
 router.get('/mentorlist',authController.mentorlist);
 router.get('/adminprojectlist',authController.adminprojectlist);//pending
 router.get('/adminmentorlist',authController.adminmentorlist);//pending
+router.get('/adminstudentlist',authController.adminstudentlist);//pending
 router.post('/acceptproject',authController.acceptProject);
 router.post('/searchdomain',authController.searchdomain);//pending
 router.post('/rejectproject',authController.rejectProject);
+router.post('/newproject',authController.newproject);//pending
 //router.get('/checkmentor',mid.authenticationMiddleware,authController.checkmentor)//pending
 module.exports = router;

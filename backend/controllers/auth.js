@@ -508,6 +508,26 @@ exports.teamregister = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+exports.newproject = (req, res) => {
+  const { projectName, domain } = req.body;
+  
+  if (!projectName || !domain) {
+    return res.status(400).json({ error: "Project name and domain are required" });
+  }
+
+  const query = `
+    INSERT INTO project (Project_Name, Phase_Status, Project_Marks, File_Path, Project_Phase, domain) 
+    VALUES (?, 'Pending', 0, NULL, 1, ?)
+  `;
+
+  connection.query(query, [projectName, domain], (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    res.status(201).json({ message: "Project created successfully", projectId: results.insertId });
+  });
+};
 
 exports.grouplist = (req, res) => {
   const ID = req.user;
@@ -634,6 +654,20 @@ exports.studentmentor = (req, res) => {
     } else {
       res.status(200).json({ message: "Project not assigned to mentor currently" });
     }
+  });
+};
+exports.adminstudentlist = (req, res) => {
+  const query = `
+    SELECT USN, Name, Email, P_ID, M_ID 
+    FROM student 
+    ORDER BY P_ID`;
+
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    res.status(200).json(results);
   });
 };
 

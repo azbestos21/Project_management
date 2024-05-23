@@ -8,7 +8,7 @@ exports.createProjectTable = () => {
     Project_Phase VARCHAR(10) NOT NULL,
     File_Path VARCHAR(100) DEFAULT NULL,
     Phase_Status VARCHAR(10) NOT NULL,
-    Project_Marks INT
+    Project_Marks INT DEFAULT NULL
 )
 
     `;
