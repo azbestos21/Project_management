@@ -16,12 +16,12 @@ const Actions = () => {
     setDarkTheme(!darkTheme);
   };
 
-  const handleAssignMentor = async (values) => {
+  const handleAssign = async (values) => {
     try {
-      await axios.post("http://localhost:3000/auth/assignmentor", values);
-      message.success("Mentor assigned successfully");
+      await axios.post("http://localhost:3000/auth/assign", values);
+      message.success("Mentor and project assigned successfully");
     } catch (error) {
-      message.error("Failed to assign mentor");
+      message.error("Failed to assign mentor and project ");
     }
   };
 
@@ -31,14 +31,6 @@ const Actions = () => {
       message.success("Project created successfully");
     } catch (error) {
       message.error("Failed to create project");
-    }
-  };
-  const handleAssignProject = async (values) => {
-    try {
-      await axios.post("http://localhost:3000/auth/assignproject", values);
-      message.success("Project assigned successfully");
-    } catch (error) {
-      message.error("Failed to assign project");
     }
   };
 
@@ -75,30 +67,19 @@ const Actions = () => {
             </Form>
             </div>
             <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">Assign Project</h3>
-            <Form onFinish={handleAssignProject}>
-              <Form.Item label="Project ID" name="PID">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Team_ID" name="Team_ID">
-                <Input />
-              </Form.Item>
-              <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
-                Assign Project
-              </Button>
-            </Form>
-          </div>
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">Assign Mentor</h3>
-            <Form onFinish={handleAssignMentor}>
+            <h3 className="text-xl font-semibold mb-4">Assign Project and Mentor</h3>
+            <Form onFinish={handleAssign}>
               <Form.Item label="Mentor ID" name="mid">
                 <Input />
               </Form.Item>
               <Form.Item label="Project ID" name="pid">
                 <Input />
               </Form.Item>
+              <Form.Item label="Team_ID" name="Team_ID">
+                <Input />
+              </Form.Item>
               <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
-                Assign Mentor
+                Assign 
               </Button>
             </Form>
           </div>

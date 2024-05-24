@@ -48,13 +48,30 @@ const adminprojectlist = async () => {
       throw error;
     }
   };
-  export {adminmentorlist,adminprojectlist,adminstudentlist}
+  const mentoroption = async () => {
+    try {
+      const response = await axios.get(`${baseurl}/auth/mentoroption`);
+      console.log("Mentor options response:", response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  const projectoption = async () => {
+    try {
+      const response = await axios.get(`${baseurl}/auth/projectoption`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  export {adminmentorlist,adminprojectlist,adminstudentlist,projectoption,mentoroption}
 
 
   // Assign Mentor to Student
-  const assignmentor = async (mid, pid) => {
+  const assign = async (mid, pid,Team_ID) => {
     try {
-      const response = await axios.post(`${baseurl}/auth/assignmentor`, { mid, pid });
+      const response = await axios.post(`${baseurl}/auth/assignmentor`, { mid, pid,Team_ID });
       return response.data;
     } catch (error) {
       throw error;
@@ -70,15 +87,7 @@ const adminprojectlist = async () => {
       throw error;
     }
   };
-  const assignproject = async (PID, Team_ID ) => {
-    try {
-      const response = await axios.post(`${baseurl}/auth/assignproject`, { PID, Team_ID });
-      console.log(PID, Team_ID );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  };
+
   
-  export { assignmentor, newproject,assignproject };
+  export { newproject,assign };
   

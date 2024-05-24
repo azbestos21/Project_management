@@ -8,7 +8,7 @@ export default function Login() {
   const [showSignUp, setShowSignUp] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [Name, setName] = useState("");
   const [email, setUserEmail] = useState("");
   const [designation, setDesignation] = useState("");
   const [phone, setPhoneNo] = useState("");
@@ -60,7 +60,7 @@ export default function Login() {
         username,
         password,
         confirmpassword: confirmPassword,
-        name,
+        Name,
         email,
         phone,
         designation,

@@ -916,33 +916,48 @@ exports.adminmentorlist = (req,res) =>{
     res.json({ title: "mentor-List", userData: data });
   });
 }
-exports.assignmentor = (req, res) => {
-  const { mid , pid } = req.body;
+exports.assign = (req, res) => {
+  const { mid , pid, Team_ID} = req.body;
   console.log(req.body);
-  const sql = "UPDATE student SET M_ID= ? WHERE P_ID = ?";
-  connection.query(sql, [mid, pid], (err, data) => {
+  const sql = `UPDATE student SET M_ID= ${mid} , P_ID = ${pid} WHERE Team_ID="${Team_ID}" `;
+  connection.query(sql, (err, data) => {
     if (err) {
       console.error("Error", err);
       res.status(500).json({ error: "Internal Server Error" });
       return;
     }
 
-    res.status(200).json({ message: "Mentor assigned successfully" });
+    res.status(200).json({ message: "Mentor and project assigned successfully" });
   });
 };
+exports.mentoroption = (req,res) => {
+  const sql = "SELECT Mentor_ID, Name FROM mentor";
 
-exports.assignProject = (req,res)=>{
-  const {Team_ID,PID} = req.body;
-
-  const updateQuery=`UPDATE student SET P_ID =${PID} WHERE Team_ID="${Team_ID}"`;
-
-  connection.query(updateQuery, (err, data) => {
+  // Execute the SQL query
+  connection.query(sql, (err, data) => {
     if (err) {
-      console.error("Error updating data:", err);
+      console.error("Error fetching data:", err);
       res.status(500).json({ error: "Internal Server Error" });
       return;
     }
-    console.log("Updated PID data from the database:", data);
-    res.json({"message":"Updated teamid with PID" });
+    console.log("Retrieved data from the database:", data);
+    res.json({ title: "mentor-List", mentorData: data });
   });
+
 }
+exports.projectoption = (req,res) =>{
+  const sql = "SELECT Project_ID, Project_Name FROM project";
+
+  // Execute the SQL query
+  connection.query(sql, (err, data) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
+    }
+    console.log("Retrieved data from the database:", data);
+    res.json({ title: "project-List", mentorData: data });
+  });
+
+}
+
