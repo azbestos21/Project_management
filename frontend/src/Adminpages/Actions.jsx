@@ -33,9 +33,18 @@ const Actions = () => {
       message.error("Failed to create project");
     }
   };
+  const handleAssignProject = async (values) => {
+    try {
+      await axios.post("http://localhost:3000/auth/assignproject", values);
+      message.success("Project assigned successfully");
+    } catch (error) {
+      message.error("Failed to assign project");
+    }
+  };
+
 
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout className="overflow-y-auto h-32" style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
         collapsed={collapsed}
         collapsible
@@ -51,8 +60,33 @@ const Actions = () => {
         <Header style={{ padding: 0 }}>
         </Header>
         <Content style={{ padding: "24px" }}>
-          <div className="container mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Welcome to the Admin Actions</h2>
+          <div className="mt-8 ">
+            <h3 className="text-xl font-semibold mb-4">Create Project</h3>
+            <Form onFinish={handleCreateProject}>
+              <Form.Item label="Project Name" name="projectName">
+                <Input/>
+              </Form.Item>
+              <Form.Item label="Domain" name="domain">
+                <Input />
+              </Form.Item>
+              <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
+                Create Project
+              </Button>
+            </Form>
+            </div>
+            <div className="mt-8">
+            <h3 className="text-xl font-semibold mb-4">Assign Project</h3>
+            <Form onFinish={handleAssignProject}>
+              <Form.Item label="Project ID" name="PID">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Team_ID" name="Team_ID">
+                <Input />
+              </Form.Item>
+              <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
+                Assign Project
+              </Button>
+            </Form>
           </div>
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Assign Mentor</h3>
@@ -65,20 +99,6 @@ const Actions = () => {
               </Form.Item>
               <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
                 Assign Mentor
-              </Button>
-            </Form>
-          </div>
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">Create Project</h3>
-            <Form onFinish={handleCreateProject}>
-              <Form.Item label="Project Name" name="projectName">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Domain" name="domain">
-                <Input />
-              </Form.Item>
-              <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
-                Create Project
               </Button>
             </Form>
           </div>

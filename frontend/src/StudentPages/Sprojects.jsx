@@ -63,7 +63,7 @@ const Sprojects = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header style={{ padding: 0}}>
           <Button
             type="text"
             className="toggle"
@@ -73,7 +73,7 @@ const Sprojects = () => {
         </Header>
         <Content>
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80">
+            <h3 className="text-lg text-center font-bold uppercase p-1 bg-gray-100 border-b-2 border-black-700 opacity-80">
               Project Details
             </h3>
             <table className="w-full text-sm text-left rtl:text-right text-black-500 dark:text-gray-400">

@@ -54,7 +54,7 @@ const Smentor = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header style={{ padding: 0 }}>
           <Button
             type="text"
             className="toggle"
@@ -64,7 +64,7 @@ const Smentor = () => {
         </Header>
         <Content style={{ overflow: "auto", padding: "24px" }}>
           <div className="container mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-4 bg-purple-100 p-2 border-b-2 border-purple-600">
+            <h2 className="text-2xl font-bold text-center mb-4 bg-gray-100 p-2 border-b-2 border-black-600">
               Mentor Information
             </h2>
             <div className="bg-white p-4 rounded shadow">

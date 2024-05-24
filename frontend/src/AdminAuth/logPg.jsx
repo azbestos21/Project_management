@@ -84,16 +84,15 @@ export default function LogPg() {
           <h2 className="text-2xl text-center mb-4">Admin</h2>
           <div className="flex gap-3 mb-5 justify-center">
             <button
-              className="primary w-1/2 p-2 rounded-xl"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
               onClick={handleSignInClick}
-              style={signInButtonStyle}
+              
             >
               SIGN IN
             </button>
             <button
-              className="secondary w-1/2 p-2 rounded-xl"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
               onClick={handleSignUpClick}
-              style={signUpButtonStyle}
             >
               SIGN UP
             </button>
@@ -112,7 +111,7 @@ export default function LogPg() {
                 placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button className="bg-blue-500 text-white p-3 rounded">
+              <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                 Login
               </button>
             </form>
@@ -137,7 +136,7 @@ export default function LogPg() {
                 placeholder="Confirm Password"
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              <button className="bg-blue-500 text-white p-3 rounded">
+              <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                 Register
               </button>
             </form>

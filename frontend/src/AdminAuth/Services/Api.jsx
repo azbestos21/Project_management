@@ -70,6 +70,15 @@ const adminprojectlist = async () => {
       throw error;
     }
   };
+  const assignproject = async (PID, Team_ID ) => {
+    try {
+      const response = await axios.post(`${baseurl}/auth/assignproject`, { PID, Team_ID });
+      console.log(PID, Team_ID );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
   
-  export { assignmentor, newproject };
+  export { assignmentor, newproject,assignproject };
   

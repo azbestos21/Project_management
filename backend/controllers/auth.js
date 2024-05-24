@@ -316,34 +316,33 @@ exports.studentregister = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 8);
     console.log(hashedPassword);
-    console.log(M_ID);
 
-    const totalProjects = await new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT COUNT(*) AS totalProjects FROM project",
-        (error, results) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(results[0].totalProjects);
-          }
-        }
-      );
-    });
-    console.log(totalProjects);
-    const nextProjectID = await new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT MAX(P_ID) AS maxProjectID FROM student",
-        (error, results) => {
-          if (error) {
-            reject(error);
-          } else {
-            console.log(results[0].maxProjectID);
-            resolve((results[0].maxProjectID % totalProjects) + 1);
-          }
-        }
-      );
-    });
+    // const totalProjects = await new Promise((resolve, reject) => {
+    //   connection.query(
+    //     "SELECT COUNT(*) AS totalProjects FROM project",
+    //     (error, results) => {
+    //       if (error) {
+    //         reject(error);
+    //       } else {
+    //         resolve(results[0].totalProjects);
+    //       }
+    //     }
+    //   );
+    // });
+    // console.log(totalProjects);
+    // const nextProjectID = await new Promise((resolve, reject) => {
+    //   connection.query(
+    //     "SELECT MAX(P_ID) AS maxProjectID FROM student",
+    //     (error, results) => {
+    //       if (error) {
+    //         reject(error);
+    //       } else {
+    //         console.log(results[0].maxProjectID);
+    //         resolve((results[0].maxProjectID % totalProjects) + 1);
+    //       }
+    //     }
+    //   );
+    // });
 
     await new Promise((resolve, reject) => {
       connection.query(
@@ -353,7 +352,7 @@ exports.studentregister = async (req, res) => {
           Name: Name,
           Email: email,
           Password: hashedPassword,
-          P_ID: nextProjectID,
+          Team_ID: `${username}${Math.floor(Math.random() * 10)}`
         },
         (error, results) => {
           if (error) {
@@ -473,29 +472,46 @@ exports.teamregister = async (req, res) => {
     for (const teammate of teammates) {
       const { usn, name, email } = teammate;
 
-      // Insert teammate record into the database
-      await new Promise((resolve, reject) => {
+
+      await new Promise((resolve,reject) =>{
         connection.query(
-          "INSERT INTO student SET ?",
-          {
-            USN: usn,
-            Name: name,
-            Email: email,
-            Password: Password, // Use captain's password for teammates
-            P_ID: P_ID, // Use captain's project ID for teammates
-            M_ID: M_ID, // Use captain's mentor ID for teammates
-          },
-          (error, results) => {
+          "SELECT Team_ID from student WHERE USN=?",[capusn],(error, results) => {
             if (error) {
               console.error(error);
               reject(error);
             } else {
-              console.log(results);
+              console.log(results[0].Team_ID);
+              
+            connection.query(
+              "INSERT INTO student SET ?",
+              {
+                USN: usn,
+                Name: name,
+                Email: email,
+                Team_ID: results[0].Team_ID,
+                Password: Password, // Use captain's password for teammates
+                P_ID: P_ID, // Use captain's project ID for teammates
+                M_ID: M_ID, // Use captain's mentor ID for teammates
+              },
+              (error, results) => {
+                if (error) {
+                  console.error(error);
+                  reject(error);
+                } else {
+                  console.log(results);
+                  resolve();
+                }
+              }
+            );
               resolve();
             }
-          }
-        );
-      });
+
+            
+        
+          })
+      })
+      // Insert teammate record into the database
+      
 
       console.log(`Teammate ${name} registered successfully`);
     }
@@ -589,7 +605,7 @@ exports.studentteam = (req, res) => {
   const usn = req.user;
   console.log(usn);
 
-  const query = `SELECT P_ID FROM student WHERE USN = "${usn}"`;
+  const query = `SELECT Team_ID FROM student WHERE USN = "${usn}"`;
 
   connection.query(query, (error, results) => {
     if (error) {
@@ -598,9 +614,9 @@ exports.studentteam = (req, res) => {
     }
 
     if (results.length > 0) {
-      const projectId = results[0].P_ID;
-      console.log(projectId);
-      const studentsQuery = `SELECT USN,Name FROM student WHERE P_ID = ${projectId}`;
+      const teamId = results[0].Team_ID;
+      console.log(teamId);
+      const studentsQuery = `SELECT USN, Name FROM student WHERE Team_ID = "${teamId}"`;
 
       connection.query(studentsQuery, (error, studentResults) => {
         if (error) {
@@ -612,6 +628,9 @@ exports.studentteam = (req, res) => {
     }
   });
 };
+
+
+
 //pending
 exports.mentormentor = (req, res) => {
   const mid = req.user;
@@ -658,7 +677,7 @@ exports.studentmentor = (req, res) => {
 };
 exports.adminstudentlist = (req, res) => {
   const query = `
-    SELECT USN, Name, Email, P_ID, M_ID 
+    SELECT USN, Name, Email, P_ID, Team_ID,M_ID
     FROM student 
     ORDER BY P_ID`;
 
@@ -912,3 +931,18 @@ exports.assignmentor = (req, res) => {
   });
 };
 
+exports.assignProject = (req,res)=>{
+  const {Team_ID,PID} = req.body;
+
+  const updateQuery=`UPDATE student SET P_ID =${PID} WHERE Team_ID="${Team_ID}"`;
+
+  connection.query(updateQuery, (err, data) => {
+    if (err) {
+      console.error("Error updating data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
+    }
+    console.log("Updated PID data from the database:", data);
+    res.json({"message":"Updated teamid with PID" });
+  });
+}

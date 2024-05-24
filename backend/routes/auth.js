@@ -25,5 +25,6 @@ router.post('/acceptproject',authController.acceptProject);
 router.post('/searchdomain',authController.searchdomain);//pending
 router.post('/rejectproject',authController.rejectProject);
 router.post('/newproject',authController.newproject);//pending
+router.post("/assignproject",authController.assignProject);
 //router.get('/checkmentor',mid.authenticationMiddleware,authController.checkmentor)//pending
 module.exports = router;

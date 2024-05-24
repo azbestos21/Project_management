@@ -79,6 +79,7 @@ const ADashboard = () => {
     { title: 'Name', dataIndex: 'Name', key: 'Name' },
     { title: 'Email', dataIndex: 'Email', key: 'Email' },
     { title: 'Project ID', dataIndex: 'P_ID', key: 'P_ID' },
+    { title: 'Team ID', dataIndex: 'Team_ID', key: 'Team_ID' },
     { title: 'Mentor ID', dataIndex: 'M_ID', key: 'M_ID' },
   ];
 
@@ -126,23 +127,23 @@ const ADashboard = () => {
         </Header>
         <Content style={{ padding: "24px", background: colorBgContainer, overflowY: 'auto',backgroundColor:'rgba(230,230,230)' }}>
           <div className="container mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Welcome to the Admin Dashboard</h2>
-            <p>Use the sidebar to navigate through the admin features.</p>
+            <h2 className="text-2xl font-bold mb-4">Welcome to the Admin Dashboard!</h2>
           </div>
-          <div className="flex justify-around my-8">
-            <div className="p-4 bg-white shadow rounded-lg">
-              <h3 className="text-lg font-semibold">Total Projects</h3>
-              <p className="text-2xl">{projects.length}</p>
-            </div>
-            <div className="p-4 bg-white shadow rounded-lg">
-              <h3 className="text-lg font-semibold">Total Mentors</h3>
-              <p className="text-2xl">{mentors.length}</p>
-            </div>
-            <div className="p-4 bg-white shadow rounded-lg">
-              <h3 className="text-lg font-semibold">Total Students</h3>
-              <p className="text-2xl">{students.length}</p>
-            </div>
-          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-8">
+  <div className="p-4 bg-white shadow rounded-lg text-center">
+    <h3 className="text-lg font-semibold">Total Projects</h3>
+    <p className="text-2xl">{projects.length}</p>
+  </div>
+  <div className="p-4 bg-white shadow rounded-lg text-center">
+    <h3 className="text-lg font-semibold">Total Mentors</h3>
+    <p className="text-2xl">{mentors.length}</p>
+  </div>
+  <div className="p-4 bg-white shadow rounded-lg text-center">
+    <h3 className="text-lg font-semibold">Total Students</h3>
+    <p className="text-2xl">{students.length}</p>
+  </div>
+</div>
+
           <div style={tableStyles.container}>
             <h3 className="text-xl font-semibold mb-4">Project List</h3>
             <Table
