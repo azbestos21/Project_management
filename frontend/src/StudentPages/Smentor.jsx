@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // Make sure axios is imported
+import axios from "axios";
 import { Layout, Button, theme } from "antd";
 import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";
@@ -33,9 +33,8 @@ const Smentor = () => {
         } else if (data.message) {
           setMessage(data.message);
         }
-        console.log(data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         setMessage("An error occurred while fetching data.");
       }
     };
@@ -49,7 +48,6 @@ const Smentor = () => {
         collapsible
         trigger={null}
         theme={darkTheme ? "dark" : "light"}
-        className=""
       >
         <Logoimg />
         <MenuItem darkTheme={darkTheme} />

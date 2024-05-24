@@ -116,7 +116,7 @@ const ADashboard = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header style={{ padding: 0  }}>
           <Button
             type="text"
             className="toggle"
@@ -124,7 +124,7 @@ const ADashboard = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content style={{ padding: "24px", background: colorBgContainer, overflowY: 'auto',backgroundColor:'rgba(200,200,200)' }}>
+        <Content style={{ padding: "24px", background: colorBgContainer, overflowY: 'auto',backgroundColor:'rgba(230,230,230)' }}>
           <div className="container mx-auto text-center">
             <h2 className="text-2xl font-bold mb-4">Welcome to the Admin Dashboard</h2>
             <p>Use the sidebar to navigate through the admin features.</p>

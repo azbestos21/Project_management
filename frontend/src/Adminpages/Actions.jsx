@@ -49,12 +49,6 @@ const Actions = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0 }}>
-          <Button
-            type="text"
-            className="toggle"
-            onClick={() => setCollapsed(!collapsed)}
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          />
         </Header>
         <Content style={{ padding: "24px" }}>
           <div className="container mx-auto text-center">
