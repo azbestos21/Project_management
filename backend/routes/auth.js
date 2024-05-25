@@ -8,7 +8,6 @@ router.post('/studentregister', authController.studentregister);
 router.post('/adminregister', authController.adminregister);
 router.post('/adminlogin', authController.adminlogin);
 router.post('/studentlogin', authController.studentlogin);
-router.post('/assignmentor', authController.assignmentor);//pending
 router.get('/viewgroups', mid.mentorauthenticationMiddleware,authController.grouplist);
 router.get('/viewprojects', mid.mentorauthenticationMiddleware,authController.projectlist);
 router.get('/studentproject',mid.authenticationMiddleware,authController.studentproject);
@@ -25,5 +24,8 @@ router.post('/acceptproject',authController.acceptProject);
 router.post('/searchdomain',authController.searchdomain);//pending
 router.post('/rejectproject',authController.rejectProject);
 router.post('/newproject',authController.newproject);//pending
+router.post("/assign",authController.assign);
+router.get("/mentoroption",authController.mentoroption)
+router.get("/projectoption",authController.projectoption)
 //router.get('/checkmentor',mid.authenticationMiddleware,authController.checkmentor)//pending
 module.exports = router;

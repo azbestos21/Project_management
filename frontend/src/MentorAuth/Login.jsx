@@ -1,39 +1,28 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import Backgimg from "../assets/rns1.jpg";
+import { mentorlogin, mentorregister } from "./Services/Api";
 import { useNavigate } from "react-router-dom";
-import CSE from "../assets/CSE.jpeg";
-import Backgimg from "../assets/Backgimg.jpg";
-import RNSIT from "../assets/RNSIT.jpg";
-import { Carousel } from "antd";
-import { mentorlogin, mentorregister } from "./Services/Api.jsx";
+
 export default function Login() {
   const [showSignIn, setShowSignIn] = useState(true);
   const [showSignUp, setShowSignUp] = useState(false);
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
-  const [Name, setname] = useState();
-  const [email, setUseremail] = useState();
-  const [designation, setDesignation] = useState();
-  const [phone, setPhoneNo] = useState();
-  const [confirmpassword, setconfirmPassword] = useState();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [Name, setName] = useState("");
+  const [email, setUserEmail] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [phone, setPhoneNo] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-  console.log(username, password);
-  console.log(
-    username,
-    password,
-    confirmpassword,
-    Name,
-    email,
-    phone,
-    designation
-  );
+
   const [signInButtonStyle, setSignInButtonStyle] = useState({
     backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
   });
   const [signUpButtonStyle, setSignUpButtonStyle] = useState({
     backgroundColor: "slate",
   });
-  const handleSignInclick = () => {
+
+  const handleSignInClick = () => {
     setShowSignIn(true);
     setShowSignUp(false);
     setSignInButtonStyle({
@@ -42,7 +31,8 @@ export default function Login() {
     });
     setSignUpButtonStyle({ backgroundColor: "slate" });
   };
-  const handleSignUpclick = () => {
+
+  const handleSignUpClick = () => {
     setShowSignUp(true);
     setShowSignIn(false);
     setSignInButtonStyle({ backgroundColor: "slate" });
@@ -51,36 +41,37 @@ export default function Login() {
       backgroundImage: "linear-gradient(to right, #6a11cb 0%, #ff4b2b 100%)",
     });
   };
-  const handlelogin = async (e) => {
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const data = await mentorlogin({ username, password });
-      console.log(data);
       localStorage.setItem("Mentortoken", data.userData.token);
       navigate("/Mdashboard");
     } catch (error) {
       console.log(error);
     }
   };
+
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
       const data = await mentorregister({
         username,
         password,
-        confirmpassword,
+        confirmpassword: confirmPassword,
         Name,
         email,
         phone,
         designation,
       });
-      console.log(data);
       localStorage.setItem("Mentortoken", data.userData.token);
       navigate("/Mdashboard");
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     const handleLogout = () => {
       localStorage.removeItem("studenttoken");
@@ -89,134 +80,98 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="w-full h-screen flex flex-row">
-      <div className="w-1/2 h-screen flex flex-col justify-start items-center bg-slate-50">
-        <h2 className="text-2xl text-center m-2">Mentor</h2>
-        <div className="flex gap-3 my-4">
-          <div className="bg-slate-50 rounded-2xl">
+    <div className="relative w-full h-screen bg-cover bg-center" style={{ backgroundImage: `url(${Backgimg})` }}>
+      <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 flex flex-col justify-center items-center">
+        <div className="text-center mb-8">
+          <p className="text-white text-4xl font-serif">
+            Project Management System
+          </p>
+        </div>
+        <div className="bg-white bg-opacity-60 p-8 rounded-lg shadow-lg w-80">
+          <h2 className="text-2xl text-center mb-4">Mentor</h2>
+          <div className="flex gap-3 mb-5 justify-center">
             <button
-              className="primary w-full h-full p-2 rounded-3xl"
-              onClick={handleSignInclick}
-              style={signInButtonStyle}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+              onClick={handleSignInClick}
             >
               SIGN IN
             </button>
-          </div>
-          <div className="rounded-2xl bg-slate-50">
             <button
-              className="w-full h-full p-2 rounded-3xl"
-              onClick={handleSignUpclick}
-              style={signUpButtonStyle}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+              onClick={handleSignUpClick}
             >
               SIGN UP
             </button>
           </div>
-        </div>
-        {showSignIn && (
-          <div className="w-full">
-            <form
-              onSubmit={handlelogin}
-              className="max-w-md mx-auto flex flex-col gap-8 p-3"
-            >
+          {showSignIn && (
+            <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="text"
-                placeholder={"Mentro_Id"}
+                placeholder="Mentor_Id"
                 onChange={(e) => setUsername(e.target.value)}
               />
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="password"
-                placeholder={"password"}
+                placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button className="bg-blue-300 p-3">Login</button>
+              <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                Login
+              </button>
             </form>
-          </div>
-        )}
-        {showSignUp && (
-          <div className="w-full">
-            <form
-              className="max-w-md mx-auto flex flex-col gap-1 p-3"
-              onSubmit={handleSignup}
-            >
+          )}
+          {showSignUp && (
+            <form onSubmit={handleSignup} className="flex flex-col gap-4">
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="text"
-                placeholder={"MentorId"}
+                placeholder="MentorId"
                 onChange={(e) => setUsername(e.target.value)}
               />
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="text"
-                placeholder={"Name"}
-                onChange={(e) => setname(e.target.value)}
+                placeholder="Name"
+                onChange={(e) => setName(e.target.value)}
               />
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="email"
-                placeholder={"your@email.com"}
-                onChange={(e) => setUseremail(e.target.value)}
+                placeholder="Your Email"
+                onChange={(e) => setUserEmail(e.target.value)}
               />
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="text"
-                placeholder={"Phone_no"}
+                placeholder="Phone Number"
                 onChange={(e) => setPhoneNo(e.target.value)}
               />
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="text"
-                placeholder={"Designation"}
+                placeholder="Designation"
                 onChange={(e) => setDesignation(e.target.value)}
               />
-
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="password"
-                placeholder={"password"}
+                placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
               />
               <input
-                className="p-3 border-none"
+                className="p-3 border rounded"
                 type="password"
-                placeholder={"Confirm Password"}
-                onChange={(e) => setconfirmPassword(e.target.value)}
+                placeholder="Confirm Password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
-
-              <button className="bg-blue-300 p-2">Register</button>
+              <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                Register
+              </button>
             </form>
-          </div>
-        )}
-      </div>
-      <div className="w-1/2 h-screen">
-        {" "}
-        <Carousel autoplay>
-          <div className="bg-orange-300 w-1/2 h-screen ">
-            <img src={RNSIT} className="w-11/12 h-72 ml-7 mt-7" />
-            <div className="ml-9 mt-7">
-              <p className="text-white text-4xl font-serif text-center ">
-                "Your First Step to a Brighter Future."
-              </p>
-            </div>
-          </div>
-          <div className="bg-purple-300 w-1/2 h-screen ">
-            <img src={Backgimg} className="w-11/12 h-72 ml-7 mt-7" />
-            <div className="ml-9 mt-7">
-              <p className="text-white text-4xl font-serif text-center ">
-                "Lush Green Campus with Top Placement Opportunities"
-              </p>
-            </div>
-          </div>
-          <div className="bg-teal-500 w-1/2 h-screen ">
-            <img src={CSE} className="w-11/12 h-60 ml-7 mt-7" />
-            <div className="ml-9 mt-7">
-              <p className="text-white text-4xl font-serif text-center ">
-                "Preparing Better Computer Professionals for a Real World"
-              </p>
-            </div>
-          </div>
-        </Carousel>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -18,12 +18,12 @@ const Actions = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const handleAssignMentor = async (values) => {
+  const handleAssign = async (values) => {
     try {
-      await axios.post("http://localhost:3000/auth/assignmentor", values);
-      message.success("Mentor assigned successfully");
+      await axios.post("http://localhost:3000/auth/assign", values);
+      message.success("Mentor and project assigned successfully");
     } catch (error) {
-      message.error("Failed to assign mentor");
+      message.error("Failed to assign mentor and project ");
     }
   };
 
@@ -36,7 +36,10 @@ const Actions = () => {
     }
   };
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout
+      className="overflow-y-auto h-32"
+      style={{ height: "100vh", overflow: "hidden" }}
+    >
       <Sider
         collapsed={collapsed}
         collapsible
@@ -101,6 +104,29 @@ const Actions = () => {
                 className="bg-blue-300 shadow-xl"
               >
                 Create Project
+              </Button>
+            </Form>
+          </div>
+          <div className="mt-8">
+            <h3 className="text-xl font-semibold mb-4">
+              Assign Project and Mentor
+            </h3>
+            <Form onFinish={handleAssign}>
+              <Form.Item label="Mentor ID" name="mid">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Project ID" name="pid">
+                <Input />
+              </Form.Item>
+              <Form.Item label="Team_ID" name="Team_ID">
+                <Input />
+              </Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ color: "black" }}
+              >
+                Assign
               </Button>
             </Form>
           </div>

@@ -61,7 +61,7 @@ const MProjects = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header style={{ padding: 0 }}>
           <Button
             type="text"
             className="toggle"
@@ -71,18 +71,8 @@ const MProjects = () => {
         </Header>
         <Content className="overflow-y-auto p-10 ">
           {" "}
-          <div className="flex justify-end mb-3">
-            <div className="relative">
-              <input
-                className="p-3 pl-10 pr-4 border-none rounded-full bg-gray-100 focus:ring focus:ring-blue-200"
-                type="text"
-                placeholder="Search Domain"
-                onChange={handleSearch}
-              />
-            </div>
-          </div>
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <h3 className="text-lg text-center font-bold uppercase p-1 bg-yellow-100 border-b-2 border-yellow-700 opacity-80 text-black">
+            <h3 className="text-lg text-center font-bold uppercase p-1 bg-gray-100 border-b-2 border-black-700 opacity-80 text-black">
               Project Details
             </h3>
             <table className="w-full text-sm text-left rtl:text-right text-black-500 dark:text-gray-400">
