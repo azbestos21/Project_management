@@ -846,7 +846,6 @@ const sendVerificationEmail = async (email, verificationToken) => {
               <h2>Registration Confirmation</h2>
               <p>Dear User,</p>
               <p>Thank you for registering with us. Please click the button below to verify your email address:</p>
-              <a href="http://localhost:3000/auth/verify?token=${verificationToken}" class="button">YES IT'S ME</a>
               <div class="footer">
                   <p>Best regards,<br>Your App Team</p>
               </div>
@@ -912,34 +911,5 @@ exports.adminregister = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
-
-// Define verify function
-exports.verify = async (req, res) => {
-  const { token } = req.query;
-
-  if (!token) {
-    return res.status(400).json({ message: 'Verification token is missing' });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const { username } = decoded;
-
-    const updateResult = await util.promisify(connection.query).call(
-      connection,
-      'UPDATE admin SET verified = ? WHERE username = ?',
-      [true, username]
-    );
-
-    if (updateResult.affectedRows === 0) {
-      return res.status(404).json({ message: 'Admin not found' });
-    }
-
-    return res.redirect('https://localhost:5173/login'); // Use HTTPS in the redirect URL
-  } catch (error) {
-    console.error(error);
-    return res.status(400).json({ message: 'Invalid token or expired token' });
   }
 };

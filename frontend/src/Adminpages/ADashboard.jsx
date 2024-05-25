@@ -151,26 +151,21 @@ const ADashboard = () => {
             </h2>
             <p>Use the sidebar to navigate through the admin features.</p>
           </div>
-          <div className="flex justify-around my-8">
-            <div className="p-4 bg-orange-300 shadow rounded-lg">
-              <h3 className="text-lg font-semibold">Total Projects</h3>
-              <p className="text-2xl">{projects.length}</p>
-            </div>
-            <div className="p-4 bg-purple-300 shadow rounded-lg flex justify-end">
-              <div className="w-10 h-10 bg-purple-200">
-                <PiChalkboardTeacherLight className="w-full h-full rounded-full" />
-              </div>
+          <div className="flex justify-center my-8">
+  <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
+    <h3 className="text-lg font-semibold">Total Projects</h3>
+    <p className="text-2xl">{projects.length}</p>
+  </div>
+  <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
+    <h3 className="text-lg font-semibold">Total Mentors</h3>
+    <p className="text-2xl">{mentors.length}</p>
+  </div>
+  <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
+    <h3 className="text-lg font-semibold">Total Students</h3>
+    <p className="text-2xl">{students.length}</p>
+  </div>
+</div>
 
-              <div className="div">
-                <h3 className="text-lg font-semibold">Total Mentors</h3>
-                <p className="text-2xl">{mentors.length}</p>
-              </div>
-            </div>
-            <div className="p-4 bg-green-300 shadow rounded-lg">
-              <h3 className="text-lg font-semibold">Total Students</h3>
-              <p className="text-2xl">{students.length}</p>
-            </div>
-          </div>
           <div style={tableStyles.container}>
             <h3 className="text-xl font-semibold mb-4">Project List</h3>
             <Table
