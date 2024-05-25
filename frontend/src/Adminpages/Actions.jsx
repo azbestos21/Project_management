@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Button, Input, Form, message } from "antd";
+import { Layout, Button, Input, Form, message, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
@@ -7,7 +7,6 @@ import ToggleButton from "../ANavbar/ToggleButton";
 import axios from "axios";
 
 const { Header, Sider, Content } = Layout;
-
 const Actions = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
@@ -15,6 +14,9 @@ const Actions = () => {
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
 
   const handleAssignMentor = async (values) => {
     try {
@@ -33,7 +35,6 @@ const Actions = () => {
       message.error("Failed to create project");
     }
   };
-
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
@@ -48,11 +49,22 @@ const Actions = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <Button
+            type="text"
+            className="toggle"
+            onClick={() => setCollapsed(!collapsed)}
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          />
         </Header>
-        <Content style={{ padding: "24px" }}>
+        <Content
+          className="overflow-y-auto p-5 rounded-md "
+          style={{ padding: "24px" }}
+        >
           <div className="container mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Welcome to the Admin Actions</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              Welcome to the Admin Actions
+            </h2>
           </div>
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Assign Mentor</h3>
@@ -63,7 +75,12 @@ const Actions = () => {
               <Form.Item label="Project ID" name="pid">
                 <Input />
               </Form.Item>
-              <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ color: "black" }}
+                className="bg-blue-300 shadow-xl"
+              >
                 Assign Mentor
               </Button>
             </Form>
@@ -77,7 +94,12 @@ const Actions = () => {
               <Form.Item label="Domain" name="domain">
                 <Input />
               </Form.Item>
-              <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ color: "black" }}
+                className="bg-blue-300 shadow-xl"
+              >
                 Create Project
               </Button>
             </Form>

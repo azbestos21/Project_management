@@ -3,8 +3,13 @@ import { Layout, Button, Table, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
+import { PiChalkboardTeacherLight } from "react-icons/pi";
 import ToggleButton from "../ANavbar/ToggleButton";
-import { adminprojectlist, adminmentorlist, adminstudentlist } from "../AdminAuth/Services/Api";
+import {
+  adminprojectlist,
+  adminmentorlist,
+  adminstudentlist,
+} from "../AdminAuth/Services/Api";
 
 const { Header, Sider, Content } = Layout;
 
@@ -57,48 +62,56 @@ const ADashboard = () => {
   }, []);
 
   const projectColumns = [
-    { title: 'Project ID', dataIndex: 'Project_ID', key: 'Project_ID' },
-    { title: 'Project Name', dataIndex: 'Project_Name', key: 'Project_Name' },
-    { title: 'Phase Status', dataIndex: 'Phase_Status', key: 'Phase_Status' },
-    { title: 'Project Marks', dataIndex: 'Project_Marks', key: 'Project_Marks' },
-    { title: 'File Path', dataIndex: 'File_Path', key: 'File_Path' },
-    { title: 'Project Phase', dataIndex: 'Project_Phase', key: 'Project_Phase' },
-    { title: 'Domain', dataIndex: 'domain', key: 'domain' },
+    { title: "Project ID", dataIndex: "Project_ID", key: "Project_ID" },
+    { title: "Project Name", dataIndex: "Project_Name", key: "Project_Name" },
+    { title: "Phase Status", dataIndex: "Phase_Status", key: "Phase_Status" },
+    {
+      title: "Project Marks",
+      dataIndex: "Project_Marks",
+      key: "Project_Marks",
+    },
+    { title: "File Path", dataIndex: "File_Path", key: "File_Path" },
+    {
+      title: "Project Phase",
+      dataIndex: "Project_Phase",
+      key: "Project_Phase",
+    },
+    { title: "Domain", dataIndex: "domain", key: "domain" },
   ];
 
   const mentorColumns = [
-    { title: 'Mentor ID', dataIndex: 'Mentor_ID', key: 'Mentor_ID' },
-    { title: 'Name', dataIndex: 'Name', key: 'Name' },
-    { title: 'Designation', dataIndex: 'Designation', key: 'Designation' },
-    { title: 'Phone', dataIndex: 'Phone', key: 'Phone' },
-    { title: 'Email', dataIndex: 'Email', key: 'Email' },
+    { title: "Mentor ID", dataIndex: "Mentor_ID", key: "Mentor_ID" },
+    { title: "Name", dataIndex: "Name", key: "Name" },
+    { title: "Designation", dataIndex: "Designation", key: "Designation" },
+    { title: "Phone", dataIndex: "Phone", key: "Phone" },
+    { title: "Email", dataIndex: "Email", key: "Email" },
   ];
 
   const studentColumns = [
-    { title: 'USN', dataIndex: 'USN', key: 'USN' },
-    { title: 'Name', dataIndex: 'Name', key: 'Name' },
-    { title: 'Email', dataIndex: 'Email', key: 'Email' },
-    { title: 'Project ID', dataIndex: 'P_ID', key: 'P_ID' },
-    { title: 'Mentor ID', dataIndex: 'M_ID', key: 'M_ID' },
+    { title: "USN", dataIndex: "USN", key: "USN" },
+    { title: "Name", dataIndex: "Name", key: "Name" },
+    { title: "Email", dataIndex: "Email", key: "Email" },
+    { title: "Project ID", dataIndex: "P_ID", key: "P_ID" },
+    { title: "Mentor ID", dataIndex: "M_ID", key: "M_ID" },
   ];
 
   const tableStyles = {
     container: {
-      marginTop: '20px',
+      marginTop: "20px",
     },
     table: {
-      backgroundColor: '#f0f2f5',
-      borderRadius: '8px',
+      backgroundColor: "#f0f2f5",
+      borderRadius: "8px",
     },
     thead: {
-      backgroundColor: '#001529',
-      color: 'white',
+      backgroundColor: "#001529",
+      color: "white",
     },
     tbody: {
-      backgroundColor: 'white',
+      backgroundColor: "white",
     },
     tbodyHover: {
-      backgroundColor: '#e6f7ff',
+      backgroundColor: "#e6f7ff",
     },
   };
 
@@ -116,7 +129,7 @@ const ADashboard = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0  }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -124,21 +137,36 @@ const ADashboard = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content style={{ padding: "24px", background: colorBgContainer, overflowY: 'auto',backgroundColor:'rgba(230,230,230)' }}>
+        <Content
+          style={{
+            padding: "24px",
+            background: colorBgContainer,
+            overflowY: "auto",
+            backgroundColor: "rgba(230,230,230)",
+          }}
+        >
           <div className="container mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Welcome to the Admin Dashboard</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              Welcome to the Admin Dashboard
+            </h2>
             <p>Use the sidebar to navigate through the admin features.</p>
           </div>
           <div className="flex justify-around my-8">
-            <div className="p-4 bg-white shadow rounded-lg">
+            <div className="p-4 bg-orange-300 shadow rounded-lg">
               <h3 className="text-lg font-semibold">Total Projects</h3>
               <p className="text-2xl">{projects.length}</p>
             </div>
-            <div className="p-4 bg-white shadow rounded-lg">
-              <h3 className="text-lg font-semibold">Total Mentors</h3>
-              <p className="text-2xl">{mentors.length}</p>
+            <div className="p-4 bg-purple-300 shadow rounded-lg flex justify-end">
+              <div className="w-10 h-10 bg-purple-200">
+                <PiChalkboardTeacherLight className="w-full h-full rounded-full" />
+              </div>
+
+              <div className="div">
+                <h3 className="text-lg font-semibold">Total Mentors</h3>
+                <p className="text-2xl">{mentors.length}</p>
+              </div>
             </div>
-            <div className="p-4 bg-white shadow rounded-lg">
+            <div className="p-4 bg-green-300 shadow rounded-lg">
               <h3 className="text-lg font-semibold">Total Students</h3>
               <p className="text-2xl">{students.length}</p>
             </div>
@@ -151,7 +179,7 @@ const ADashboard = () => {
               rowKey="Project_ID"
               scroll={{ y: 300 }}
               style={tableStyles.table}
-              rowClassName={() => 'custom-row'}
+              rowClassName={() => "custom-row"}
             />
           </div>
           <div style={tableStyles.container}>
@@ -162,7 +190,7 @@ const ADashboard = () => {
               rowKey="Mentor_ID"
               scroll={{ y: 300 }}
               style={tableStyles.table}
-              rowClassName={() => 'custom-row'}
+              rowClassName={() => "custom-row"}
             />
           </div>
           <div style={tableStyles.container}>
@@ -173,7 +201,7 @@ const ADashboard = () => {
               rowKey="USN"
               scroll={{ y: 300 }}
               style={tableStyles.table}
-              rowClassName={() => 'custom-row'}
+              rowClassName={() => "custom-row"}
             />
           </div>
         </Content>
