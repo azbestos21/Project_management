@@ -99,20 +99,18 @@ export default function LogPg() {
           <div className="bg-white bg-opacity-60 p-8 rounded-lg shadow-lg w-80">
             <h2 className="text-2xl text-center mb-4">Admin</h2>
             <div className="flex gap-3 mb-5 justify-center">
-              <button
-                className="primary w-1/2 p-2 rounded-xl"
-                onClick={handleSignInClick}
-                style={signInButtonStyle}
-              >
-                SIGN IN
-              </button>
-              <button
-                className="secondary w-1/2 p-2 rounded-xl"
-                onClick={handleSignUpClick}
-                style={signUpButtonStyle}
-              >
-                SIGN UP
-              </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+              onClick={handleSignInClick}
+            >
+              SIGN IN
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+              onClick={handleSignInClick}
+            >
+              SIGN UP
+            </button>
             </div>
             {showSignIn && (
               <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -128,9 +126,9 @@ export default function LogPg() {
                   placeholder="Password"
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className="bg-blue-500 text-white p-3 rounded">
-                  Login
-                </button>
+                <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                Login
+              </button>
               </form>
             )}
             {showSignUp && (
