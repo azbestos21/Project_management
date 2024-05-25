@@ -21,6 +21,7 @@ import SCalendar from "./StudentPages/SCalendar.jsx";
 import MCalendar from "./MentorPages/MCalendar.jsx";
 import ACalendar from "./Adminpages/ACalender.jsx";
 import ADashboard from "./Adminpages/ADashboard.jsx";
+import Verify from "./AdminAuth/verify.jsx"
 
 function App() {
   return (
@@ -37,7 +38,8 @@ function App() {
       <Route path="/login" element={<Loginpg />} />
       <Route path="/Mlogin" element={<Login />} />
       <Route path="/Alogin" element={<LogPg />} />
-      <Route path="/" element={<PrivateMentRoute />}>
+      <Route path="/Alogin" element={<LogPg />} />
+      <Route path="/verify" element={<Verify />}>
         <Route path="/" element={<Multipage />}>
         <Route path="/Adashboard" element={<ADashboard />} />
         <Route path="/ACalendar" element={<ACalendar />} />

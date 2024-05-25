@@ -10,6 +10,15 @@ const adminlogin = async (data) => {
   }
 };
 export { adminlogin };
+const verify = async (data) => {
+  try {
+    const response = await axios.post(`${baseurl}/auth/verify`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export { verify };
 
 const adminsignup = async (data) => {
   try {

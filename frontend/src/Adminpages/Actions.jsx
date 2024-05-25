@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Layout, Button, Input, Form, message } from "antd";
+import React, { useState,useEffect } from "react";
+import { Layout, Button, Input, Form, message,Select } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
@@ -11,6 +11,33 @@ const { Header, Sider, Content } = Layout;
 const Actions = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+  const [projectOptions, setProjectOptions] = useState([]);
+  const [mentorOptions, setMentorOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchProjectOptions = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/auth/projectoption");
+        setProjectOptions(response.data.mentorData);
+      } catch (error) {
+        console.error("Error fetching project options:", error);
+      }
+    };
+
+    fetchProjectOptions();
+  }, []);
+  useEffect(() => {
+    const fetchMentorOptions = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/auth/mentoroption");
+        setMentorOptions(response.data.mentorData);
+      } catch (error) {
+        console.error("Error fetching project options:", error);
+      }
+    };
+
+    fetchMentorOptions();
+  }, []);
 
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
@@ -61,27 +88,43 @@ const Actions = () => {
               <Form.Item label="Domain" name="domain">
                 <Input />
               </Form.Item>
-              <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
+              <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                 Create Project
-              </Button>
+              </button>
             </Form>
             </div>
             <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Assign Project and Mentor</h3>
             <Form onFinish={handleAssign}>
-              <Form.Item label="Mentor ID" name="mid">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Project ID" name="pid">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Team_ID" name="Team_ID">
-                <Input />
-              </Form.Item>
-              <Button type="primary" htmlType="submit" style={{ color: 'black' }}>
-                Assign 
-              </Button>
-            </Form>
+            {/* Mentor ID input */}
+            <Form.Item label="Mentor ID" name="M_ID">
+            <Select>
+              {mentorOptions.map((option) => (
+                <Select.Option key={option.Mentor_ID} value={option.Mentor_ID}>
+                  {option.Mentor_Name}
+                </Select.Option>
+              ))}
+            </Select>
+            </Form.Item>
+            {/* Project ID dropdown */}
+            <Form.Item label="Project ID" name="P_ID">
+                          <Select>
+                {projectOptions.map((option) => (
+                  <Select.Option key={option.Project_ID} value={option.Project_ID}>
+                    {option.Project_Name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            {/* Team ID input */}
+            <Form.Item label="Team ID" name="Team_ID">
+              <Input />
+            </Form.Item>
+            {/* Submit button */}
+            <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                Assign
+              </button>
+          </Form>
           </div>
         </Content>
       </Layout>
