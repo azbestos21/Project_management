@@ -740,7 +740,7 @@ exports.adminmentorlist = (req,res) =>{
 exports.assign = (req, res) => {
   const { M_ID , P_ID, Team_ID} = req.body;
   console.log(req.body);
-  const sql = `UPDATE student SET M_ID= "${M_ID}" , P_ID = ${P_ID} WHERE Team_ID="${Team_ID}" `;
+  const sql = `UPDATE student SET M_ID= "${mid}" , P_ID = ${pid} WHERE Team_ID="${Team_ID}" `;
   connection.query(sql, (err, data) => {
     if (err) {
       console.error("Error", err);
