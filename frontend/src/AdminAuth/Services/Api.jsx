@@ -51,7 +51,17 @@ const adminstudentlist = async () => {
     throw error;
   }
 };
-export { adminmentorlist, adminprojectlist, adminstudentlist };
+const verifyadmin = async (token) => { // Accept token as a parameter
+  try {
+    const response = await axios.get(`${baseurl}/auth/verifyadmin?token=${token}`); // Send token in the URL query string
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export { adminmentorlist, adminprojectlist, adminstudentlist , verifyadmin };
 
 // Assign Mentor to Student
 const assignmentor = async (mid, pid) => {

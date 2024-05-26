@@ -27,5 +27,8 @@ router.post('/newproject',authController.newproject);//pending
 router.post("/assign",authController.assign);
 router.get("/mentoroption",authController.mentoroption)
 router.get("/projectoption",authController.projectoption)
+router.get("/teamoption",authController.teamoption)
+router.get('/verifyadmin', authController.verifyAdmin);
+
 //router.get('/checkmentor',mid.authenticationMiddleware,authController.checkmentor)//pending
 module.exports = router;

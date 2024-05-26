@@ -3,71 +3,16 @@ const bcrypt = require("bcryptjs");
 const mentorTableModule = require("../models/mentor");
 const projectTableModule = require("../models/project");
 const studentTableModule = require("../models/student");
-const adminTableModule = require("../models/admin");
 const multer = require("multer");
 const fs = require("fs");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const connection = require("../db/connect");
 const { log } = require("console");
+const crypto = require("crypto");
+const util = require('util');
 
-exports.adminregister = async(req,res) =>{
-  console.log(req.body);
-  adminTableModule.createAdminTable();
-  const{username,password,confirmpassword} = req.body;
-  connection.query(
-    "Select username from admin where username = ?",
-    [username],
-    async (error, results) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
-      if (results.length > 0) {
-        return res
-          .status(400)
-          .json({ message: "That username is already in use" });
-      } else if (password !== confirmpassword) {
-        return res.status(400).json({ message: "Passwords do not match" });
-      }
 
-      try {
-        let hashedPassword = await bcrypt.hash(password, 8);
-        console.log(hashedPassword);
-
-        connection.query(
-          "INSERT INTO admin SET ?",
-          {
-            username: username,
-            Password: hashedPassword,
-          },
-          async (error, results) => {
-            if (error) {
-              console.log(error);
-              return res.status(500).json({ error: "Internal Server Error" });
-            } else {
-              console.log(results);
-              const token = jwt.sign(
-                { username, password },
-                process.env.JWT_SECRET
-              );
-              const userData = {
-                username: username,
-                token: token,
-              };
-              return res
-                .status(200)
-                .json({ message: "Admin registered", userData });
-            }
-          }
-        );
-      } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
-    }
-  );
-}
 
 exports.adminlogin = async (req, res) => {
   const { username, password } = req.body;
@@ -103,6 +48,10 @@ exports.adminlogin = async (req, res) => {
       return res.status(401).json({ message: "Username or password is incorrect" });
     }
 
+    if (user.verified === 0) {
+      return res.status(401).json({ message: "Account not verified. Please check your email for verification." });
+    }
+
     const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
     const userData = {
       username: username,
@@ -114,6 +63,7 @@ exports.adminlogin = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 exports.mentorregister = async (req, res) => {
   console.log(req.body);
@@ -185,35 +135,6 @@ exports.mentorregister = async (req, res) => {
     }
   );
 };
-/*exports.checkmentor = async (req, res) => {
-  const usn = req.user;
-  console.log(usn);
-
-  try {
-    const result = await new Promise((resolve, reject) => {
-      connection.query("SELECT M_ID FROM student WHERE USN = ?", [usn], (error, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(results);
-        }
-      });
-    });
-
-    if (result.length > 0 && result[0].M_ID) {
-      // Mentor assigned
-      res.json({ assignedMentor: true });
-    } else {
-      // No mentor assigned
-      res.json({ assignedMentor: false });
-    }
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};*/
-
 exports.mentorlogin = async (req, res) => {
   const { username, password } = req.body;
 
@@ -317,32 +238,6 @@ exports.studentregister = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 8);
     console.log(hashedPassword);
 
-    // const totalProjects = await new Promise((resolve, reject) => {
-    //   connection.query(
-    //     "SELECT COUNT(*) AS totalProjects FROM project",
-    //     (error, results) => {
-    //       if (error) {
-    //         reject(error);
-    //       } else {
-    //         resolve(results[0].totalProjects);
-    //       }
-    //     }
-    //   );
-    // });
-    // console.log(totalProjects);
-    // const nextProjectID = await new Promise((resolve, reject) => {
-    //   connection.query(
-    //     "SELECT MAX(P_ID) AS maxProjectID FROM student",
-    //     (error, results) => {
-    //       if (error) {
-    //         reject(error);
-    //       } else {
-    //         console.log(results[0].maxProjectID);
-    //         resolve((results[0].maxProjectID % totalProjects) + 1);
-    //       }
-    //     }
-    //   );
-    // });
 
     await new Promise((resolve, reject) => {
       connection.query(
@@ -749,75 +644,6 @@ exports.uploadphase = (req, res) => {
   });
 };
 
-const sendemail = async (email) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.SECRET_EMAIL, // Your Gmail address
-      pass: process.env.SECRET_PASS, // Your Gmail password or an app-specific password
-    },
-  });
-
-  const mailSuperAdmin = {
-    from: process.env.SECRET_EMAIL,
-    to: email,
-    subject: "Registration Confirmation",
-    html: `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Registration Confirmation</title>
-          <style>
-              body {
-                  font-family: Arial, sans-serif;
-                  margin: 0;
-                  padding: 0;
-              }
-              .container {
-                  max-width: 600px;
-                  margin: auto;
-                  padding: 20px;
-                  border: 1px solid #ccc;
-                  border-radius: 5px;
-              }
-              h2 {
-                  color: #333;
-              }
-              p {
-                  color: #666;
-                  line-height: 1.6;
-              }
-              .footer {
-                  margin-top: 20px;
-                  text-align: center;
-                  color: #999;
-              }
-          </style>
-      </head>
-      <body>
-          <div class="container">
-              <h2>Registration Confirmation</h2>
-              <p>Dear Student,</p>
-              <p>Thank you for registering with us. We appreciate your interest and look forward to having you as a part of our community.</p>
-              <div class="footer">
-                  <p>Best regards,<br>RNSIT</p>
-              </div>
-          </div>
-      </body>
-      </html>
-    `,
-  };
-
-  try {
-    await transporter.sendMail(mailSuperAdmin);
-    console.log("Email sent successfully");
-  } catch (error) {
-    console.error("Email sending error:", error);
-    throw new Error("Failed to send registration confirmation email.");
-  }
-};
 
 exports.acceptProject = (req, res) => {
   const { pid } = req.body;
@@ -945,6 +771,21 @@ exports.mentoroption = (req,res) => {
   });
 
 }
+exports.teamoption = (req, res) => {
+  const sql = "SELECT DISTINCT Team_ID FROM student";
+
+  // Execute the SQL query
+  connection.query(sql, (err, data) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).json({ error: "Internal Server Error" });
+      return;
+    }
+    console.log("Retrieved data from the database:", data);
+    res.json({ title: "team-List", teamData: data });
+  });
+}
+
 exports.projectoption = (req,res) =>{
   const sql = "SELECT Project_ID, Project_Name FROM project";
 
@@ -960,4 +801,94 @@ exports.projectoption = (req,res) =>{
   });
 
 }
+exports.adminregister = async (req, res) => {
+  const { username, password, confirmpassword } = req.body;
 
+  if (password !== confirmpassword) {
+    return res.status(400).json({ message: 'Passwords do not match' });
+  }
+
+  const verificationToken = crypto.randomBytes(20).toString('hex');
+
+  try {
+    const existingUser = await util.promisify(connection.query).call(
+      connection,
+      'SELECT username FROM admin WHERE username = ?',
+      [username]
+    );
+
+    if (existingUser.length > 0) {
+      return res.status(400).json({ message: 'That username is already in use' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 8);
+
+    await util.promisify(connection.query).call(
+      connection,
+      'INSERT INTO admin SET ?',
+      {
+        username,
+        password: hashedPassword,
+        verificationtoken: verificationToken,
+        verified: 0
+      }
+    );
+
+    // Send verification email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SECRET_EMAIL,
+        pass: process.env.SECRET_PASS
+      }
+    });
+
+    const mailOptions = {
+      from: process.env.SECRET_EMAIL,
+      to: username,
+      subject: 'Admin Account Verification',
+      html: `<p>Please verify your account by clicking the link below:</p>
+             <a href="http://localhost:5173/verify-admin?token=${verificationToken}">Verify Account</a>`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Failed to send verification email' });
+      }
+      res.status(200).json({ message: 'Admin registered, check your email for verification' });
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+exports.verifyAdmin = async (req, res) => {
+  console.log(req.query);
+  const { token } = req.query;
+  console.log(token);
+  console.log("inside verify");
+  try {
+    const result = await util.promisify(connection.query).call(
+      connection,
+      'SELECT * FROM admin WHERE verificationtoken = ?',
+      [token]
+    );
+
+    if (result.length === 0) {
+      return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    await util.promisify(connection.query).call(
+      connection,
+      'UPDATE admin SET verified = 1, verificationtoken = NULL WHERE verificationtoken = ?',
+      [token]
+    );
+
+    res.status(200).json({ message: 'Account verified successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

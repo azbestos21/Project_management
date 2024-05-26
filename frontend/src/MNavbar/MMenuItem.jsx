@@ -3,6 +3,8 @@ import {
   DashboardOutlined,
   ProjectOutlined,
   CalendarOutlined,
+  LoadingOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { MdOutlineGroups } from "react-icons/md";
@@ -24,6 +26,9 @@ const MenuItem = ({ darkTheme }) => {
       </Menu.Item>
       <Menu.Item key="Mentor" icon={<MdOutlineGroups />}>
         <Link to="/MCalendar">Calendar</Link>
+      </Menu.Item>
+      <Menu.Item key="Logout" icon={<LogoutOutlined/>}>
+        <Link to="/Mlogin">Logout</Link>
       </Menu.Item>
     </Menu>
   );
