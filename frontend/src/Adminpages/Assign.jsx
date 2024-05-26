@@ -4,7 +4,6 @@ import { Layout, Button, Input, Form, message, Select } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
-import ToggleButton from "../ANavbar/ToggleButton";
 import { useNavigate } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
@@ -16,6 +15,7 @@ const Assign = () => {
   const [projectOptions, setProjectOptions] = useState([]);
   const [mentorOptions, setMentorOptions] = useState([]);
   const [teamOptions, setTeamOptions] = useState([]);
+  const [form] = Form.useForm(); // Create a form instance
 
   useEffect(() => {
     const fetchProjectOptions = async () => {
@@ -79,6 +79,7 @@ const Assign = () => {
     try {
       await axios.post("http://localhost:3000/auth/assign", values);
       message.success("Mentor and project assigned successfully");
+      form.resetFields(); // Clear the form fields
     } catch (error) {
       message.error("Failed to assign mentor and project");
     }
@@ -100,15 +101,14 @@ const Assign = () => {
           />
         </Header>
         <Content className="overflow-y-auto p-5 rounded-md" style={{ padding: "24px" }}>
-          <div className="container mx-auto text-center">
-          </div>
+          <div className="container mx-auto text-center"></div>
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Assign Project and Mentor</h3>
-            <Form onFinish={handleAssign}>
-            <Form.Item
+            <Form form={form} onFinish={handleAssign}>
+              <Form.Item
                 label="Team_ID"
                 name="Team_ID"
-                rules={[{ required: true, message: 'Please select a team!' }]}
+                rules={[{ required: true, message: "Please select a team!" }]}
               >
                 <Select placeholder="Select a team">
                   {teamOptions.map((option) => (
@@ -121,7 +121,7 @@ const Assign = () => {
               <Form.Item
                 label="Project ID"
                 name="pid"
-                rules={[{ required: true, message: 'Please select a project!' }]}
+                rules={[{ required: true, message: "Please select a project!" }]}
               >
                 <Select placeholder="Select a project">
                   {projectOptions.map((option) => (
@@ -134,7 +134,7 @@ const Assign = () => {
               <Form.Item
                 label="Mentor ID"
                 name="mid"
-                rules={[{ required: true, message: 'Please select a mentor!' }]}
+                rules={[{ required: true, message: "Please select a mentor!" }]}
               >
                 <Select placeholder="Select a mentor">
                   {mentorOptions.map((option) => (

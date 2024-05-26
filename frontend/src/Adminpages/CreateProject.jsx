@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { Layout, Button, Input, Form, message, Select } from "antd";
+import { Layout, Button, Input, Form, message } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
-import ToggleButton from "../ANavbar/ToggleButton";
 
 const { Header, Sider, Content } = Layout;
-const { Option } = Select;
 
 const Actions = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+  const [form] = Form.useForm(); // Create a form instance
 
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
+
   const handleCreateProject = async (values) => {
     try {
       await axios.post("http://localhost:3000/auth/newproject", values);
       message.success("Project created successfully");
+      form.resetFields(); // Clear the form fields
     } catch (error) {
       message.error("Failed to create project");
     }
@@ -41,23 +42,22 @@ const Actions = () => {
           />
         </Header>
         <Content className="overflow-y-auto p-5 rounded-md" style={{ padding: "24px" }}>
-          <div className="container mx-auto text-center">
-          </div>
+          <div className="container mx-auto text-center"></div>
 
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Create Project</h3>
-            <Form onFinish={handleCreateProject}>
+            <Form form={form} onFinish={handleCreateProject}>
               <Form.Item
                 label="Project Name"
                 name="projectName"
-                rules={[{ required: true, message: 'Please input the project name!' }]}
+                rules={[{ required: true, message: "Please input the project name!" }]}
               >
                 <Input />
               </Form.Item>
               <Form.Item
                 label="Domain"
                 name="domain"
-                rules={[{ required: true, message: 'Please input the domain!' }]}
+                rules={[{ required: true, message: "Please input the domain!" }]}
               >
                 <Input />
               </Form.Item>
