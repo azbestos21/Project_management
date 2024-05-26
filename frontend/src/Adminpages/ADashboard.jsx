@@ -3,6 +3,7 @@ import { Layout, Button, Table, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
+import LogoutButton from "../ANavbar/logout";
 import { PiChalkboardTeacherLight } from "react-icons/pi";
 import ToggleButton from "../ANavbar/ToggleButton";
 import {
@@ -126,10 +127,9 @@ const ADashboard = () => {
       >
         <Logoimg />
         <MenuItem darkTheme={darkTheme} />
-        <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header style={{ padding: 0 }}>
           <Button
             type="text"
             className="toggle"

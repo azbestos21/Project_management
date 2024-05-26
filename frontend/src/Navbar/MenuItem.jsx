@@ -4,9 +4,11 @@ import {
   DashboardOutlined,
   ProjectOutlined,
   CalendarOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { GiTeacher } from "react-icons/gi";
+import LogoutButton from "../ANavbar/logout";
 const MenuItem = ({ darkTheme }) => {
   return (
     <Menu
@@ -24,6 +26,9 @@ const MenuItem = ({ darkTheme }) => {
       </Menu.Item>
       <Menu.Item key="Calendar" icon={<CalendarOutlined />}>
         <Link to="/SCalendar">Calendar</Link>
+      </Menu.Item>
+      <Menu.Item key="Logout" icon={<LogoutOutlined/>}>
+        <Link to="/login">Logout</Link>
       </Menu.Item>
     </Menu>
   );

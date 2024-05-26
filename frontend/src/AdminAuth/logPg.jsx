@@ -1,14 +1,13 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Loading from "../Loading";
 import bg from "../assets/rns1.jpg";
-import backimg from "../assets/Backgimg.jpg";
 import { adminlogin, adminsignup } from "./Services/Api";
 import { useNavigate } from "react-router-dom";
 
 export default function LogPg() {
   const [showSignIn, setShowSignIn] = useState(true);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsn] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
@@ -61,12 +60,12 @@ export default function LogPg() {
   };
 
   const handleSignup = async (e) => {
+    alert("check email to verify");
     e.preventDefault();
     setLoading(true);
     try {
       const data = await adminsignup({ username, password, confirmpassword });
       localStorage.setItem("admintoken", data.userData.token);
-      navigate("/Adashboard");
     } catch (error) {
       setLoading(true);
       console.log(error);
@@ -99,18 +98,18 @@ export default function LogPg() {
           <div className="bg-white bg-opacity-60 p-8 rounded-lg shadow-lg w-80">
             <h2 className="text-2xl text-center mb-4">Admin</h2>
             <div className="flex gap-3 mb-5 justify-center">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
-              onClick={handleSignInClick}
-            >
-              SIGN IN
-            </button>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
-              onClick={handleSignInClick}
-            >
-              SIGN UP
-            </button>
+              <button
+                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                onClick={handleSignInClick}
+              >
+                SIGN IN
+              </button>
+              <button
+                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+                onClick={handleSignUpClick}
+              >
+                SIGN UP
+              </button>
             </div>
             {showSignIn && (
               <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -127,8 +126,8 @@ export default function LogPg() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                Login
-              </button>
+                  Login
+                </button>
               </form>
             )}
             {showSignUp && (
@@ -151,7 +150,7 @@ export default function LogPg() {
                   placeholder="Confirm Password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-                <button className="bg-blue-500 text-white p-3 rounded">
+                <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                   Register
                 </button>
               </form>
