@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Button, Table, theme } from "antd";
+import { Layout, Button, Table, message, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { GrProjects } from "react-icons/gr";
-import { MdOutlineGroupAdd } from "react-icons/md";
 import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";
 import ToggleButton from "../Navbar/ToggleButton";
@@ -20,6 +18,7 @@ const SDashboard = () => {
   const [name, setName] = useState("");
   const [usn, setUsn] = useState("");
   const [mail, setMail] = useState("");
+  const [refresh, setRefresh] = useState(false); // State to manage refresh
 
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
@@ -51,7 +50,7 @@ const SDashboard = () => {
       }
     };
     fetchTeamData();
-  }, []);
+  }, [refresh]); // Add refresh as a dependency
 
   const handleTeamButtonClick = () => {
     if (team.length >= 4) {
@@ -64,10 +63,12 @@ const SDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await registerteam({ usn, name, mail });
-      console.log(data);
+      await registerteam({ usn, name, mail });
+      message.success("Teammate added successfully");
       setShowTeamForm(false);
+      setRefresh(!refresh); // Toggle refresh state to trigger useEffect
     } catch (error) {
+      message.error("Error registering team");
       console.error("Error registering team:", error);
     }
   };
@@ -101,18 +102,18 @@ const SDashboard = () => {
         <Content style={{ padding: "24px", background: colorBgContainer, overflowY: 'auto', backgroundColor: 'rgba(230,230,230)' }}>
           <div className="container mx-auto text-center">
             <h2 className="text-2xl font-bold mb-4">Welcome to the Student Dashboard!</h2>
-            <p> Note: Teammates will have same password as the team lead.</p>
+            <p>Note: Teammates will have the same password as the team lead.</p>
           </div>
           <div className="flex justify-center">
-          <div className="p-4 bg-white shadow rounded-lg text-center">
-    <h3 className="text-lg font-semibold">Total Students</h3>
-    <p className="text-2xl">{team.length}</p>
-  </div>
-  <div className="p-4 bg-white shadow rounded-lg text-center">
-    <h3 className="text-lg font-semibold">Total Project</h3>
-    <p className="text-2xl">{details.length}</p>
-  </div>
-</div>
+            <div className="p-4 bg-white shadow rounded-lg text-center">
+              <h3 className="text-lg font-semibold">Total Students</h3>
+              <p className="text-2xl">{team.length}</p>
+            </div>
+            <div className="p-4 bg-white shadow rounded-lg text-center">
+              <h3 className="text-lg font-semibold">Total Project</h3>
+              <p className="text-2xl">{details.length}</p>
+            </div>
+          </div>
           <div className="flex justify-center">
             {showButton && (
               <button

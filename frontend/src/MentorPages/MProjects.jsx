@@ -1,25 +1,30 @@
-import React, { useState } from "react";
-import { Layout, Button, theme } from "antd";
+import React, { useState, useEffect } from "react";
+import { Layout, Button, message, theme } from "antd";
 import Logoimg from "../MNavbar/MLogoimg";
 import MenuItem from "../MNavbar/MMenuItem";
 import ToggleButton from "../MNavbar/MToggle";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import ActionButton from "../Buttons/Button";
-import { useEffect } from "react";
-const { Header, Sider, Content } = Layout;
 import { viewprojects, updateDetails } from "../MentorAuth/Services/Api.jsx";
 import { domainproject } from "../MentorAuth/Services/Api.jsx";
+
+const { Header, Sider, Content } = Layout;
+
 const MProjects = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [projectdata, setprojectdata] = useState(null);
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
+  const [refresh, setRefresh] = useState(false); // State to manage refresh
+
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
     console.log(search);
@@ -38,14 +43,23 @@ const MProjects = () => {
     const fetchproject = async () => {
       try {
         const data = await viewprojects();
-
         setprojectdata(data);
       } catch (error) {
         console.log("Something went wrong");
       }
     };
     fetchproject();
-  }, []);
+  }, [refresh]); // Add refresh as a dependency
+
+  const handleUpdate = async (projectId, status) => {
+    try {
+      await updateDetails(projectId, status);
+      message.success("Project updated successfully");
+      setRefresh(!refresh); // Toggle refresh state to trigger useEffect
+    } catch (error) {
+      message.error("Failed to update project");
+    }
+  };
 
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
@@ -70,7 +84,6 @@ const MProjects = () => {
           />
         </Header>
         <Content className="overflow-y-auto p-10 ">
-          {" "}
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <h3 className="text-lg text-center font-bold uppercase p-1 bg-gray-100 border-b-2 border-black-700 opacity-80 text-black">
               Project Details
@@ -122,12 +135,12 @@ const MProjects = () => {
                       <td className="px-6 py-4">
                         <ActionButton
                           label={"Accept"}
-                          onClick={() => updateDetails(data.Project_ID, 1)}
+                          onClick={() => handleUpdate(data.Project_ID, 1)}
                         />{" "}
-                        <br></br>{" "}
+                        <br />
                         <ActionButton
-                          label={"  Reject  "}
-                          onClick={() => updateDetails(data.Project_ID, 0)}
+                          label={"Reject"}
+                          onClick={() => handleUpdate(data.Project_ID, 0)}
                         />{" "}
                       </td>
                     </tr>
