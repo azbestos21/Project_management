@@ -48,7 +48,7 @@ function App() {
           <Route path="/MCalendar" element={<MCalendar />} />
         </Route>
       </Route>
-      <Route path="/" element={<PrivateRoute />}>
+      <Route path="/" element={<PrivateRouter />}>
         <Route path="/" element={<Multipage />}>
           <Route path="/Adashboard" element={<ADashboard />} />
           <Route path="/ACalendar" element={<ACalendar />} />
