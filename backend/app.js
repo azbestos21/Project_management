@@ -7,7 +7,11 @@ const upload=require("./controllers/auth.js")
 const cors = require("cors");
 // Update the path for extracting HTML and CSS
 const publicDirectory = path.join(__dirname, '../frontend/public');
-app.use(cors())
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.static(publicDirectory));
 
 // For parsing into JSON
