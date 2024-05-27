@@ -4,7 +4,11 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";
 import ToggleButton from "../Navbar/ToggleButton";
-import { registerteam, studentproject, studentteam } from "../StudAuth/Services/Api.jsx";
+import {
+  registerteam,
+  studentproject,
+  studentteam,
+} from "../StudAuth/Services/Api.jsx";
 
 const { Header, Sider, Content } = Layout;
 
@@ -25,7 +29,7 @@ const SDashboard = () => {
   };
 
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   useEffect(() => {
@@ -91,7 +95,7 @@ const SDashboard = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -99,9 +103,17 @@ const SDashboard = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content style={{ padding: "24px", background: colorBgContainer, overflowY: 'auto', backgroundColor: 'rgba(230,230,230)' }}>
+        <Content
+          style={{
+            padding: "24px",
+            borderRadius: borderRadiusLG,
+            overflowY: "auto",
+          }}
+        >
           <div className="container mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Welcome to the Student Dashboard!</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              Welcome to the Student Dashboard!
+            </h2>
             <p>Note: Teammates will have the same password as the team lead.</p>
           </div>
           <div className="flex justify-center">
@@ -126,7 +138,10 @@ const SDashboard = () => {
           </div>
           {showTeamForm && (
             <div className="bg-gray-100 max-w-md mx-auto rounded-md p-4 m-2">
-              <form className="max-w-md mx-auto flex flex-col gap-2 p-3" onSubmit={handleSubmit}>
+              <form
+                className="max-w-md mx-auto flex flex-col gap-2 p-3"
+                onSubmit={handleSubmit}
+              >
                 <input
                   type="text"
                   onChange={(e) => setName(e.target.value)}
@@ -158,8 +173,8 @@ const SDashboard = () => {
               columns={projectColumns}
               rowKey="USN"
               scroll={{ y: 300 }}
-              style={{ backgroundColor: '#f0f2f5', borderRadius: '8px' }}
-              rowClassName={() => 'custom-row'}
+              style={{ backgroundColor: "#f0f2f5", borderRadius: "8px" }}
+              rowClassName={() => "custom-row"}
             />
           </div>
         </Content>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Layout, Button, Input, Form, message } from "antd";
+import { Layout, Button, Input, Form, message, theme } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
-
+import ToggleButton from "../ANavbar/ToggleButton";
 const { Header, Sider, Content } = Layout;
 
 const Actions = () => {
@@ -15,7 +15,9 @@ const Actions = () => {
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
-
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
   const handleCreateProject = async (values) => {
     try {
       await axios.post("http://localhost:3000/auth/newproject", values);
@@ -27,13 +29,23 @@ const Actions = () => {
   };
 
   return (
-    <Layout className="overflow-y-auto h-32" style={{ height: "100vh", overflow: "hidden" }}>
-      <Sider collapsed={collapsed} collapsible trigger={null} theme={darkTheme ? "dark" : "light"} className="">
+    <Layout
+      className="overflow-y-auto h-32"
+      style={{ height: "100vh", overflow: "hidden" }}
+    >
+      <Sider
+        collapsed={collapsed}
+        collapsible
+        trigger={null}
+        theme={darkTheme ? "dark" : "light"}
+        className=""
+      >
         <Logoimg />
         <MenuItem darkTheme={darkTheme} />
+        <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: darkTheme ? "#001529" : "#fff" }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -41,7 +53,10 @@ const Actions = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto p-5 rounded-md" style={{ padding: "24px" }}>
+        <Content
+          className="overflow-y-auto p-5 rounded-md"
+          style={{ padding: "24px", borderRadius: borderRadiusLG }}
+        >
           <div className="container mx-auto text-center"></div>
 
           <div className="mt-8">
@@ -50,14 +65,18 @@ const Actions = () => {
               <Form.Item
                 label="Project Name"
                 name="projectName"
-                rules={[{ required: true, message: "Please input the project name!" }]}
+                rules={[
+                  { required: true, message: "Please input the project name!" },
+                ]}
               >
                 <Input />
               </Form.Item>
               <Form.Item
                 label="Domain"
                 name="domain"
-                rules={[{ required: true, message: "Please input the domain!" }]}
+                rules={[
+                  { required: true, message: "Please input the domain!" },
+                ]}
               >
                 <Input />
               </Form.Item>

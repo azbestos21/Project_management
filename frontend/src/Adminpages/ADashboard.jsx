@@ -26,7 +26,7 @@ const ADashboard = () => {
   };
 
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   useEffect(() => {
@@ -127,9 +127,10 @@ const ADashboard = () => {
       >
         <Logoimg />
         <MenuItem darkTheme={darkTheme} />
+        <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -138,12 +139,8 @@ const ADashboard = () => {
           />
         </Header>
         <Content
-          style={{
-            padding: "24px",
-            background: colorBgContainer,
-            overflowY: "auto",
-            backgroundColor: "rgba(230,230,230)",
-          }}
+          style={{ borderRadius: borderRadiusLG }}
+          className="overflow-y-auto p-5 rounded-md"
         >
           <div className="container mx-auto text-center">
             <h2 className="text-2xl font-bold mb-4">
@@ -152,19 +149,19 @@ const ADashboard = () => {
             <p>Use the sidebar to navigate through the admin features.</p>
           </div>
           <div className="flex justify-center my-8">
-  <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
-    <h3 className="text-lg font-semibold">Total Projects</h3>
-    <p className="text-2xl">{projects.length}</p>
-  </div>
-  <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
-    <h3 className="text-lg font-semibold">Total Mentors</h3>
-    <p className="text-2xl">{mentors.length}</p>
-  </div>
-  <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
-    <h3 className="text-lg font-semibold">Total Students</h3>
-    <p className="text-2xl">{students.length}</p>
-  </div>
-</div>
+            <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
+              <h3 className="text-lg font-semibold">Total Projects</h3>
+              <p className="text-2xl">{projects.length}</p>
+            </div>
+            <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
+              <h3 className="text-lg font-semibold">Total Mentors</h3>
+              <p className="text-2xl">{mentors.length}</p>
+            </div>
+            <div className="p-4 bg-white shadow rounded-lg text-center mx-2">
+              <h3 className="text-lg font-semibold">Total Students</h3>
+              <p className="text-2xl">{students.length}</p>
+            </div>
+          </div>
 
           <div style={tableStyles.container}>
             <h3 className="text-xl font-semibold mb-4">Project List</h3>
