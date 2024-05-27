@@ -2,11 +2,11 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 
 import Loginpg from "./StudAuth/Loginpg.jsx";
-import PrivateRoute from "./StudAuth/PrivateRoute.jsx";
+import { PrivateRoute } from "./StudAuth/PrivateRoute.jsx";
 import Login from "./MentorAuth/Login.jsx";
-import PrivateMentRoute from "./MentorAuth/PrivateMentRoute.jsx";
+import { PrivateMentRoute } from "./MentorAuth/PrivateMentRoute.jsx";
 import LogPg from "./AdminAuth/logPg.jsx";
-import PrivateRouter from "./AdminAuth/PrivateRoute.jsx";
+import { PrivateRouter } from "./AdminAuth/PrivateRoute.jsx";
 
 import MyMentees from "./MentorPages/MyMentees.jsx";
 import MProjects from "./MentorPages/MProjects.jsx";
