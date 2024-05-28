@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Layout, Button, Input, Form, message, Select } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Layout, Button, Input, Form, message, Select, theme } from "antd";
+
+import {
+  BorderBottomOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from "@ant-design/icons";
 import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
+import { useNavigate } from "react-router-dom";
+import ToggleButton from "../ANavbar/ToggleButton";
+
 
 const { Header, Sider, Content } = Layout;
 const { Option } = Select;
@@ -19,7 +27,9 @@ const Assign = () => {
   useEffect(() => {
     const fetchProjectOptions = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/auth/projectoption");
+        const response = await axios.get(
+          "http://localhost:3000/auth/projectoption"
+        );
         if (response.data && response.data.mentorData) {
           setProjectOptions(response.data.mentorData);
         } else {
@@ -37,7 +47,9 @@ const Assign = () => {
   useEffect(() => {
     const fetchMentorOptions = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/auth/mentoroption");
+        const response = await axios.get(
+          "http://localhost:3000/auth/mentoroption"
+        );
         if (response.data && response.data.mentorData) {
           setMentorOptions(response.data.mentorData);
         } else {
@@ -55,7 +67,9 @@ const Assign = () => {
   useEffect(() => {
     const fetchTeamOptions = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/auth/teamoption");
+        const response = await axios.get(
+          "http://localhost:3000/auth/teamoption"
+        );
         if (response.data && response.data.teamData) {
           setTeamOptions(response.data.teamData);
         } else {
@@ -73,6 +87,9 @@ const Assign = () => {
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
   const handleAssign = async (values) => {
     try {
@@ -85,13 +102,23 @@ const Assign = () => {
   };
 
   return (
-    <Layout className="overflow-y-auto h-32" style={{ height: "100vh", overflow: "hidden" }}>
-      <Sider collapsed={collapsed} collapsible trigger={null} theme={darkTheme ? "dark" : "light"} className="">
+    <Layout
+      className="overflow-y-auto h-32"
+      style={{ height: "100vh", overflow: "hidden" }}
+    >
+      <Sider
+        collapsed={collapsed}
+        collapsible
+        trigger={null}
+        theme={darkTheme ? "dark" : "light"}
+        className=""
+      >
         <Logoimg />
         <MenuItem darkTheme={darkTheme} />
+        <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: darkTheme ? "#001529" : "#fff" }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -99,10 +126,15 @@ const Assign = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto p-5 rounded-md" style={{ padding: "24px" }}>
+        <Content
+          className="overflow-y-auto p-5 rounded-md"
+          style={{ padding: "24px", borderRadius: borderRadiusLG }}
+        >
           <div className="container mx-auto text-center"></div>
           <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">Assign Project and Mentor</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Assign Project and Mentor
+            </h3>
             <Form form={form} onFinish={handleAssign}>
               <Form.Item
                 label="Team_ID"
@@ -120,7 +152,9 @@ const Assign = () => {
               <Form.Item
                 label="Project ID"
                 name="pid"
-                rules={[{ required: true, message: "Please select a project!" }]}
+                rules={[
+                  { required: true, message: "Please select a project!" },
+                ]}
               >
                 <Select placeholder="Select a project">
                   {projectOptions.map((option) => (

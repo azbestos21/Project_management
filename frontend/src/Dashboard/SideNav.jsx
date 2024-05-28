@@ -16,6 +16,7 @@ const SideNav = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
       <Sider
@@ -30,7 +31,7 @@ const SideNav = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header style={{ padding: 0, background: "White" }}>
           <Button
             type="text"
             className="toggle"
