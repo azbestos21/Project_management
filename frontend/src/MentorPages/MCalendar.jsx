@@ -83,7 +83,7 @@ const MCalendar = () => {
     setDarkTheme(!darkTheme);
   };
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const monthCellRender = (value) => {
     const num = getMonthData(value);
@@ -125,7 +125,7 @@ const MCalendar = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -133,7 +133,10 @@ const MCalendar = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto p-5 rounded-md">
+        <Content
+          style={{ borderRadius: borderRadiusLG }}
+          className="overflow-y-auto p-5 rounded-md"
+        >
           <Calendar cellRender={cellRender} />
         </Content>
       </Layout>

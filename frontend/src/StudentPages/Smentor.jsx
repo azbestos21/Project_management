@@ -15,13 +15,13 @@ const Smentor = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [info, setInfo] = useState(null);
   const [message, setMessage] = useState("");
-  
+
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
 
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const Smentor = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -62,7 +62,13 @@ const Smentor = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content style={{ overflow: "auto", padding: "24px" }}>
+        <Content
+          style={{
+            overflow: "auto",
+            padding: "24px",
+            borderRadius: borderRadiusLG,
+          }}
+        >
           <div className="container mx-auto">
             <h2 className="text-2xl font-bold text-center mb-4 bg-gray-100 p-2 border-b-2 border-black-600">
               Mentor Information
@@ -73,7 +79,10 @@ const Smentor = () => {
               ) : (
                 info &&
                 info.map((mentor, index) => (
-                  <div key={index} className="flex flex-col items-center space-y-4">
+                  <div
+                    key={index}
+                    className="flex flex-col items-center space-y-4"
+                  >
                     <div className="flex items-center">
                       <div className="font-bold text-lg">Name:</div>
                       <div className="ml-2">

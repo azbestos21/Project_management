@@ -7,7 +7,11 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import ToggleButton from "../MNavbar/MToggle";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { GrProjects } from "react-icons/gr";
-import { mentordetails, viewgroups, viewprojects } from "../MentorAuth/Services/Api";
+import {
+  mentordetails,
+  viewgroups,
+  viewprojects,
+} from "../MentorAuth/Services/Api";
 
 const { Header, Sider, Content } = Layout;
 
@@ -24,7 +28,7 @@ const MDashboard = () => {
   };
 
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   useEffect(() => {
@@ -37,7 +41,7 @@ const MDashboard = () => {
       }
     };
     fetchgroups();
-    
+
     const fetchproject = async () => {
       try {
         const data = await viewprojects();
@@ -70,21 +74,21 @@ const MDashboard = () => {
   const infoCardStyle = "p-4 bg-white shadow rounded-lg text-center";
   const tableStyles = {
     container: {
-      marginTop: '20px',
+      marginTop: "20px",
     },
     table: {
-      backgroundColor: '#f0f2f5',
-      borderRadius: '8px',
+      backgroundColor: "#f0f2f5",
+      borderRadius: "8px",
     },
     thead: {
-      backgroundColor: '#001529',
-      color: 'white',
+      backgroundColor: "#001529",
+      color: "white",
     },
     tbody: {
-      backgroundColor: 'white',
+      backgroundColor: "white",
     },
     tbodyHover: {
-      backgroundColor: '#e6f7ff',
+      backgroundColor: "#e6f7ff",
     },
   };
 
@@ -101,7 +105,7 @@ const MDashboard = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0}}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -109,20 +113,33 @@ const MDashboard = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content style={{ padding: "24px", background: colorBgContainer, overflowY: "auto" }}>
+        <Content
+          style={{
+            padding: "24px",
+
+            overflowY: "auto",
+            borderRadius: borderRadiusLG,
+          }}
+        >
           <div className="container mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-4">Welcome to the Mentor Dashboard!</h2>
+            <h2 className="text-2xl font-bold mb-4">
+              Welcome to the Mentor Dashboard!
+            </h2>
           </div>
           <div className="flex justify-center">
-          <div className="p-4 bg-white shadow rounded-lg text-center">
-    <h3 className="text-lg font-semibold">Total Projects</h3>
-    <p className="text-2xl">{projectdata && projectdata.userData.length}</p>
-  </div>
-  <div className="p-4 bg-white shadow rounded-lg text-center">
-    <h3 className="text-lg font-semibold">Total Students</h3>
-    <p className="text-2xl">{groupdata && groupdata.userData.length}</p>
-  </div>
-</div>
+            <div className="p-4 bg-white shadow rounded-lg text-center">
+              <h3 className="text-lg font-semibold">Total Projects</h3>
+              <p className="text-2xl">
+                {projectdata && projectdata.userData.length}
+              </p>
+            </div>
+            <div className="p-4 bg-white shadow rounded-lg text-center">
+              <h3 className="text-lg font-semibold">Total Students</h3>
+              <p className="text-2xl">
+                {groupdata && groupdata.userData.length}
+              </p>
+            </div>
+          </div>
 
           <div style={tableStyles.container}>
             <h3 className="text-xl font-semibold mb-4">Profile</h3>
@@ -149,7 +166,9 @@ const MDashboard = () => {
                         <div>{data.Phone}</div>
                       </div>
                       <div>
-                        <div className="text-sm font-semibold">Designation:</div>
+                        <div className="text-sm font-semibold">
+                          Designation:
+                        </div>
                         <div>{data.Designation}</div>
                       </div>
                     </div>

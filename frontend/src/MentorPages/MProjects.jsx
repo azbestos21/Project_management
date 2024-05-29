@@ -22,7 +22,7 @@ const MProjects = () => {
   };
 
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const handleSearch = (e) => {
@@ -75,7 +75,7 @@ const MProjects = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -83,7 +83,10 @@ const MProjects = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto p-10 ">
+        <Content
+          style={{ borderRadius: borderRadiusLG }}
+          className="overflow-y-auto p-10 "
+        >
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <h3 className="text-lg text-center font-bold uppercase p-1 bg-gray-100 border-b-2 border-black-700 opacity-80 text-black">
               Project Details

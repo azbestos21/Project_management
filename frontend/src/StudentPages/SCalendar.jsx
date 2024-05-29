@@ -83,7 +83,7 @@ const SCalendar = () => {
     setDarkTheme(!darkTheme);
   };
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const monthCellRender = (value) => {
     const num = getMonthData(value);
@@ -125,7 +125,7 @@ const SCalendar = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -133,7 +133,10 @@ const SCalendar = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto p-5 rounded-lg">
+        <Content
+          style={{ borderRadius: borderRadiusLG }}
+          className="overflow-y-auto p-5 rounded-lg bg-slate-200"
+        >
           <Calendar cellRender={cellRender} />
         </Content>
       </Layout>

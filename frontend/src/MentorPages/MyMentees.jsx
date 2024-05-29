@@ -16,7 +16,7 @@ const MyMentees = () => {
     setDarkTheme(!darkTheme);
   };
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const MyMentees = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -52,7 +52,10 @@ const MyMentees = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content className="overflow-y-auto p-10">
+        <Content
+          style={{ borderRadius: borderRadiusLG }}
+          className="overflow-y-auto p-10"
+        >
           {" "}
           <h3 className="text-lg text-center font-bold uppercase p-1 bg-gray-200 border-b-2 border-gray-100 opacity-80 sticky">
             Student Details

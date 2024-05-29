@@ -18,7 +18,7 @@ const Sprojects = () => {
     setDarkTheme(!darkTheme);
   };
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   useEffect(() => {
     console.log(123);
@@ -63,7 +63,7 @@ const Sprojects = () => {
         <ToggleButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0}}>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
             className="toggle"
@@ -71,7 +71,13 @@ const Sprojects = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           />
         </Header>
-        <Content>
+        <Content
+          style={{
+            overflow: "auto",
+            padding: "24px",
+            borderRadius: borderRadiusLG,
+          }}
+        >
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <h3 className="text-lg text-center font-bold uppercase p-1 bg-gray-100 border-b-2 border-black-700 opacity-80">
               Project Details
