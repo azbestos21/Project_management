@@ -28,7 +28,7 @@ const Assign = () => {
     const fetchProjectOptions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/auth/projectoption"
+          "https://project-management-lbsg.onrender.com/auth/projectoption"
         );
         if (response.data && response.data.mentorData) {
           setProjectOptions(response.data.mentorData);
@@ -48,7 +48,7 @@ const Assign = () => {
     const fetchMentorOptions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/auth/mentoroption"
+          "https://project-management-lbsg.onrender.com/auth/mentoroption"
         );
         if (response.data && response.data.mentorData) {
           setMentorOptions(response.data.mentorData);
@@ -68,7 +68,7 @@ const Assign = () => {
     const fetchTeamOptions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/auth/teamoption"
+          "https://project-management-lbsg.onrender.com/auth/teamoption"
         );
         if (response.data && response.data.teamData) {
           setTeamOptions(response.data.teamData);
@@ -93,7 +93,7 @@ const Assign = () => {
 
   const handleAssign = async (values) => {
     try {
-      await axios.post("http://localhost:3000/auth/assign", values);
+      await axios.post("https://project-management-lbsg.onrender.com/auth/assign", values);
       message.success("Mentor and project assigned successfully");
       form.resetFields(); // Clear the form fields
     } catch (error) {

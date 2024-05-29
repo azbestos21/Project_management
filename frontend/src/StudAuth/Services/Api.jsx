@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseurl = "http://localhost:3000";
+const baseurl = "https://project-management-lbsg.onrender.com";
 
 const studentlogin = async (data) => {
   try {
