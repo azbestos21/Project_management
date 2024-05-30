@@ -848,7 +848,7 @@ exports.adminregister = async (req, res) => {
       to: username,
       subject: 'Admin Account Verification',
       html: `<p>Please verify your account by clicking the link below:</p>
-             <a href="http://localhost:5173/verify-admin?token=${verificationToken}">Verify Account</a>`
+             <a href="https://main.d377ji73xjk9a9.amplifyapp.com/verify-admin?token=${verificationToken}">Verify Account</a>`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
