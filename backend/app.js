@@ -9,7 +9,7 @@ const cors = require("cors");
 const publicDirectory = path.join(__dirname, '../frontend/public');
 app.use(
   cors({
-    origin: "*",
+    origin: "https://main.d3od0hvcknqa8u.amplifyapp.com",
   })
 );
 app.use(express.static(publicDirectory));
