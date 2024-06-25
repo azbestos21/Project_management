@@ -20,7 +20,7 @@ const Actions = () => {
   } = theme.useToken();
   const handleCreateProject = async (values) => {
     try {
-      await axios.post("http://localhost:3000/auth/newproject", values);
+      await axios.post("https://project-management-4.onrender.com/auth/newproject", values);
       message.success("Project created successfully");
       form.resetFields(); // Clear the form fields
     } catch (error) {
