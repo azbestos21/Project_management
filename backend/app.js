@@ -7,11 +7,12 @@ const upload=require("./controllers/auth.js")
 const cors = require("cors");
 // Update the path for extracting HTML and CSS
 const publicDirectory = path.join(__dirname, '../frontend/public');
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+app.use(cors({
+  origin: 'https://main.d3od0hvcknqa8u.amplifyapp.com',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+}));
 app.use(express.static(publicDirectory));
 
 // For parsing into JSON
