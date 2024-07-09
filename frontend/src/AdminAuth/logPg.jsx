@@ -116,7 +116,7 @@ export default function LogPg() {
                 <input
                   className="p-3 border rounded"
                   type="text"
-                  placeholder="Username"
+                  placeholder="Email"
                   onChange={(e) => setUsn(e.target.value)}
                 />
                 <input
@@ -135,7 +135,7 @@ export default function LogPg() {
                 <input
                   className="p-3 border rounded"
                   type="text"
-                  placeholder="Username"
+                  placeholder="Email"
                   onChange={(e) => setUsn(e.target.value)}
                 />
                 <input
