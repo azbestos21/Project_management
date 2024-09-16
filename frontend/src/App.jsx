@@ -23,10 +23,16 @@ import MCalendar from "./MentorPages/MCalendar.jsx";
 import ACalendar from "./Adminpages/ACalender.jsx";
 import ADashboard from "./Adminpages/ADashboard.jsx";
 import VerifyAdmin from "./AdminAuth/email.jsx";
+import HomePage from "./Adminpages/Home.jsx"; // New HomePage for role selection
 
 function App() {
   return (
     <Routes>
+      {/* HomePage is now the default landing page */}
+      <Route path="/home" element={<HomePage />} />
+
+      {/* Student Routes */}
+      <Route path="/login" element={<Loginpg />} />
       <Route path="/" element={<PrivateRoute />}>
         <Route path="/" element={<MulPages />}>
           <Route path="/dashboard" element={<SDashboard />} />
@@ -36,10 +42,8 @@ function App() {
         </Route>
       </Route>
 
-      <Route path="/login" element={<Loginpg />} />
+      {/* Mentor Routes */}
       <Route path="/Mlogin" element={<Login />} />
-      <Route path="/Alogin" element={<LogPg />} />
-      <Route path="/verify-admin" element={<VerifyAdmin />} />
       <Route path="/" element={<PrivateMentRoute />}>
         <Route path="/" element={<Multipage />}>
           <Route path="/Mdashboard" element={<MDashboard />} />
@@ -48,6 +52,10 @@ function App() {
           <Route path="/MCalendar" element={<MCalendar />} />
         </Route>
       </Route>
+
+      {/* Admin Routes */}
+      <Route path="/Alogin" element={<LogPg />} />
+      <Route path="/verify-admin" element={<VerifyAdmin />} />
       <Route path="/" element={<PrivateRouter />}>
         <Route path="/" element={<Multipage />}>
           <Route path="/Adashboard" element={<ADashboard />} />
@@ -60,4 +68,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;

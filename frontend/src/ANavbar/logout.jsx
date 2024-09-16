@@ -8,6 +8,7 @@ const LogoutButton = () => {
 
   const handleLogout = () => {
     // Add your logout logic here (e.g., clearing user data, tokens, etc.)
+    localStorage.removeItem("admintoken"); 
     console.log("User logged out");
     navigate("/Alogin");
   };

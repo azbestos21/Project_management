@@ -74,7 +74,7 @@ export default function Login() {
 
   useEffect(() => {
     const handleLogout = () => {
-      localStorage.removeItem("studenttoken");
+      localStorage.removeItem("Mentortoken");
     };
     handleLogout();
   }, []);
