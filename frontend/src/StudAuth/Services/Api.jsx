@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseurl = "http://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000";
+const baseurl = "https://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000";
 
 const studentlogin = async (data) => {
   try {
