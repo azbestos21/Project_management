@@ -29,7 +29,7 @@ const Assign = () => {
     const fetchProjectOptions = async () => {
       try {
         const response = await axios.get(
-          "http://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000/auth/projectoption"
+          "https://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000/auth/projectoption"
         );
         if (response.data && response.data.mentorData) {
           setProjectOptions(response.data.mentorData);
@@ -49,7 +49,7 @@ const Assign = () => {
     const fetchMentorOptions = async () => {
       try {
         const response = await axios.get(
-          "http://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000/auth/mentoroption"
+          "https://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000/auth/mentoroption"
         );
         if (response.data && response.data.mentorData) {
           setMentorOptions(response.data.mentorData);
