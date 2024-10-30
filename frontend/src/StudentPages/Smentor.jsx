@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { Layout, Button, theme } from "antd";
 import Logoimg from "../Navbar/Logoimg";
 import MenuItem from "../Navbar/MenuItem";

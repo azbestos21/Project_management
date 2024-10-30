@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import RNSIT from "../assets/RNSIT.jpg";
-import { Carousel } from "antd";
-import CSE from "../assets/CSE.jpeg";
+
+
 import Backgimg from "../assets/rns1.jpg";
 import { studentlogin, studentsignup } from "./Services/Api";
 import { useNavigate } from "react-router-dom";

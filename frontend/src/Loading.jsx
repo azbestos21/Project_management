@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { LikeOutlined, MessageOutlined, StarOutlined } from "@ant-design/icons";
-import { Avatar, List, Skeleton, Switch } from "antd";
+import { Avatar, List, Skeleton } from "antd";
 const listData = Array.from({
   length: 3,
 }).map((_, i) => ({

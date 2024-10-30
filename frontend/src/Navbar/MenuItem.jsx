@@ -8,7 +8,6 @@ import {
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { GiTeacher } from "react-icons/gi";
-import LogoutButton from "../ANavbar/logout";
 const MenuItem = ({ darkTheme }) => {
   return (
     <Menu
