@@ -29,5 +29,5 @@ app.use('/auth', require('./routes/auth'));
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running at http://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000:${port}`);
+  console.log(`Server is running at http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:${port}`);
 });

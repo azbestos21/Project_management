@@ -49,7 +49,7 @@ const Assign = () => {
     const fetchMentorOptions = async () => {
       try {
         const response = await axios.get(
-          "https://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000/auth/mentoroption"
+          "http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000/auth/mentoroption"
         );
         if (response.data && response.data.mentorData) {
           setMentorOptions(response.data.mentorData);
@@ -69,7 +69,7 @@ const Assign = () => {
     const fetchTeamOptions = async () => {
       try {
         const response = await axios.get(
-          "http://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com:3000/auth/teamoption"
+          "http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000/auth/teamoption"
         );
         if (response.data && response.data.teamData) {
           setTeamOptions(response.data.teamData);
