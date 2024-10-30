@@ -6,7 +6,7 @@ import Logoimg from "../ANavbar/LogoImg";
 import MenuItem from "../ANavbar/MenuItem";
 import ToggleButton from "../ANavbar/ToggleButton";
 const { Header, Sider, Content } = Layout;
-
+//http://ec2-13-232-5-103.ap-south-1.compute.amazonaws.com
 const Actions = () => {
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
