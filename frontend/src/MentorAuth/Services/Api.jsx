@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseurl = "http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000";
+const baseurl = "https://project-management-4.onrender.com";
 
 const mentorlogin = async (data) => {
   try {
