@@ -5,13 +5,35 @@ const projectTableModule = require("../models/project");
 const studentTableModule = require("../models/student");
 const multer = require("multer");
 const fs = require("fs");
+const path = require('path');
+
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const connection = require("../db/connect");
 const { log } = require("console");
 const crypto = require("crypto");
 const util = require('util');
+const AWS = require('aws-sdk');
+const multerS3 = require("multer-s3");
+const { GetObjectCommand } = require('@aws-sdk/client-s3');
 
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
+
+
+const { S3Client } = require("@aws-sdk/client-s3");
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 
 exports.adminlogin = async (req, res) => {
@@ -63,8 +85,57 @@ exports.adminlogin = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+exports.downloadFile = async (req, res) => {
+  console.log("Inside downloadFile");
 
+  let { filePath } = req.body; // Extract filePath from the request body
+  console.log("File Path received:", filePath);
 
+  if (!filePath) {
+    return res.status(400).json({ msg: "File path is required." });
+  }
+
+  // Extract the key from the URL by removing the bucket domain
+  const bucketUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/`;
+  
+  // Ensure the filePath starts with the bucket URL, and extract the key
+  if (filePath.startsWith(bucketUrl)) {
+    filePath = filePath.replace(bucketUrl, ''); // Remove the URL part to get the key
+  }
+
+  // If filePath does not start with 'projects/', prepend it
+  if (!filePath.startsWith("projects/")) {
+    filePath = `projects/${filePath}`;
+  }
+
+  const bucketName = process.env.AWS_BUCKET_NAME; // S3 bucket name
+  const fileName = path.basename(filePath); // Extract the file name from the path
+
+  const downloadParams = {
+    Bucket: bucketName,
+    Key: filePath, // Use the corrected file path (key)
+  };
+
+  try {
+    const { Body } = await s3.send(new GetObjectCommand(downloadParams));
+
+    // Set headers to prompt file download
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+    res.setHeader("Content-Type", "application/octet-stream");
+
+    // Pipe the file stream to the response
+    Body.pipe(res);
+
+    // Handle stream errors
+    Body.on("error", (err) => {
+      console.error("Error streaming file:", err);
+      return res.status(500).json({ msg: "Error streaming the file", error: err });
+    });
+  } catch (err) {
+    console.error("Error fetching file from S3:", err);
+    return res.status(500).json({ msg: "Error downloading the file", error: err });
+  }
+};
 exports.mentorregister = async (req, res) => {
   console.log(req.body);
   mentorTableModule.createMentorTable();
@@ -588,59 +659,64 @@ exports.adminstudentlist = (req, res) => {
 
 exports.uploadphase = (req, res) => {
   const usn = req.user;
-
-  console.log(usn);
+  console.log('Hello ');
+  
+  console.log("USN:", usn);
 
   const getPID = "SELECT P_ID from student S where S.USN=?";
   connection.query(getPID, [usn], (err, data) => {
-    if (data) {
-      const PID = data[0].P_ID;
-      const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-          const uploadDir = "C:/uploadsRishi/";
-
-          // Check if the directory exists
-          if (!fs.existsSync(uploadDir)) {
-            // If not, create the directory
-            fs.mkdirSync(uploadDir);
-          }
-
-          cb(null, uploadDir);
-        },
-        filename: function (req, file, cb) {
-          cb(null, file.originalname); // Specify how the uploaded files will be named
-        },
-      });
-
-      const upload = multer({ storage: storage });
-
-      upload.single("document")(req, res, async function (err) {
-        if (err) {
-          return res.status(500).send("invalid document");
-        }
-
-        const uploadedFile = await req.file;
-        console.log(uploadedFile);
-
-        const path = uploadedFile.destination + uploadedFile.filename;
-        console.log(path);
-        const updateProjectFile = `UPDATE project SET Phase_Status='uploaded', File_Path='${path}' WHERE project.Project_ID=${PID}`;
-
-        connection.query(updateProjectFile, (err, data) => {
-          if (err) {
-            console.log("Cant update file into project");
-
-            return res.status(500).json({ msg: "Internal server error", err });
-          } else {
-            console.log("successful updation of file into project");
-            return res.status(200).json({ msg: "updated record in project" });
-          }
-        });
-      });
-    } else {
-      console.log("Internal server error");
+    if (err || !data.length) {
+      console.log("Error retrieving Project ID:", err);
       return res.status(500).json({ msg: "Internal server error" });
     }
+
+    const PID = data[0].P_ID;
+
+    // Set up multer S3 storage
+    const upload = multer({
+      storage: multerS3({
+        s3: s3,
+        bucket: process.env.AWS_BUCKET_NAME, // Bucket name
+        metadata: (req, file, cb) => {
+          cb(null, { fieldName: file.fieldname });
+        },
+        key: (req, file, cb) => {
+          const fileName = `projects/${file.originalname}`;
+          cb(null, fileName); // File path within the bucket
+        },
+      }),
+      limits: { fileSize: 10 * 1024 * 1024 }, // Limit file size to 10MB
+    }).single("document");
+
+    // Handle file upload
+    upload(req, res, (err) => {
+      if (err) {
+        console.log("Error during upload:", err);
+        return res.status(500).send("Invalid document");
+      }
+
+      const uploadedFile = req.file;
+      console.log("Uploaded File:", uploadedFile);
+
+      const filePath = uploadedFile.location; // S3 file URL
+      console.log("S3 File Path:", filePath);
+
+      const updateProjectFile = `
+        UPDATE project 
+        SET Phase_Status='uploaded', File_Path=? 
+        WHERE Project_ID=?
+      `;
+
+      connection.query(updateProjectFile, [filePath, PID], (err) => {
+        if (err) {
+          console.log("Can't update file into project:", err);
+          return res.status(500).json({ msg: "Internal server error", err });
+        }
+
+        console.log("Successful file upload and database update");
+        return res.status(200).json({ msg: "Updated record in project" });
+      });
+    });
   });
 };
 

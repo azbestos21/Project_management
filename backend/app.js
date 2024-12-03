@@ -3,7 +3,7 @@ const connection = require('./db/connect');
 const path = require('path');
 const app = express();
 const port = 3000;
-const upload=require("./controllers/auth.js")
+
 const cors = require("cors");
 // Update the path for extracting HTML and CSS
 const publicDirectory = path.join(__dirname, '../frontend/public');

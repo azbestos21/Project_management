@@ -60,6 +60,36 @@ const MProjects = () => {
       message.error("Failed to update project");
     }
   };
+  const handleDownload = async (filePath) => {
+    try {
+      const response = await fetch("http://localhost:3000/auth/download", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ filePath }), // Send filePath to the backend
+      });
+  
+      if (response.ok) {
+        const blob = await response.blob();
+  
+        // Create a link element to trigger the download
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filePath.split("/").pop(); // Extract file name for download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        const errorMsg = await response.json();
+        message.error(errorMsg.msg || "Failed to download the file");
+      }
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      message.error("Something went wrong while downloading the file");
+    }
+  };
+  
 
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
@@ -136,6 +166,10 @@ const MProjects = () => {
                       <td className="px-6 py-4">{data.Phase_Status}</td>
                       <td className="px-6 py-4">{data.Project_Marks}</td>
                       <td className="px-6 py-4">
+                      <ActionButton
+                          label={"Download"}
+                          onClick={() => handleDownload(data.File_Path)} // Pass the file path to backend
+                        /> <br />
                         <ActionButton
                           label={"Accept"}
                           onClick={() => handleUpdate(data.Project_ID, 1)}
@@ -146,6 +180,7 @@ const MProjects = () => {
                           onClick={() => handleUpdate(data.Project_ID, 0)}
                         />{" "}
                       </td>
+
                     </tr>
                   ))}
               </tbody>
