@@ -20,7 +20,7 @@ const Actions = () => {
   } = theme.useToken();
   const handleCreateProject = async (values) => {
     try {
-      await axios.post("http://localhost:3000/auth/newproject", values);
+      await axios.post("http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000/auth/newproject", values);
       message.success("Project created successfully");
       form.resetFields(); // Clear the form fields
     } catch (error) {

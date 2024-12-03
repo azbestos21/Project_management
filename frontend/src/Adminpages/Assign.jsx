@@ -29,7 +29,7 @@ const Assign = () => {
     const fetchProjectOptions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/auth/projectoption"
+          "http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000/auth/projectoption"
         );
         if (response.data && response.data.mentorData) {
           setProjectOptions(response.data.mentorData);
