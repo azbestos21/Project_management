@@ -1,5 +1,6 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
+import React from 'react';
 
 import Loginpg from "./StudAuth/Loginpg.jsx";
 import { PrivateRoute } from "./StudAuth/PrivateRoute.jsx";
