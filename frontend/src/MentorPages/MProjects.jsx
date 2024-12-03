@@ -62,7 +62,7 @@ const MProjects = () => {
   };
   const handleDownload = async (filePath) => {
     try {
-      const response = await fetch("http://localhost:3000/auth/download", {
+      const response = await fetch("http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000/auth/download", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
