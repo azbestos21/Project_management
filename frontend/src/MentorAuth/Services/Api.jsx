@@ -1,6 +1,6 @@
 import axios from "axios";
 //const baseurl = "https://project-management-4.onrender.com";
-const baseurl = "http://localhost:3000";
+const baseurl = "http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000";
 const mentorlogin = async (data) => {
   try {
     const response = await axios.post(`${baseurl}/auth/login`, data);
