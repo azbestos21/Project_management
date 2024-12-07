@@ -331,8 +331,6 @@ exports.studentregister = async (req, res) => {
       );
     });
 
-    await sendemail(email);
-
     const token = jwt.sign({ username, password }, process.env.JWT_SECRET);
     const userData = {
       username: username,
