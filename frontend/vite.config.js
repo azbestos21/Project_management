@@ -2,9 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default {
+export default defineConfig({
   server: {
-    host: true, // Or use "0.0.0.0" to bind to all interfaces
-    port: 5173, // Optional: specify the port
+    host: "0.0.0.0",  // Allows external access
+    strictPort: true,
+    port: 5173, // Change this if needed
+    allowedHosts: "all", // Allows all hosts
   },
-};
+});
