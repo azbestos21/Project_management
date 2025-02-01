@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message } from "antd";
 //const baseurl = "https://project-management-4.onrender.com";
-const baseurl = "http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000";
+const baseurl = "http://ec2-3-6-18-59.ap-south-1.compute.amazonaws.com:3000";
 const adminlogin = async (data) => {
   try {
     const response = await axios.post(`${baseurl}/auth/adminlogin`, data);

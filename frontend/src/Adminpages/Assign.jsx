@@ -94,7 +94,7 @@ const Assign = () => {
 
   const handleAssign = async (values) => {
     try {
-      await axios.post("http://ec2-13-203-61-198.ap-south-1.compute.amazonaws.com:3000/auth/assign", values);
+      await axios.post("http://ec2-3-6-18-59.ap-south-1.compute.amazonaws.com:3000/auth/assign", values);
       message.success("Mentor and project assigned successfully");
       form.resetFields(); // Clear the form fields
     } catch (error) {
